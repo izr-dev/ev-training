@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Training Teknologi Kendaraan Listrik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#060A12;--panel:#0C1220;--line:#1B2740;--text:#E6ECF5;--dim:#8593AA;
+  --u:#FFC857;--v:#3DDC97;--w:#4DA3FF;
+  --disp:'Chakra Petch',system-ui,sans-serif;--body:'Sora',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;color-scheme:dark}
+body{margin:0;background:var(--ink);color:var(--text);font:400 15px/1.6 var(--body);overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--v);outline-offset:3px}
+.fine,.fine a,.fine button{cursor:none}
+.fine input{cursor:text}
+
+/* kursor */
+.cur,.ring{position:fixed;left:0;top:0;pointer-events:none;z-index:99;border-radius:50%;opacity:0}
+.cur{width:7px;height:7px;background:var(--v)}
+.ring{width:36px;height:36px;border:1.5px solid var(--v);transition:width .2s,height .2s,background .2s,border-color .2s}
+.ring.hot{width:60px;height:60px;background:rgba(61,220,151,.12);border-color:var(--u)}
+.ring.down{width:26px;height:26px}
+
+header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px clamp(16px,4vw,48px);background:rgba(6,10,18,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font:700 18px var(--disp);letter-spacing:.02em}
+.brand svg{width:30px;height:30px}
+nav{display:flex;gap:22px;font-size:14px;color:var(--dim)}
+nav a:hover{color:var(--text)}
+@media(max-width:720px){nav{display:none}}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border:1px solid var(--line);border-radius:6px;font:600 14px var(--disp);background:var(--panel);color:var(--text);transition:border-color .2s,background .2s}
+.btn:hover{border-color:var(--v)}
+.btn.pri{background:var(--v);border-color:var(--v);color:#04130C}
+.btn.pri:hover{background:#6BEBB4}
+
+/* hero */
+.hero{position:relative;padding:clamp(40px,8vw,96px) clamp(16px,4vw,48px) 72px;display:grid;grid-template-columns:1.25fr .75fr;gap:48px;align-items:center;min-height:min(640px,90vh);overflow:hidden}
+#wave{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.hero>*:not(canvas){position:relative;z-index:1}
+@media(max-width:900px){.hero{grid-template-columns:1fr}}
+h1{font:700 clamp(34px,5.4vw,66px)/1.04 var(--disp);margin:0 0 18px;letter-spacing:-.01em;max-width:15ch}
+.lead{max-width:52ch;color:#B7C3D6;margin:0 0 26px;font-size:16px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px}
+.stats{display:flex;gap:28px;flex-wrap:wrap}
+.stats div{font:600 28px var(--disp)}
+.stats span{display:block;font:400 13px var(--body);color:var(--dim)}
+.prog{margin-top:22px;max-width:320px;font-size:13px;color:var(--dim)}
+.prog i{display:block;height:4px;margin-top:6px;background:var(--line);border-radius:2px;overflow:hidden}
+.prog b{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--u),var(--v),var(--w));transition:width .6s}
+
+.qrc{justify-self:end;width:min(300px,100%);padding:22px;background:rgba(12,18,32,.88);border:1px solid var(--line);border-radius:10px;text-align:center;backdrop-filter:blur(6px)}
+.qrc h2{font:600 17px var(--disp);margin:0 0 4px}
+.qrc p{margin:0 0 14px;font-size:13px;color:var(--dim)}
+.qr{background:#fff;border-radius:6px;padding:10px;aspect-ratio:1}
+.qr svg,.qr img{width:100%;height:100%;display:block}
+.qrc small{display:block;margin:10px 0 14px;font-size:11px;color:var(--dim)}
+.qrc .btn{width:100%;justify-content:center}
+#qrModal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;flex-direction:column;gap:18px;background:rgba(6,10,18,.96);padding:24px}
+#qrModal.on{display:flex}
+#qrModal .qr{width:min(78vmin,620px);padding:3vmin}
+#qrModal p{margin:0;color:var(--dim)}
+
+.pulse{display:block;width:100%;height:36px}
+.pulse path{fill:none;stroke:var(--v);stroke-width:1.5;stroke-dasharray:60 340;animation:flow 4s linear infinite;filter:drop-shadow(0 0 5px var(--v))}
+@keyframes flow{to{stroke-dashoffset:-400}}
+
+/* modul */
+section.blk{padding:44px clamp(16px,4vw,48px) 8px;max-width:1180px;margin:0 auto}
+.blk>h2{font:700 clamp(24px,3vw,34px) var(--disp);margin:0 0 6px}
+.sub{color:var(--dim);margin:0 0 20px;max-width:60ch}
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:30px}
+.chip{padding:8px 16px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--dim);font:500 13px var(--body);transition:all .2s}
+.chip[aria-pressed=true]{border-color:var(--v);color:var(--text);background:rgba(61,220,151,.1)}
+.tools input{flex:1;min-width:200px;max-width:320px;padding:9px 14px;background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--text);font:400 14px var(--body)}
+.grp{display:grid;grid-template-columns:200px 1fr;gap:8px 28px;margin-bottom:34px}
+@media(max-width:760px){.grp{grid-template-columns:1fr}}
+.grp h3{margin:0;font:600 17px var(--disp);padding-left:12px;border-left:3px solid var(--c);align-self:start}
+.grp h3 span{display:block;font:400 12px var(--body);color:var(--dim);margin-top:2px}
+.rows{border-top:1px solid var(--line)}
+.row{--mx:50%;display:grid;grid-template-columns:44px 1fr auto auto;gap:14px;align-items:center;padding:12px 10px;border-bottom:1px solid var(--line);position:relative;transition:opacity .25s,padding .2s,background .2s}
+.row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:0;background:var(--c);transition:width .2s}
+.row:hover,.row:focus-visible{background:linear-gradient(90deg,rgba(255,255,255,.05),transparent);padding-left:18px}
+.row:hover::before{width:3px}
+.no{font:700 20px var(--disp);color:var(--c)}
+.row.done .no::after{content:' ✓';font-size:13px}
+.ti{font-weight:500}
+.dp{display:flex;gap:3px}
+.dp i{width:14px;height:5px;border-radius:2px;background:var(--line)}
+.dp i.f{background:var(--c)}
+.pt{display:flex;gap:4px}
+.pt b{width:20px;height:20px;border-radius:4px;border:1px solid var(--line);font:600 10px/18px var(--disp);text-align:center;color:var(--dim)}
+.pt b.on{border-color:var(--c);color:var(--c)}
+.row.dim{opacity:.22}
+.row.hide,.grp.hide{display:none}
+@media(max-width:520px){.dp{display:none}.row{grid-template-columns:38px 1fr auto}}
+.legend{font-size:12px;color:var(--dim);margin:-14px 0 28px}
+#empty{display:none;color:var(--dim);padding:20px 0}
+
+.res{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:0;border-top:1px solid var(--line)}
+.res a{padding:16px 10px;border-bottom:1px solid var(--line);transition:background .2s}
+.res a:hover{background:rgba(255,255,255,.05)}
+.res strong{display:block;font:600 15px var(--disp)}
+.res span{font-size:13px;color:var(--dim)}
+footer{margin-top:60px;padding:30px clamp(16px,4vw,48px);border-top:1px solid var(--line);color:var(--dim);font-size:13px;text-align:center}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="cur"></div><div class="ring"></div>
+
+<header>
+  <a class="brand" href="#">
+    <svg viewBox="0 0 32 32" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M2 16c3-10 6-10 9 0s6 10 9 0 6-10 9 0" stroke="#FFC857"/><path d="M2 16c3-10 6-10 9 0s6 10 9 0 6-10 9 0" stroke="#3DDC97" transform="translate(4 0)" opacity=".8"/><path d="M2 16c3-10 6-10 9 0s6 10 9 0 6-10 9 0" stroke="#4DA3FF" transform="translate(8 0)" opacity=".7"/></svg>
+    Training EV
+  </a>
+  <nav><a href="#jalur">Jalur belajar</a><a href="#modul">Modul</a><a href="#sumber">Pusat sumber</a></nav>
+  <a class="btn" id="kitTop" target="_blank" rel="noopener">Konsol kit</a>
+</header>
+
+<section class="hero">
+  <canvas id="wave" aria-hidden="true"></canvas>
+  <div>
+    <h1>Dari dasar listrik sampai setting controller</h1>
+    <p class="lead">Kendaraan listrik roda empat, roda dua, dan personal transporter. Belajar lewat simulasi, kuis, video, dan kit praktik yang bisa dicolok sendiri.</p>
+    <div class="cta">
+      <a class="btn pri" href="#modul">Mulai belajar</a>
+      <a class="btn" id="kitBtn" target="_blank" rel="noopener">Buka konsol kit</a>
+    </div>
+    <div class="stats">
+      <div>30<span>modul</span></div>
+      <div>6<span>lab kit</span></div>
+      <div>3<span>jalur belajar</span></div>
+    </div>
+    <div class="prog" id="prog">Progres: <span id="progTxt">0 dari 30 modul</span><i><b id="progBar"></b></i></div>
+  </div>
+  <aside class="qrc">
+    <h2>Buka bersama</h2>
+    <p>Scan untuk membuka materi di HP Anda.</p>
+    <div class="qr" id="qrBox"></div>
+    <small>QR contoh. Ganti dengan berkas assets/qr.png</small>
+    <button class="btn" id="qrBig">Perbesar QR</button>
+  </aside>
+</section>
+<svg class="pulse" viewBox="0 0 1200 36" preserveAspectRatio="none" aria-hidden="true"><path d="M0 18H430l14-12 14 24 14-12H1200"/></svg>
+
+<section class="blk" id="jalur">
+  <h2>Pilih jalur belajar</h2>
+  <p class="sub">Semua jalur memakai materi yang sama. Jalur hanya menandai modul yang paling berguna untuk Anda.</p>
+  <div class="tools">
+    <button class="chip" data-p="" aria-pressed="true">Semua</button>
+    <button class="chip" data-p="a" aria-pressed="false">Awam</button>
+    <button class="chip" data-p="b" aria-pressed="false">Bengkel</button>
+    <button class="chip" data-p="h" aria-pressed="false">Hobi dan teknis</button>
+    <input id="q" type="search" placeholder="Cari modul, misalnya BMS" aria-label="Cari modul">
+  </div>
+</section>
+
+<section class="blk" id="modul" style="padding-top:0">
+  <h2>Modul pembelajaran</h2>
+  <p class="legend">Huruf A, B, H menandai jalur yang disarankan. Garis kecil menunjukkan kedalaman: satu ringkas, dua sedang, tiga mendalam.</p>
+  <div id="list"></div>
+  <p id="empty">Tidak ada modul yang cocok. Coba kata kunci lain.</p>
+</section>
+
+<section class="blk" id="sumber">
+  <h2>Pusat sumber</h2>
+  <p class="sub">Alat bantu belajar yang bisa dibuka kapan saja.</p>
+  <div class="res" id="res"></div>
+</section>
+
+<footer>Materi training teknologi kendaraan listrik. Gambar dan video memakai lisensi yang dicantumkan di halaman Kredit.</footer>
+
+<div id="qrModal" role="dialog" aria-label="QR code"><div class="qr" id="qrBig2"></div><p>Ketuk di mana saja atau tekan Esc untuk menutup</p></div>
+
+<script>
+// ===== PENGATURAN: ubah di sini =====
+const KIT_URL = '#';              // alamat konsol kit online Anda
+const QR_IMAGE = 'assets/qr.png'; // ganti berkas ini dengan QR sungguhan
+
+// ===== DATA MODUL: [kelompok, kode, judul, kedalaman 1-3, jalur] =====
+const GROUPS = {
+  p:['Pengantar','Sejarah dan latar belakang','#4DA3FF'],
+  f:['Fondasi kelistrikan','Dasar, alat ukur, komponen','#FFC857'],
+  k:['Jenis kendaraan','Roda empat sampai transporter','#3DDC97'],
+  r:['R2 mendalam','Bagian demi bagian motor listrik','#4DA3FF'],
+  l:['Blok kit','Praktik dengan kit simulasi','#3DDC97'],
+  d:['Diagnosa dan lanjutan','Mencari dan memperbaiki gangguan','#FF6B8B'],
+  x:['Praktik','Setting dan uji pada motor','#FFC857'],
+  w:['Wawasan','Regulasi, biaya, masa depan','#4DA3FF'],
+  e:['Penutup','Ujian dan studi kasus','#3DDC97']
+};
+const M = [
+['p','01','Sejarah Kendaraan Listrik Dunia',2,'abh'],
+['p','02','Sejarah Kendaraan Listrik di Indonesia',2,'abh'],
+['f','03','Dasar Kelistrikan',3,'abh'],
+['f','04','Keselamatan Kelistrikan dan K3 Bengkel EV',3,'abh'],
+['f','05','Pengenalan Alat Ukur',3,'bh'],
+['f','06','Komponen Elektronik dan Kelistrikan',3,'bh'],
+['f','07','Semikonduktor dan Pengendali Daya',2,'h'],
+['f','08','Mekanika dan Performa Kendaraan',2,'ah'],
+['k','09','Mobil Listrik: Jenis dan Anatomi',3,'abh'],
+['k','10','Pengisian Daya Mobil Listrik',2,'abh'],
+['k','11','Kendaraan Komersial',1,'a'],
+['k','12','Personal Transporter',2,'ah'],
+['k','13','Motor Listrik R2: Gambaran Umum',2,'abh'],
+['r','14','Baterai',3,'abh'],
+['r','15','BMS',3,'bh'],
+['r','16','Motor BLDC',3,'bh'],
+['r','17','Charger, Throttle, Rem Regen, Instrumen',2,'bh'],
+['r','18','Sistem 12 V dan DC-DC Converter',2,'b'],
+['r','19','Komunikasi Data: CAN, UART, Bluetooth',2,'h'],
+['r','20','Kabel, Konektor, dan Wiring',2,'bh'],
+['r','21','Controller (Votol)',3,'bh'],
+['l','L1','Lab 1: Merakit R2 dan Tes Jalan',2,'abh'],
+['l','L2','Lab 2: Baterai dan Charging',2,'abh'],
+['l','L3','Lab 3: Proteksi dan Keselamatan',2,'abh'],
+['l','L4','Lab 4: Mode Kecepatan dan Parameter',2,'bh'],
+['l','L5','Lab 5: Gladi Votol',2,'bh'],
+['d','22','Diagnosa dan Troubleshooting',3,'bh'],
+['d','L6','Lab 6: Bengkel Diagnosa (DTC)',3,'bh'],
+['d','23','Konversi Motor BBM ke Listrik',2,'bh'],
+['x','24','Praktik Setting Votol',3,'bh'],
+['x','25','Uji Jalan dan Data Log',3,'bh'],
+['w','26','Regulasi dan Legalitas di Indonesia',1,'abh'],
+['w','27','Ekosistem EV Indonesia',1,'a'],
+['w','28','Biaya Kepemilikan dibanding BBM',1,'a'],
+['w','29','Daur Ulang dan Teknologi Masa Depan',1,'ah'],
+['e','30','Evaluasi Akhir dan Studi Kasus',2,'abh']
+];
+const RES = [
+['Pre-test','Ukur level awal Anda','pretest.html'],
+['Post-test','Cek hasil belajar','posttest.html'],
+['Glosarium','Istilah dan singkatan','glosarium.html'],
+['Kartu ringkas','Rumus dan batas aman','kartu.html'],
+['Mitos atau fakta','Kuis cepat seputar EV','mitos.html'],
+['Galeri kerusakan','Kasus nyata dan penyebabnya','galeri.html'],
+['Tantangan tim','Papan skor dan lencana','tantangan.html'],
+['Standar dan rujukan','SNI, UN R100, ISO, IEC','standar.html'],
+['Karier teknisi EV','Kompetensi dan sertifikasi','karier.html'],
+['Panduan penyelenggara','Alat, bahan, briefing','penyelenggara.html'],
+['Umpan balik','Beri masukan untuk training','umpanbalik.html'],
+['Kredit dan lisensi','Sumber gambar dan video','kredit.html']
+];
+const DEPTH = ['','Ringkas','Sedang','Mendalam'];
+const PNAME = {a:'Awam',b:'Bengkel',h:'Hobi dan teknis'};
+
+// ===== tautan kit =====
+['kitTop','kitBtn'].forEach(id=>document.getElementById(id).href=KIT_URL);
+
+// ===== progres tersimpan di perangkat =====
+let done=[]; try{done=JSON.parse(localStorage.getItem('evDone')||'[]')}catch(e){}
+
+// ===== bangun daftar modul =====
+const list=document.getElementById('list');
+Object.keys(GROUPS).forEach(g=>{
+  const items=M.filter(m=>m[0]===g), G=GROUPS[g];
+  const el=document.createElement('div'); el.className='grp'; el.style.setProperty('--c',G[2]);
+  el.innerHTML=`<h3>${G[0]}<span>${G[1]}</span></h3><div class="rows">${items.map(m=>{
+    const href=m[1][0]==='L'?`lab-${m[1][1]}.html`:`modul-${m[1]}.html`;
+    const dots=[1,2,3].map(i=>`<i class="${i<=m[3]?'f':''}"></i>`).join('');
+    const pts=['a','b','h'].map(p=>`<b class="${m[4].includes(p)?'on':''}" title="${PNAME[p]}">${p.toUpperCase()}</b>`).join('');
+    return `<a class="row${done.includes(m[1])?' done':''}" href="${href}" data-p="${m[4]}" data-s="${(m[1]+' '+m[2]).toLowerCase()}"><span class="no">${m[1]}</span><span class="ti">${m[2]}</span><span class="dp" role="img" aria-label="${DEPTH[m[3]]}" title="${DEPTH[m[3]]}">${dots}</span><span class="pt">${pts}</span></a>`;
+  }).join('')}</div>`;
+  list.appendChild(el);
+});
+document.getElementById('res').innerHTML=RES.map(r=>`<a href="${r[2]}"><strong>${r[0]}</strong><span>${r[1]}</span></a>`).join('');
+
+const nDone=done.filter(c=>/^\d+$/.test(c)).length;
+document.getElementById('progTxt').textContent=`${nDone} dari 30 modul`;
+requestAnimationFrame(()=>document.getElementById('progBar').style.width=(nDone/30*100)+'%');
+
+// ===== filter jalur dan pencarian =====
+let path='', term='';
+function applyFilter(){
+  let shown=0;
+  document.querySelectorAll('.row').forEach(r=>{
+    const match=r.dataset.s.includes(term);
+    r.classList.toggle('hide',!match);
+    r.classList.toggle('dim',match&&path&&!r.dataset.p.includes(path));
+    if(match)shown++;
+  });
+  document.querySelectorAll('.grp').forEach(g=>g.classList.toggle('hide',!g.querySelector('.row:not(.hide)')));
+  document.getElementById('empty').style.display=shown?'none':'block';
+}
+document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{
+  document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===c));
+  path=c.dataset.p; applyFilter();
+}));
+document.getElementById('q').addEventListener('input',e=>{term=e.target.value.trim().toLowerCase();applyFilter()});
+
+// ===== QR dummy (diganti otomatis bila assets/qr.png ada) =====
+function dummyQR(){
+  const n=25, cells=[]; let s=7;
+  const rnd=()=>(s=(s*16807)%2147483647)/2147483647;
+  const finder=(x,y)=>(x<8&&y<8)||(x>n-9&&y<8)||(x<8&&y>n-9);
+  for(let y=0;y<n;y++)for(let x=0;x<n;x++){
+    if(finder(x,y)){
+      const fx=x<8?x:x-(n-8), fy=y<8?y:y-(n-8);
+      const ring=Math.max(Math.abs(fx-3),Math.abs(fy-3));
+      if(ring<=3&&ring!==2&&fx<7&&fy<7)cells.push([x,y]);
+    }else if(rnd()>.52)cells.push([x,y]);
+  }
+  return `<svg viewBox="0 0 ${n} ${n}" shape-rendering="crispEdges" role="img" aria-label="QR contoh"><rect width="${n}" height="${n}" fill="#fff"/>${cells.map(c=>`<rect x="${c[0]}" y="${c[1]}" width="1" height="1" fill="#0A0F1A"/>`).join('')}</svg>`;
+}
+const qrA=document.getElementById('qrBox'), qrB=document.getElementById('qrBig2');
+qrA.innerHTML=qrB.innerHTML=dummyQR();
+const probe=new Image();
+probe.onload=()=>{qrA.innerHTML=qrB.innerHTML=`<img src="${QR_IMAGE}" alt="QR code materi">`};
+probe.src=QR_IMAGE;
+const modal=document.getElementById('qrModal');
+document.getElementById('qrBig').onclick=()=>modal.classList.add('on');
+modal.onclick=()=>modal.classList.remove('on');
+addEventListener('keydown',e=>{if(e.key==='Escape')modal.classList.remove('on')});
+
+// ===== kursor =====
+const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const fine=matchMedia('(pointer:fine)').matches;
+let mx=innerWidth/2, my=innerHeight/2;
+addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY});
+if(fine&&!reduce){
+  document.documentElement.classList.add('fine');
+  const cur=document.querySelector('.cur'), ring=document.querySelector('.ring');
+  let rx=mx, ry=my;
+  cur.style.opacity=ring.style.opacity=1;
+  (function loop(){
+    rx+=(mx-rx)*.16; ry+=(my-ry)*.16;
+    cur.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;
+    ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+    requestAnimationFrame(loop);
+  })();
+  document.addEventListener('pointerover',e=>ring.classList.toggle('hot',!!e.target.closest('a,button,input')));
+  addEventListener('pointerdown',()=>ring.classList.add('down'));
+  addEventListener('pointerup',()=>ring.classList.remove('down'));
+}
+
+// ===== tiga fasa: gerak kursor = putaran gas =====
+const cv=document.getElementById('wave'), ctx=cv.getContext('2d');
+const COL=['#FFC857','#3DDC97','#4DA3FF'];
+let W,H,t=0,speed=1,amp=.5,reveal=reduce?1:0;
+function size(){const r=cv.getBoundingClientRect(),d=Math.min(2,devicePixelRatio||1);W=cv.width=r.width*d;H=cv.height=r.height*d;ctx.setTransform(d,0,0,d,0,0);W=r.width;H=r.height}
+size(); addEventListener('resize',size);
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  const r=cv.getBoundingClientRect();
+  const tx=Math.min(1,Math.max(0,(mx-r.left)/W)), ty=Math.min(1,Math.max(0,(my-r.top)/H));
+  speed+=((.6+tx*3.2)-speed)*.05; amp+=((.35+(1-ty)*.65)-amp)*.05;
+  if(!reduce)t+=.012*speed;
+  reveal=Math.min(1,reveal+.012);
+  const ease=1-Math.pow(1-reveal,3), lim=W*ease, base=H*.62;
+  COL.forEach((c,i)=>{
+    ctx.beginPath();
+    for(let x=0;x<=lim;x+=4){
+      const y=base+Math.sin(x*.009+t-i*2.0944)*H*.16*amp*(.6+.4*Math.sin(x*.002+i));
+      x?ctx.lineTo(x,y):ctx.moveTo(x,y);
+    }
+    ctx.strokeStyle=c;ctx.lineWidth=2;ctx.globalAlpha=.55;ctx.shadowColor=c;ctx.shadowBlur=12;ctx.stroke();
+  });
+  ctx.globalAlpha=1;ctx.shadowBlur=0;
+  if(!reduce)requestAnimationFrame(draw);
+}
+draw();
+</script>
+</body>
+</html>

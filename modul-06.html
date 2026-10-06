@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>06 Komponen Elektronik dan Kelistrikan | Training EV</title>
+<script src="assets/tema.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#060A12;--panel:#0C1220;--line:#1B2740;--text:#E6ECF5;--dim:#8593AA;--u:#FFC857;--v:#3DDC97;--w:#4DA3FF;--alert:#FF6B8B;--disp:'Chakra Petch',system-ui,sans-serif;--body:'Sora',system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font:400 16px/1.7 var(--body)}
+main{max-width:900px;margin:0 auto;padding:40px clamp(16px,4vw,32px) 0}
+h1{font:700 clamp(28px,4vw,44px)/1.1 var(--disp);margin:0 0 8px}
+h2{font:700 24px var(--disp);margin:48px 0 6px}
+.lead{color:var(--dim);margin:0 0 20px}
+.no{font:700 15px var(--disp);color:var(--v)}
+.goal{margin:0 0 8px;padding:14px 18px 14px 36px;border:1px solid var(--line);border-left:3px solid var(--v);border-radius:6px;background:var(--panel)}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px}
+.note{border-left:3px solid var(--alert);padding:10px 16px;background:color-mix(in srgb,var(--alert) 9%,transparent);border-radius:0 6px 6px 0;margin:16px 0}
+.note b{color:var(--alert)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.chip{padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--dim);font:500 13px var(--body);cursor:pointer}
+.chip[aria-pressed=true]{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
+#cp{display:grid;grid-template-columns:110px 1fr;gap:18px;align-items:start}
+#cp svg{width:110px;height:56px;fill:none;stroke:var(--v);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
+#cp h3{font:600 20px var(--disp);margin:0 0 6px}
+#cp p{margin:6px 0}
+#cp .k{color:var(--u);font:600 12px var(--disp)}
+@media(max-width:560px){#cp{grid-template-columns:1fr}}
+.ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px 22px;margin:14px 0}
+.ctl label{display:block;font-size:13px;color:var(--dim)}
+.ctl b{color:var(--text);font-family:var(--disp)}
+.ctl input[type=range]{width:100%;accent-color:var(--v)}
+.ctl select{width:100%;padding:6px;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:6px}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:14px 0}
+.out div{padding:10px 12px;border:1px solid var(--line);border-radius:6px}
+.out span{display:block;font-size:12px;color:var(--dim)}
+.out strong{font:700 20px var(--disp)}
+.bar{position:relative;height:26px;background:var(--ink);border:1px solid var(--line);border-radius:5px;margin:8px 0;overflow:hidden}
+.bar i{position:absolute;left:0;top:0;bottom:0;background:var(--w);transition:width .15s}
+.bar span{position:relative;z-index:1;font-size:12px;padding:0 8px;line-height:24px}
+.bar u{position:absolute;top:0;bottom:0;width:2px;background:var(--u)}
+.verdict{padding:10px 14px;border-radius:6px;border:1px solid var(--line);margin-top:10px;font-size:14px}
+.ok{border-color:var(--v);color:var(--v)}.warn{border-color:var(--u);color:var(--u)}.bad{border-color:var(--alert);color:var(--alert)}
+canvas{width:100%;height:220px;display:block;background:var(--ink);border:1px solid var(--line);border-radius:6px}
+.vid{aspect-ratio:16/9;display:grid;place-items:center;border:1px dashed var(--dim);border-radius:8px;color:var(--dim);text-align:center;padding:16px}
+.vid iframe{width:100%;height:100%;border:0;border-radius:8px}
+.rec li{margin:6px 0}
+.q{margin:18px 0}
+.q h4{margin:0 0 8px;font:600 16px var(--body)}
+.q button{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--text);font:inherit;cursor:pointer}
+.q button:hover:not(:disabled){border-color:var(--v)}
+.q button.right{border-color:var(--v);background:color-mix(in srgb,var(--v) 14%,transparent)}
+.q button.wrong{border-color:var(--alert);background:color-mix(in srgb,var(--alert) 12%,transparent)}
+.why{font-size:14px;color:var(--dim);margin:6px 0 0}
+.nav{display:flex;justify-content:space-between;gap:12px;margin-top:44px;padding-top:20px;border-top:1px solid var(--line)}
+.nav a,.nav button{padding:10px 18px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);font:600 14px var(--disp);text-decoration:none;cursor:pointer}
+.nav button{background:var(--v);border-color:var(--v);color:var(--ink)}
+.nav button[disabled]{background:var(--panel);color:var(--v)}
+</style>
+</head>
+<body data-kode="06">
+<div id="site-header"></div>
+
+<main>
+  <div class="no">Modul 06 &nbsp;|&nbsp; Fondasi kelistrikan</div>
+  <h1>Komponen Elektronik dan Kelistrikan</h1>
+  <p class="lead">Kenali komponen yang paling sering ditemui di motor dan mobil listrik: fungsinya, di mana letaknya, dan cara mengeceknya.</p>
+
+  <ul class="goal">
+    <li>Menyebutkan fungsi resistor, kapasitor, dioda, saklar, relay, kontaktor, sekering/MCB, shunt, dan sensor.</li>
+    <li>Menghitung pembagi tegangan dan memahami efek beban.</li>
+    <li>Menjelaskan mengapa pre-charge diperlukan dan mengapa MCB AC tidak boleh dipakai di DC.</li>
+  </ul>
+
+  <h2>1. Peta komponen</h2>
+  <p class="lead">Pilih komponen, lalu atur kedalaman penjelasan sesuai kebutuhan Anda.</p>
+  <div class="chips" id="lv" role="group" aria-label="Kedalaman"></div>
+  <div class="chips" id="tabs" role="group" aria-label="Komponen"></div>
+  <div class="box" id="cp"></div>
+
+  <h2>2. Simulasi pembagi tegangan</h2>
+  <p class="lead">Dua resistor membagi tegangan. Cara ini dipakai untuk "mengecilkan" tegangan baterai agar bisa dibaca mikrokontroler yang hanya tahan 3,3 V.</p>
+  <div class="box">
+    <div class="ctl">
+      <label>Tegangan baterai (Vin): <b id="vinT"></b><input type="range" id="vin" min="12" max="100" step="1" value="72"></label>
+      <label>R1: <b id="r1T"></b><input type="range" id="r1" min="1" max="200" step="1" value="68"></label>
+      <label>R2: <b id="r2T"></b><input type="range" id="r2" min="1" max="50" step=".5" value="3"></label>
+      <label>Beban di Vout (input ADC)<select id="rl"><option value="0">Tidak ada beban</option><option value="100">100 kΩ</option><option value="10">10 kΩ</option></select></label>
+    </div>
+    <div class="out"><div><span>Vout</span><strong id="vo"></strong></div><div><span>Arus</span><strong id="io"></strong></div><div><span>Panas di R1</span><strong id="po"></strong></div></div>
+    <div class="bar"><i id="vb"></i><u id="vm" title="Batas 3,3 V"></u><span>Vout dibanding Vin (garis kuning = batas 3,3 V)</span></div>
+    <div class="verdict" id="vd"></div>
+    <p class="why">Rumus: Vout = Vin × R2 ÷ (R1 + R2). Beban dipasang paralel dengan R2, sehingga Vout turun.</p>
+  </div>
+
+  <h2>3. Simulasi pre-charge kapasitor</h2>
+  <p class="lead">Kapasitor di dalam controller kosong saat baterai dihubungkan. Tanpa hambatan, arus awalnya sangat besar.</p>
+  <div class="box">
+    <div class="ctl">
+      <label>Tegangan baterai: <b id="pvT"></b><input type="range" id="pv" min="24" max="96" step="1" value="72"></label>
+      <label>Kapasitor DC-link: <b id="pcT"></b><input type="range" id="pc" min="100" max="4700" step="100" value="1000"></label>
+      <label>Hambatan pengisian<select id="pr"><option value="0.05">Tanpa pre-charge (kabel saja, 0,05 Ω)</option><option value="10">Pre-charge 10 Ω</option><option value="47" selected>Pre-charge 47 Ω</option><option value="100">Pre-charge 100 Ω</option></select></label>
+    </div>
+    <canvas id="cap" aria-label="Grafik tegangan kapasitor dan arus terhadap waktu"></canvas>
+    <div class="out"><div><span>Arus puncak</span><strong id="ip"></strong></div><div><span>Waktu isi penuh (±95%)</span><strong id="tp"></strong></div><div><span>Konstanta waktu (τ = R×C)</span><strong id="tau"></strong></div></div>
+    <div class="verdict" id="pd"></div>
+    <p class="why">Garis hijau: tegangan kapasitor. Garis kuning: arus. Keduanya digambar sampai 5τ.</p>
+  </div>
+
+  <h2>4. Video pendukung</h2>
+  <div class="vid" id="vid">Video belum dipilih. Isi VIDEO_ID di bagian skrip halaman ini dengan ID video YouTube yang relevan.</div>
+
+  <h2>5. Yang perlu diingat</h2>
+  <ul class="rec">
+    <li>Resistor membatasi arus; dua resistor bisa menjadi pembagi tegangan, tetapi beban mengubah hasilnya.</li>
+    <li>Kapasitor bisa tetap bermuatan setelah baterai dilepas. Kosongkan dulu sebelum menyentuh.</li>
+    <li>Rangkaian baterai DC butuh sekering atau MCB yang berperingkat DC.</li>
+    <li>Tegangan tinggi masuk lewat pre-charge dulu, baru kontaktor utama menutup.</li>
+  </ul>
+
+  <h2>6. Kuis</h2>
+  <div id="quiz"></div>
+  <div class="verdict" id="score" hidden></div>
+
+  <div class="nav">
+    <a href="modul-05.html">Sebelumnya: 05</a>
+    <a href="index.html#modul">Daftar modul</a>
+    <button id="doneBtn">Tandai selesai</button>
+    <a href="modul-07.html">Berikutnya: 07</a>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script>
+const VIDEO_ID = '';   // contoh: 'dQw4w9WgXcQ' (hanya ID, bukan alamat lengkap)
+
+// ----- layout bersama dan progres -----
+fetch('assets/layout.html').then(r=>{if(!r.ok)throw 0;return r.text()}).then(h=>{
+  const d=new DOMParser().parseFromString(h,'text/html');
+  document.head.append(...d.querySelectorAll('style'));
+  document.getElementById('site-header').replaceWith(d.querySelector('header'));
+  document.getElementById('site-footer').replaceWith(d.querySelector('footer'));
+}).catch(()=>{document.getElementById('site-header').textContent='Training EV'});
+const kode=document.body.dataset.kode, btn=document.getElementById('doneBtn');
+let done=[]; try{done=JSON.parse(localStorage.getItem('evDone')||'[]')}catch(e){}
+const mark=()=>{btn.textContent='Selesai ✓';btn.disabled=true};
+if(done.includes(kode))mark();
+btn.onclick=()=>{if(!done.includes(kode))done.push(kode);try{localStorage.setItem('evDone',JSON.stringify(done))}catch(e){}mark()};
+if(VIDEO_ID)document.getElementById('vid').innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${VIDEO_ID}" title="Video pendukung" allowfullscreen loading="lazy"></iframe>`;
+
+// ----- peta komponen -----
+const S={ // simbol
+ res:'<path d="M2 28h14l4-12 8 24 8-24 8 24 4-12h14"/>',
+ cap:'<path d="M2 28h38M40 10v36M52 10v36M52 28h56"/>',
+ dio:'<path d="M2 28h34M36 10v36l26-18zM62 10v36M62 28h46"/>',
+ sw:'<path d="M2 38h30M32 38l44-22M76 38h32"/><circle cx="32" cy="38" r="3"/><circle cx="76" cy="38" r="3"/>',
+ con:'<path d="M2 38h30M32 38l44-22M76 38h32"/><circle cx="55" cy="14" r="8"/>',
+ fus:'<path d="M2 28h20M22 16h66v24H22zM88 28h20M22 28h66"/>',
+ shu:'<path d="M2 28h24M26 18h58v20H26zM84 28h24M40 18v-10M70 18v-10"/>',
+ sen:'<path d="M2 28h20M22 12h66v32H22zM88 28h20M40 36l10-16 10 16 10-16"/>'
+};
+const K=[
+['Resistor','res','Membatasi arus dan mengubah sebagian energi menjadi panas.','Pre-charge resistor, pembagi tegangan untuk sensor, resistor pengosong (bleeder).','Ukur dalam ohm saat rangkaian MATI. Nilai jauh dari tulisan, atau gosong, berarti rusak.','Daya P = I² × R. Untuk pre-charge, pilih jenis yang tahan lonjakan sesaat (pulse rating), bukan hanya watt terus-menerus.'],
+['Kapasitor','cap','Menyimpan muatan listrik dan menghaluskan tegangan.','Kapasitor DC-link di controller, filter di charger dan DC-DC.','Bisa tetap bermuatan setelah baterai dilepas. Kosongkan lewat resistor, lalu ukur tegangannya sampai mendekati 0 V.','Perhatikan tegangan kerja (beri margin di atas tegangan baterai), ESR, dan arus riak. Kapasitor elektrolit punya polaritas.'],
+['Dioda','dio','Mengalirkan arus ke satu arah saja.','Pelindung salah polaritas, peredam lonjakan di koil relay/kontaktor (flyback), penyearah di charger.','Dengan mode dioda di multimeter: sekitar 0,5–0,7 V di satu arah, tidak terbaca di arah sebaliknya.','Dioda Schottky jatuh tegangannya lebih kecil (±0,3 V) daripada dioda silikon (±0,7 V). Panas = Vf × I.'],
+['Saklar dan relay','sw','Saklar memutus atau menyambung manual. Relay memakai koil kecil untuk menggerakkan kontak.','Kunci kontak, saklar rem, sensor standar samping, relay lampu dan klakson.','Dengar bunyi klik, ukur hambatan kontak (harus hampir 0 Ω saat tertutup), dan cek tegangan koil.','Peringkat kontak untuk AC dan DC berbeda; DC lebih sulit dipadamkan. Koil relay butuh dioda flyback agar lonjakan tidak merusak pengendalinya.'],
+['Kontaktor','con','Relay untuk arus besar, dipakai sebagai pemutus utama baterai.','Memutus dan menyambung baterai ke controller di mobil dan motor bertegangan tinggi.','Kontak bisa menempel (welded) sehingga tidak mau putus. Cek bunyi klik, tegangan koil, dan kontaktor kontak.','Urutan aman: tutup jalur pre-charge, tunggu tegangan kapasitor sekitar 95%, tutup kontaktor utama, lalu buka jalur pre-charge.'],
+['Sekering dan MCB','fus','Putus sendiri bila arus melebihi batas, melindungi kabel dan komponen.','Pelindung baterai, charger, DC-DC, dan sirkuit 12 V.','Cek kontinuitas dengan multimeter. Jangan ganti dengan nilai lebih besar hanya agar tidak putus.','Wajib berperingkat DC pada tegangan baterai. Perhatikan juga kurva waktu-arus dan kemampuan putus (breaking capacity).'],
+['Shunt','shu','Resistor sangat kecil (miliohm) untuk mengukur arus lewat tegangan jatuhnya: V = I × R.','Pembacaan arus di BMS, controller, dan amperemeter.','Ukur tegangan jatuhnya (mV) saat dialiri arus, lalu bandingkan dengan nilai yang tertulis.','Shunt 100 A / 75 mV berarti 0,75 mΩ. Pembacaan paling akurat memakai sambungan empat kawat (Kelvin).'],
+['Sensor Hall dan NTC','sen','Hall membaca medan magnet (posisi, gas, arus). NTC membaca suhu: hambatannya turun saat panas.','Tiga sensor Hall di motor BLDC, throttle, sensor suhu baterai, motor, dan controller.','Hall: cek suplai 5 V dan sinyal yang berubah saat poros diputar. NTC: ukur hambatan dan bandingkan dengan suhu.','Hall open-collector butuh resistor pull-up. NTC 10 kΩ pada 25 °C dibaca lewat pembagi tegangan, seperti simulasi di bawah.']
+];
+const LV=['Dasar','Menengah','Dalam']; let lv=1, cur=0;
+const lvEl=document.getElementById('lv'), tabEl=document.getElementById('tabs'), cp=document.getElementById('cp');
+function showCp(){
+  const k=K[cur];
+  cp.innerHTML=`<svg viewBox="0 0 110 56" aria-hidden="true">${S[k[1]]}</svg><div><h3>${k[0]}</h3><p>${k[2]}</p><p><span class="k">DI EV: </span>${k[3]}</p>${lv>=1?`<p><span class="k">CARA CEK: </span>${k[4]}</p>`:''}${lv>=2?`<p><span class="k">LEBIH DALAM: </span>${k[5]}</p>`:''}</div>`;
+  lvEl.innerHTML=LV.map((n,i)=>`<button class="chip" aria-pressed="${i===lv}" data-i="${i}">${n}</button>`).join('');
+  tabEl.innerHTML=K.map((x,i)=>`<button class="chip" aria-pressed="${i===cur}" data-i="${i}">${x[0]}</button>`).join('');
+}
+lvEl.onclick=e=>{const b=e.target.closest('button');if(b){lv=+b.dataset.i;showCp()}};
+tabEl.onclick=e=>{const b=e.target.closest('button');if(b){cur=+b.dataset.i;showCp()}};
+showCp();
+cp.insertAdjacentHTML('afterend','<div class="note"><b>MCB AC tidak boleh dipakai di baterai DC.</b> Arus AC melewati titik nol puluhan kali per detik sehingga busur api padam sendiri. Arus DC tidak, sehingga busur bisa bertahan dan membakar.</div>');
+
+// ----- simulasi pembagi tegangan -----
+const $=id=>document.getElementById(id);
+function div(){
+  const vin=+$('vin').value, r1=+$('r1').value, r2=+$('r2').value, rl=+$('rl').value;
+  const r2e=rl?r2*rl/(r2+rl):r2, vo=vin*r2e/(r1+r2e), i=vin/(r1+r2e), p=i*i*r1;
+  $('vinT').textContent=vin+' V'; $('r1T').textContent=r1+' kΩ'; $('r2T').textContent=r2+' kΩ';
+  $('vo').textContent=vo.toFixed(2)+' V'; $('io').textContent=i.toFixed(2)+' mA'; $('po').textContent=p.toFixed(1)+' mW';
+  $('vb').style.width=(vo/vin*100)+'%'; $('vm').style.left=Math.min(100,3.3/vin*100)+'%';
+  const v=$('vd');
+  if(vo>3.3){v.className='verdict bad';v.textContent=`Vout ${vo.toFixed(2)} V melebihi 3,3 V. Input mikrokontroler bisa rusak. Perbesar R1 atau kecilkan R2.`}
+  else if(vo<.3){v.className='verdict warn';v.textContent='Vout terlalu kecil. Pembacaan jadi kurang teliti. Perbesar R2 atau kecilkan R1.'}
+  else{v.className='verdict ok';v.textContent=`Aman untuk ADC 3,3 V. Hasil baca dikalikan ${(vin/vo).toFixed(1)} untuk mendapat tegangan baterai.`}
+}
+['vin','r1','r2','rl'].forEach(id=>$(id).addEventListener('input',div)); div();
+
+// ----- simulasi pre-charge -----
+const cv=$('cap'), cx=cv.getContext('2d');
+const fmt=(s)=>s<1e-3?(s*1e6).toFixed(0)+' µs':s<1?(s*1e3).toFixed(1)+' ms':s.toFixed(2)+' s';
+function pre(){
+  const V=+$('pv').value, C=+$('pc').value, R=+$('pr').value, tau=R*C*1e-6, ip=V/R;
+  $('pvT').textContent=V+' V'; $('pcT').textContent=C+' µF';
+  $('ip').textContent=ip<10?ip.toFixed(1)+' A':Math.round(ip)+' A'; $('tp').textContent=fmt(3*tau); $('tau').textContent=fmt(tau);
+  const d=$('pd');
+  if(ip>300){d.className='verdict bad';d.textContent='Lonjakan arus sangat besar. Kontak kontaktor bisa terbakar atau menempel, dan sekering bisa putus.'}
+  else if(ip>40){d.className='verdict warn';d.textContent='Arus masih cukup besar. Naikkan hambatan pre-charge atau pastikan komponen tahan lonjakan.'}
+  else{d.className='verdict ok';d.textContent='Aman. Kapasitor terisi perlahan, lalu kontaktor utama boleh ditutup.'}
+  const d2=Math.min(2,devicePixelRatio||1),w=cv.clientWidth,h=cv.clientHeight; cv.width=w*d2; cv.height=h*d2; cx.setTransform(d2,0,0,d2,0,0);
+  const st=getComputedStyle(document.documentElement), g=st.getPropertyValue('--v').trim(), y=st.getPropertyValue('--u').trim(), ln=st.getPropertyValue('--line').trim(), tx=st.getPropertyValue('--dim').trim();
+  cx.clearRect(0,0,w,h); cx.strokeStyle=ln; cx.lineWidth=1;
+  for(let k=1;k<5;k++){cx.beginPath();cx.moveTo(k*w/5,0);cx.lineTo(k*w/5,h-18);cx.stroke()}
+  const draw=(f,c)=>{cx.beginPath();for(let x=0;x<=w;x+=2){const t=x/w*5,yv=(h-26)*(1-f(t))+4;x?cx.lineTo(x,yv):cx.moveTo(x,yv)}cx.strokeStyle=c;cx.lineWidth=2.2;cx.stroke()};
+  draw(t=>1-Math.exp(-t),g); draw(t=>Math.exp(-t),y);
+  cx.fillStyle=tx; cx.font='11px sans-serif'; for(let k=0;k<=5;k++)cx.fillText(k?k+'τ':'0',Math.min(w-16,k*w/5+3),h-4);
+}
+['pv','pc','pr'].forEach(id=>$(id).addEventListener('input',pre)); addEventListener('resize',pre); pre();
+
+// ----- kuis -----
+const Q=[
+['Vin 48 V, R1 = R2 = 10 kΩ, tanpa beban. Berapa Vout?',['12 V','24 V','48 V'],1,'Dua resistor sama membagi dua. 48 × 10 ÷ 20 = 24 V.'],
+['Untuk apa resistor pre-charge dipasang?',['Menaikkan tegangan baterai','Membatasi arus saat kapasitor controller terisi','Mendinginkan motor'],1,'Kapasitor kosong menarik arus sangat besar. Resistor membatasinya agar kontaktor dan sekering aman.'],
+['MCB rumah (AC) dipasang di baterai 72 V DC. Apa risikonya?',['Tidak ada, sama saja','Busur api DC tidak padam sendiri sehingga bisa terbakar','Baterai terisi lebih cepat'],1,'Arus DC tidak melewati titik nol, jadi busur bertahan. Pakai komponen berperingkat DC.'],
+['Shunt mengukur arus dengan cara...',['Membaca tegangan jatuh kecil di hambatan miliohm','Menghitung putaran motor','Mengukur suhu kabel'],0,'V = I × R. Karena R diketahui, arus didapat dari tegangan jatuh.'],
+['Setelah baterai dilepas, apa yang harus diwaspadai pada controller?',['Tidak ada yang tersisa','Kapasitor masih bisa menyimpan muatan','Dioda berubah jadi saklar'],1,'Kapasitor DC-link bisa tetap bertegangan. Kosongkan dan ukur dulu sebelum menyentuh.']
+];
+let sc=0, ans=0;
+$('quiz').innerHTML=Q.map((q,i)=>`<div class="q" data-i="${i}"><h4>${i+1}. ${q[0]}</h4>${q[1].map((o,j)=>`<button data-j="${j}">${o}</button>`).join('')}<p class="why" hidden></p></div>`).join('');
+$('quiz').onclick=e=>{
+  const b=e.target.closest('button'); if(!b||b.disabled)return;
+  const box=b.closest('.q'), q=Q[+box.dataset.i], ok=+b.dataset.j===q[2];
+  box.querySelectorAll('button').forEach((x,j)=>{x.disabled=true;if(j===q[2])x.classList.add('right')});
+  if(!ok)b.classList.add('wrong'); else sc++;
+  const w=box.querySelector('.why'); w.hidden=false; w.textContent=(ok?'Benar. ':'Belum tepat. ')+q[3];
+  if(++ans===Q.length){const s=$('score');s.hidden=false;s.className='verdict '+(sc>=4?'ok':sc>=3?'warn':'bad');s.textContent=`Skor Anda ${sc} dari ${Q.length}. `+(sc>=4?'Siap lanjut ke modul berikutnya.':'Ulangi bagian peta komponen dan simulasi, lalu coba lagi.')}
+};
+</script>
+</body>
+</html>

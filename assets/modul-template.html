@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Judul Modul | Training EV</title>
+<script src="assets/tema.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#060A12;--panel:#0C1220;--line:#1B2740;--text:#E6ECF5;--dim:#8593AA;--u:#FFC857;--v:#3DDC97;--w:#4DA3FF;--disp:'Chakra Petch',system-ui,sans-serif;--body:'Sora',system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font:400 16px/1.7 var(--body)}
+main{max-width:860px;margin:0 auto;padding:40px clamp(16px,4vw,32px) 0}
+h1{font:700 clamp(28px,4vw,44px)/1.1 var(--disp);margin:0 0 8px}
+.lead{color:var(--dim);margin:0 0 32px}
+.nav{display:flex;justify-content:space-between;gap:12px;margin-top:40px;padding-top:20px;border-top:1px solid var(--line)}
+.nav a,.nav button{padding:10px 18px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);font:600 14px var(--disp);text-decoration:none;cursor:pointer}
+.nav button{background:var(--v);border-color:var(--v);color:var(--ink)}
+.nav button[disabled]{background:var(--panel);color:var(--v);border-color:var(--v)}
+</style>
+</head>
+<!-- data-kode = nomor modul di daftar Beranda, misalnya "06" atau "L1" -->
+<body data-kode="06">
+
+<div id="site-header"></div>
+
+<main>
+  <h1>Judul Modul</h1>
+  <p class="lead">Satu kalimat tentang apa yang akan dipelajari.</p>
+
+  <!-- ISI MODUL: teks, gambar, simulasi, video, kuis -->
+
+  <div class="nav">
+    <a href="index.html#modul">Daftar modul</a>
+    <button id="doneBtn">Tandai selesai</button>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script>
+// layout bersama: header dan footer diambil dari assets/layout.html
+fetch('assets/layout.html').then(r=>{if(!r.ok)throw 0;return r.text()}).then(h=>{
+  const d=new DOMParser().parseFromString(h,'text/html');
+  document.head.append(...d.querySelectorAll('style'));
+  document.getElementById('site-header').replaceWith(d.querySelector('header'));
+  document.getElementById('site-footer').replaceWith(d.querySelector('footer'));
+}).catch(()=>{document.getElementById('site-header').textContent='Training EV'});
+
+// progres: dibaca oleh Beranda
+const kode=document.body.dataset.kode, btn=document.getElementById('doneBtn');
+let done=[]; try{done=JSON.parse(localStorage.getItem('evDone')||'[]')}catch(e){}
+function mark(){btn.textContent='Selesai ✓';btn.disabled=true}
+if(done.includes(kode))mark();
+btn.onclick=()=>{
+  if(!done.includes(kode))done.push(kode);
+  try{localStorage.setItem('evDone',JSON.stringify(done))}catch(e){}
+  mark();
+};
+</script>
+</body>
+</html>

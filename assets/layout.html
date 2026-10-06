@@ -1,0 +1,57 @@
+<!--
+  LAYOUT BERSAMA: ubah di berkas ini sekali, hasilnya tampil di Beranda dan semua modul.
+  Yang biasa diubah:
+    1. Nama perusahaan dan slogan  -> teks di dalam <span class="sh-name"> (cari: NAMA PERUSAHAAN)
+    2. Logo                        -> simpan sebagai assets/logo.png (kotak "LOGO" hilang otomatis)
+    3. Alamat konsol kit online    -> href pada tombol class="sh-btn" (cari: ALAMAT KONSOL KIT)
+-->
+<style>
+.sh{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px clamp(16px,4vw,48px);background:color-mix(in srgb,var(--ink,#060A12) 82%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line,#1B2740);color:var(--text,#E6ECF5);font-family:var(--body,system-ui,sans-serif)}
+.sh a{color:inherit;text-decoration:none}
+.sh-l{display:flex;align-items:center;gap:16px;min-width:0}
+.sh-org{display:flex;align-items:center;gap:12px;min-width:0}
+.sh-logo{width:38px;height:38px;flex:none;border-radius:8px;display:grid;place-items:center;overflow:hidden}
+.sh-logo img{width:100%;height:100%;object-fit:contain;display:block}
+.sh-logo.dummy{border:1.5px dashed var(--dim,#8593AA)}
+.sh-logo.dummy::after{content:'LOGO';font:600 9px var(--disp,system-ui);color:var(--dim,#8593AA)}
+.sh-name{font:700 16px/1.15 var(--disp,system-ui,sans-serif);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sh-name small{display:block;font:400 11px var(--body,system-ui,sans-serif);color:var(--dim,#8593AA);margin-top:2px}
+.sh-sep{width:1px;height:28px;background:var(--line,#1B2740);flex:none}
+.sh-brand{display:flex;align-items:center;gap:10px;font:700 18px var(--disp,system-ui,sans-serif);white-space:nowrap}
+.sh-brand svg{width:30px;height:30px}
+.sh-nav{display:flex;gap:22px;font-size:14px;color:var(--dim,#8593AA)}
+.sh-nav a:hover{color:var(--text,#E6ECF5)}
+.sh-btn{display:inline-flex;padding:10px 20px;border:1px solid var(--line,#1B2740);border-radius:6px;font:600 14px var(--disp,system-ui,sans-serif);background:var(--panel,#0C1220);transition:border-color .2s}
+.sh-btn:hover{border-color:var(--v,#3DDC97)}
+@media(max-width:720px){.sh-nav{display:none}}
+@media(max-width:560px){.sh-sep,.sh-brand{display:none}}
+.sf{margin-top:60px;padding:30px clamp(16px,4vw,48px);border-top:1px solid var(--line,#1B2740);color:var(--dim,#8593AA);font:400 13px var(--body,system-ui,sans-serif);text-align:center}
+.sf a{color:var(--text,#E6ECF5)}
+</style>
+
+<header class="sh">
+  <div class="sh-l">
+    <a class="sh-org" href="index.html">
+      <span class="sh-logo"><img src="assets/logo.png" alt="Logo" onerror="this.parentNode.classList.add('dummy');this.remove()"></span>
+      <!-- NAMA PERUSAHAAN: ganti teks di bawah, dan baris small untuk slogan (hapus baris small bila tidak perlu) -->
+      <span class="sh-name">Nama Perusahaan<small>Divisi atau slogan (opsional)</small></span>
+    </a>
+    <span class="sh-sep"></span>
+    <a class="sh-brand" href="index.html">
+      <svg viewBox="0 0 32 32" fill="none" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M2 16c3-10 6-10 9 0s6 10 9 0 6-10 9 0" stroke="#FFC857"/><path d="M2 16c3-10 6-10 9 0s6 10 9 0 6-10 9 0" stroke="#3DDC97" transform="translate(4 0)" opacity=".8"/><path d="M2 16c3-10 6-10 9 0s6 10 9 0 6-10 9 0" stroke="#4DA3FF" transform="translate(8 0)" opacity=".7"/></svg>
+      Training EV
+    </a>
+  </div>
+  <nav class="sh-nav">
+    <a href="index.html">Beranda</a>
+    <a href="index.html#modul">Daftar modul</a>
+    <a href="index.html#sumber">Pusat sumber</a>
+  </nav>
+  <!-- ALAMAT KONSOL KIT: ganti "#" dengan alamat konsol kit online Anda -->
+  <a class="sh-btn" id="kitLink" href="#" target="_blank" rel="noopener">Konsol kit</a>
+</header>
+
+<footer class="sf">
+  Materi training teknologi kendaraan listrik.
+  Gambar dan video memakai lisensi yang dicantumkan di <a href="kredit.html">halaman Kredit</a>.
+</footer>

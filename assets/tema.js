@@ -8,20 +8,15 @@
    3. Coba tanpa mengedit: tambahkan ?tema=magenta di akhir alamat halaman.
    ===================================================================== */
 
-const TEMA_AKTIF = 'laboratorium';
+const TEMA_AKTIF = 'fasa';
 
 /* Timpa nilai tema aktif. Contoh (hapus tanda // untuk memakai):
    const KUSTOM = { kursor:'petir', latar:'partikel', warna:{ v:'#00FFAA' } };       */
 
 
 //const KUSTOM = {};
-const KUSTOM = {
-  warna: { 
-    ink: '#000000',   /* Mengubah warna latar belakang utama halaman menjadi hitam pekat */
-    panel: '#111111'  /* (Opsional) Mengubah warna latar panel agar sedikit kontras dari hitam pekat */
-  }
-};
 
+const KUSTOM = {kursor:'jejak',latar:'partikel'};
 /* ---------------------------------------------------------------------
    PILIHAN NILAI
    kursor : cincin | bidik | petir | jejak | bawaan

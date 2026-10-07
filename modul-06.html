@@ -22,7 +22,20 @@ h2{font:700 24px var(--disp);margin:48px 0 6px}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
 .chip{padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--dim);font:500 13px var(--body);cursor:pointer}
 .chip[aria-pressed=true]{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
-#cp{display:grid;grid-template-columns:110px 1fr;gap:18px;align-items:start}
+#cp{display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:start}
+.pl figure{margin:12px 0 0}
+.pl img{width:100%;height:150px;object-fit:contain;background:#fff;border-radius:6px;display:block}
+.pl figcaption{font-size:11px;line-height:1.4;color:var(--dim);margin-top:6px}
+.pl figcaption a{color:var(--w)}
+table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin:12px 0}
+.cmp th,.cmp td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left}
+.cmp th{color:var(--dim);font-weight:500}
+.vc{font-size:12px;color:var(--dim);margin:8px 0 0}
+.xin,.ctl input[type=number]{width:100%;padding:6px 8px;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:6px;font:inherit}
+details.dl{margin-top:26px;border:1px solid var(--line);border-radius:8px;padding:4px 16px}
+details.dl summary{cursor:pointer;padding:12px 0;color:var(--w);font-weight:500}
+.exp li{margin:6px 0}
+.vc a{color:var(--w)}
 #cp svg{width:110px;height:56px;fill:none;stroke:var(--v);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
 #cp h3{font:600 20px var(--disp);margin:0 0 6px}
 #cp p{margin:6px 0}
@@ -80,8 +93,32 @@ canvas{width:100%;height:220px;display:block;background:var(--ink);border:1px so
   <div class="chips" id="tabs" role="group" aria-label="Komponen"></div>
   <div class="box" id="cp"></div>
 
-  <h2>2. Simulasi pembagi tegangan</h2>
-  <p class="lead">Dua resistor membagi tegangan. Cara ini dipakai untuk "mengecilkan" tegangan baterai agar bisa dibaca mikrokontroler yang hanya tahan 3,3 V.</p>
+  <h2>2. Kenapa MCB rumah tidak boleh dipakai di baterai</h2>
+  <p class="lead">Saat MCB memutus arus, di antara dua kontaknya muncul "api listrik" (disebut busur). Api ini harus padam. Di listrik rumah (AC) api padam hampir dengan sendirinya. Di baterai (DC) tidak.</p>
+  <div class="box">
+    <div class="ctl">
+      <label>MCB yang dipasang di sisi baterai<select id="mt"><option value="ac">MCB rumah (rating AC)</option><option value="dc">MCB khusus DC</option></select></label>
+      <label>Tegangan baterai: <b id="mvT">72 V</b><input type="range" id="mv" min="12" max="96" step="1" value="72"></label>
+    </div>
+    <canvas id="mcb" style="height:270px" aria-label="Perbandingan busur api saat MCB memutus arus AC dan DC"></canvas>
+    <div style="display:flex;gap:8px;margin-top:10px"><button class="chip" id="trip" style="color:var(--text);border-color:var(--v)">Putuskan arus</button><button class="chip" id="rst">Ulangi</button></div>
+    <div class="verdict" id="mvd"></div>
+    <ul class="rec">
+      <li><b>Listrik rumah (AC)</b> arahnya bolak-balik. Arusnya jatuh ke nol 100 kali setiap detik. Di titik nol itu api listrik kehilangan "bahan bakarnya" lalu padam sendiri.</li>
+      <li><b>Listrik baterai (DC)</b> mengalir terus ke satu arah dan tidak pernah menyentuh nol. Api listrik tetap menyala selama jarak antar kontak belum cukup jauh.</li>
+      <li><b>Akibatnya</b>, kontak MCB rumah di baterai bisa terbakar atau menempel, dan kabel ikut panas. MCB khusus DC punya ruang pemadam api dan magnet yang meniup api sampai padam.</li>
+    </ul>
+    <p class="why">Gerak diperlambat agar mudah dilihat. Di rumah, titik nol arus datang setiap 0,01 detik. Batas 24 V pada animasi hanyalah ilustrasi, bukan spesifikasi komponen.</p>
+    <div class="pl" id="mfoto" style="max-width:260px"></div>
+  </div>
+
+  <h2>3. Pembagi tegangan: untuk mengukur, bukan untuk menyuplai daya</h2>
+  <p class="lead">Dua resistor membagi tegangan. Cara ini dipakai untuk "mengecilkan" tegangan baterai agar bisa dibaca mikrokontroler yang hanya tahan 3,3 V. Pembagi cocok untuk sinyal, tetapi tidak untuk mengubah tegangan yang menyuplai beban.</p>
+  <table class="cmp"><tr><th>72 V menjadi 12 V, beban 1 A</th><th>Panas terbuang</th><th>Efisiensi</th><th>Tegangan stabil</th></tr>
+  <tr><td>Pembagi tegangan</td><td>±60 W</td><td>±17%</td><td>Tidak, ikut beban</td></tr>
+  <tr><td>Regulator linear</td><td>±60 W</td><td>±17%</td><td>Ya, tetapi sangat panas</td></tr>
+  <tr><td>DC-DC buck (switching)</td><td>±1 W</td><td>±90–95%</td><td>Ya</td></tr></table>
+  <p class="why">Konverter DC-DC yang sebenarnya dibahas di modul 07 dan 18. Coba beban 10 kΩ di simulasi untuk melihat tegangan turun.</p>
   <div class="box">
     <div class="ctl">
       <label>Tegangan baterai (Vin): <b id="vinT"></b><input type="range" id="vin" min="12" max="100" step="1" value="72"></label>
@@ -95,7 +132,57 @@ canvas{width:100%;height:220px;display:block;background:var(--ink);border:1px so
     <p class="why">Rumus: Vout = Vin × R2 ÷ (R1 + R2). Beban dipasang paralel dengan R2, sehingga Vout turun.</p>
   </div>
 
-  <h2>3. Simulasi pre-charge kapasitor</h2>
+  <h3 style="font:600 19px var(--disp);margin:28px 0 8px">Di mana peserta akan menemui pembagi tegangan di EV?</h3>
+  <p>Anda tidak perlu menghitung pembagi tegangan setiap hari. Yang penting adalah paham prinsipnya: <b>hambatan yang tersusun berurutan membagi tegangan sebanding dengan nilainya</b>. Prinsip ini muncul di banyak tempat di EV, dan cara kerja rinciannya bisa berbeda antar merek.</p>
+  <table class="cmp"><tr><th>Bagian EV</th><th>Apa yang terjadi</th><th>Kapan teknisi menemuinya</th></tr>
+  <tr><td><b>Konektor dan kabel</b></td><td>Konektor longgar atau kabel terlalu kecil punya hambatan ekstra. Hambatan itu ikut "mengambil" sebagian tegangan.</td><td>Motor lemah atau controller restart saat dipacu. Ukur tegangan di kedua ujung konektor saat beban berjalan (uji tegangan jatuh).</td></tr>
+  <tr><td><b>Sensor suhu NTC</b></td><td>NTC dan satu resistor tetap membentuk pembagi. Suhu berubah, hambatan NTC berubah, tegangan sinyal ikut berubah.</td><td>Error suhu baterai atau motor, atau daya dibatasi padahal belum panas.</td></tr>
+  <tr><td><b>Throttle (pemuntir gas)</b></td><td>Throttle jenis potensiometer adalah pembagi yang bisa diputar. Throttle Hall mengeluarkan tegangan sinyal yang dibaca sebagai nilai gas.</td><td>Gas tidak merespons atau motor melaju sendiri. Ukur tegangan sinyal sambil memutar gas.</td></tr>
+  <tr><td><b>Pembacaan tegangan baterai</b></td><td>Tegangan baterai yang jauh lebih tinggi dikecilkan sebanding agar bisa dibaca elektronik di controller atau BMS.</td><td>Tampilan tegangan atau persen baterai tidak cocok dengan hasil ukur multimeter.</td></tr>
+  <tr><td><b>Pre-charge</b></td><td>Tegangan di sisi controller dibandingkan dengan tegangan baterai untuk memutuskan kapan kontaktor utama boleh menutup.</td><td>Error pre-charge. Ukur tegangan sebelum dan sesudah kontaktor.</td></tr></table>
+  <p class="why">Intinya: kalau teknisi paham bahwa tegangan terbagi menurut hambatan, ia bisa "membaca" masalah dari angka tegangan di multimeter, tanpa membongkar komponen.</p>
+
+  <h3 style="font:600 19px var(--disp);margin:28px 0 8px">Eksperimen: membagi tegangan dengan tiga resistor</h3>
+  <p><b>Alat:</b> baterai 3 V (dua baterai AA dalam dudukan), tiga resistor (misalnya 1 kΩ, 1 kΩ, dan satu resistor 2 kΩ atau 3 kΩ), multimeter, kabel jepit atau papan percobaan.</p>
+  <ol class="exp">
+    <li>Ukur dulu tegangan baterai dengan multimeter dan catat. Baterai baru sering terbaca sedikit di atas 3 V.</li>
+    <li>Pasang dua resistor yang sama (1 kΩ dan 1 kΩ) berurutan ke baterai. <b>Tebak dulu</b>, lalu ukur tegangan di tiap resistor.</li>
+    <li>Tambahkan resistor ketiga yang sama (tiga resistor 1 kΩ berurutan). Ukur lagi tiap resistor.</li>
+    <li>Ganti dengan nilai yang berbeda (misalnya 1 kΩ, 2 kΩ, 3 kΩ). Tebak: resistor mana yang mendapat tegangan terbesar? Lalu ukur.</li>
+    <li>Jumlahkan tegangan semua resistor, lalu bandingkan dengan tegangan baterai.</li>
+  </ol>
+  <div class="box">
+    <div class="ctl">
+      <label>Tegangan baterai terukur (V)<input type="number" id="xs" value="3.0" step="0.01" min="0.5" max="12"></label>
+      <label>R1 (kΩ)<input type="number" id="x1" value="1" step="0.1" min="0"></label>
+      <label>R2 (kΩ)<input type="number" id="x2" value="1" step="0.1" min="0"></label>
+      <label>R3 (kΩ), isi 0 bila tidak dipakai<input type="number" id="x3" value="1" step="0.1" min="0"></label>
+    </div>
+    <table class="cmp"><tr><th>Resistor</th><th>Prediksi (V)</th><th>Hasil ukur (V)</th><th>Selisih</th></tr>
+      <tr id="xr1"><td id="xn1"></td><td id="xp1"></td><td><input class="xin" id="xm1" type="number" step="0.01" placeholder="isi"></td><td id="xe1">-</td></tr>
+      <tr id="xr2"><td id="xn2"></td><td id="xp2"></td><td><input class="xin" id="xm2" type="number" step="0.01" placeholder="isi"></td><td id="xe2">-</td></tr>
+      <tr id="xr3"><td id="xn3"></td><td id="xp3"></td><td><input class="xin" id="xm3" type="number" step="0.01" placeholder="isi"></td><td id="xe3">-</td></tr>
+      <tr><td><b>Jumlah</b></td><td id="xps"></td><td id="xms">-</td><td id="xes">-</td></tr></table>
+    <p class="why">Selisih beberapa persen itu wajar karena resistor punya toleransi (sering 5%) dan multimeter punya batas ketelitian. Isi tegangan baterai dengan hasil ukur Anda sendiri, bukan angka 3 V di label.</p>
+  </div>
+  <p><b>Pertanyaan diskusi:</b> (1) Mengapa dua resistor yang sama masing-masing mendapat setengah tegangan? (2) Resistor yang lebih besar mendapat tegangan lebih besar atau lebih kecil? (3) Berapa jumlah semua tegangan resistor dibanding baterai? (4) Bagaimana konektor longgar bisa dibayangkan sebagai "resistor tambahan" di rangkaian motor?</p>
+  <p><b>Lanjutan (opsional):</b> ganti salah satu resistor dengan <b>potensiometer</b> (mirip throttle) atau <b>NTC</b> (sentuh dengan jari agar hangat), lalu amati tegangan di titik tengah berubah. Ini persis cara sensor di EV bekerja.</p>
+
+  <details class="dl"><summary>Lebih dalam (opsional): merancang pembagi untuk membaca tegangan baterai</summary>
+  <p>Baterai 72 V penuh bisa mencapai sekitar 84 V. Kita ingin ADC membaca paling tinggi 3,0 V. Pilih R2 (misalnya 10 kΩ), lalu hitung R1 = R2 × (Vmax ÷ Vtarget − 1).</p>
+  <div class="box">
+    <div class="ctl">
+      <label>Tegangan baterai tertinggi: <b id="dvT"></b><input type="range" id="dv" min="12" max="100" step="1" value="84"></label>
+      <label>Tegangan target ADC: <b id="dtT"></b><input type="range" id="dt" min="1" max="3.3" step=".1" value="3"></label>
+      <label>R2 yang dipilih: <b id="d2T"></b><input type="range" id="d2" min="1" max="47" step="1" value="10"></label>
+    </div>
+    <div class="out"><div><span>R1 hasil hitung</span><strong id="dr1"></strong></div><div><span>R1 standar terdekat</span><strong id="drs"></strong></div><div><span>Vout saat baterai penuh</span><strong id="dvo"></strong></div><div><span>Arus dan panas R1</span><strong id="dpw" style="font-size:15px"></strong></div></div>
+    <div class="verdict" id="dvd"></div>
+    <p class="why">Praktik yang baik: pakai resistor toleransi 1%, pasang kapasitor sekitar 100 nF di dekat pin ADC untuk menyaring derau, dan jangan biarkan R2 terlepas. Kalau R2 putus, pin langsung menerima tegangan penuh dan mikrokontroler bisa rusak.</p>
+  </div>
+  </details>
+
+  <h2>4. Simulasi pre-charge kapasitor</h2>
   <p class="lead">Kapasitor di dalam controller kosong saat baterai dihubungkan. Tanpa hambatan, arus awalnya sangat besar.</p>
   <div class="box">
     <div class="ctl">
@@ -109,18 +196,27 @@ canvas{width:100%;height:220px;display:block;background:var(--ink);border:1px so
     <p class="why">Garis hijau: tegangan kapasitor. Garis kuning: arus. Keduanya digambar sampai 5τ.</p>
   </div>
 
-  <h2>4. Video pendukung</h2>
-  <div class="vid" id="vid">Video belum dipilih. Isi VIDEO_ID di bagian skrip halaman ini dengan ID video YouTube yang relevan.</div>
+  <h2>5. Video pendukung</h2>
+  <div class="vid" id="vid">Video belum dipilih. Isi VIDEO di bagian skrip halaman ini.</div>
+  <p class="vc" id="vcr">Sumber video: belum diisi.</p>
 
-  <h2>5. Yang perlu diingat</h2>
+  <h2>6. Yang perlu diingat</h2>
   <ul class="rec">
     <li>Resistor membatasi arus; dua resistor bisa menjadi pembagi tegangan, tetapi beban mengubah hasilnya.</li>
     <li>Kapasitor bisa tetap bermuatan setelah baterai dilepas. Kosongkan dulu sebelum menyentuh.</li>
+    <li>Hambatan berurutan membagi tegangan sebanding nilainya. Ini dasar uji tegangan jatuh di konektor, sensor suhu, dan throttle.</li>
     <li>Rangkaian baterai DC butuh sekering atau MCB yang berperingkat DC.</li>
     <li>Tegangan tinggi masuk lewat pre-charge dulu, baru kontaktor utama menutup.</li>
   </ul>
 
-  <h2>6. Kuis</h2>
+  <h2>Bacaan lanjut</h2>
+  <ul class="rec">
+    <li><a href="https://www.ti.com/de/lit/pdf/sdaa145" target="_blank" rel="noopener" style="color:var(--w)">DC-Link Capacitor Pre-Charge Designs in Automotive Systems</a> (Texas Instruments): pemilihan resistor dan relay pre-charge.</li>
+    <li><a href="https://www.electronicdesign.com/technologies/power/article/21280232/electronic-design-pre-charge-circuits-lead-to-safer-evs" target="_blank" rel="noopener" style="color:var(--w)">Pre-Charge Circuits Lead to Safer EVs</a> (Electronic Design): komponen dan urutan pre-charge.</li>
+    <li><a href="https://evkx.net/dictionary/high-voltage-contactors-and-pre-charge-circuit/" target="_blank" rel="noopener" style="color:var(--w)">High-Voltage Contactors and Pre-Charge Circuit</a> (EVKX): ringkasan kontaktor tegangan tinggi.</li>
+  </ul>
+
+  <h2>7. Kuis</h2>
   <div id="quiz"></div>
   <div class="verdict" id="score" hidden></div>
 
@@ -135,7 +231,8 @@ canvas{width:100%;height:220px;display:block;background:var(--ink);border:1px so
 <div id="site-footer"></div>
 
 <script>
-const VIDEO_ID = '';   // contoh: 'dQw4w9WgXcQ' (hanya ID, bukan alamat lengkap)
+// Isi id (hanya ID video YouTube, bukan alamat lengkap), judul, dan sumber (nama kanal) untuk menampilkan video dan kreditnya.
+const VIDEO = { id:'', judul:'', sumber:'', link:'' };
 
 // ----- layout bersama dan progres -----
 fetch('assets/layout.html').then(r=>{if(!r.ok)throw 0;return r.text()}).then(h=>{
@@ -149,7 +246,10 @@ let done=[]; try{done=JSON.parse(localStorage.getItem('evDone')||'[]')}catch(e){
 const mark=()=>{btn.textContent='Selesai ✓';btn.disabled=true};
 if(done.includes(kode))mark();
 btn.onclick=()=>{if(!done.includes(kode))done.push(kode);try{localStorage.setItem('evDone',JSON.stringify(done))}catch(e){}mark()};
-if(VIDEO_ID)document.getElementById('vid').innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${VIDEO_ID}" title="Video pendukung" allowfullscreen loading="lazy"></iframe>`;
+if(VIDEO.id){
+  document.getElementById('vid').innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${VIDEO.id}" title="${VIDEO.judul||'Video pendukung'}" allowfullscreen loading="lazy"></iframe>`;
+  document.getElementById('vcr').innerHTML=`Sumber video: ${VIDEO.link?`<a href="${VIDEO.link}" target="_blank" rel="noopener">${VIDEO.judul}</a>`:VIDEO.judul}, kanal ${VIDEO.sumber}.`;
+}
 
 // ----- peta komponen -----
 const S={ // simbol
@@ -172,18 +272,30 @@ const K=[
 ['Shunt','shu','Resistor sangat kecil (miliohm) untuk mengukur arus lewat tegangan jatuhnya: V = I × R.','Pembacaan arus di BMS, controller, dan amperemeter.','Ukur tegangan jatuhnya (mV) saat dialiri arus, lalu bandingkan dengan nilai yang tertulis.','Shunt 100 A / 75 mV berarti 0,75 mΩ. Pembacaan paling akurat memakai sambungan empat kawat (Kelvin).'],
 ['Sensor Hall dan NTC','sen','Hall membaca medan magnet (posisi, gas, arus). NTC membaca suhu: hambatannya turun saat panas.','Tiga sensor Hall di motor BLDC, throttle, sensor suhu baterai, motor, dan controller.','Hall: cek suplai 5 V dan sinyal yang berubah saat poros diputar. NTC: ukur hambatan dan bandingkan dengan suhu.','Hall open-collector butuh resistor pull-up. NTC 10 kΩ pada 25 °C dibaca lewat pembagi tegangan, seperti simulasi di bawah.']
 ];
+// ----- foto komponen -----
+// Tambah atau ganti foto di sini. src boleh berkas sendiri (mis. 'assets/foto/kontaktor-r2.jpg') atau alamat web.
+// sumber = teks kredit yang tampil di bawah foto; link = tautan halaman sumber.
+const CM='https://commons.wikimedia.org/wiki/';
+const commons=(f,by,lic)=>({src:CM+'Special:FilePath/'+f+'?width=500',sumber:'Wikimedia Commons, berkas "'+f.replace(/_/g,' ')+'"'+(by?'. Foto: '+by+', '+lic:'. Pembuat dan lisensi tertera di halaman berkas'),link:CM+'File:'+f});
+const FOTO={
+ 'Resistor':[commons('6_different_resistors.jpg','Afrank99','CC BY-SA 2.0')],
+ 'Kapasitor':[commons('Nippon_Chemi-Con_Aluminum_Electrolytic_Capacitors.jpg'),commons('Damaged_Electrolytic_capacitor_02x02x2023.jpg')],
+ 'Kontaktor':[commons('Contactor200AmpSealed.jpg'),commons('Burned_Contactor-01ASD.jpg')]
+ // contoh foto sendiri: 'Shunt':{src:'assets/foto/shunt-r2.jpg',sumber:'Foto sendiri, motor R2',link:''}
+};
+const fig=(f,n)=>`<figure><img src="${f.src}" alt="Foto ${n}" loading="lazy" onerror="this.closest('figure').style.display='none'"><figcaption>Sumber: ${f.link?`<a href="${f.link}" target="_blank" rel="noopener">${f.sumber}</a>`:f.sumber}</figcaption></figure>`;
+function foto(n){return (FOTO[n]||[]).map(f=>fig(f,n)).join('')}
 const LV=['Dasar','Menengah','Dalam']; let lv=1, cur=0;
 const lvEl=document.getElementById('lv'), tabEl=document.getElementById('tabs'), cp=document.getElementById('cp');
 function showCp(){
   const k=K[cur];
-  cp.innerHTML=`<svg viewBox="0 0 110 56" aria-hidden="true">${S[k[1]]}</svg><div><h3>${k[0]}</h3><p>${k[2]}</p><p><span class="k">DI EV: </span>${k[3]}</p>${lv>=1?`<p><span class="k">CARA CEK: </span>${k[4]}</p>`:''}${lv>=2?`<p><span class="k">LEBIH DALAM: </span>${k[5]}</p>`:''}</div>`;
+  cp.innerHTML=`<div class="pl"><svg viewBox="0 0 110 56" aria-hidden="true">${S[k[1]]}</svg>${foto(k[0])}</div><div><h3>${k[0]}</h3><p>${k[2]}</p><p><span class="k">DI EV: </span>${k[3]}</p>${lv>=1?`<p><span class="k">CARA CEK: </span>${k[4]}</p>`:''}${lv>=2?`<p><span class="k">LEBIH DALAM: </span>${k[5]}</p>`:''}</div>`;
   lvEl.innerHTML=LV.map((n,i)=>`<button class="chip" aria-pressed="${i===lv}" data-i="${i}">${n}</button>`).join('');
   tabEl.innerHTML=K.map((x,i)=>`<button class="chip" aria-pressed="${i===cur}" data-i="${i}">${x[0]}</button>`).join('');
 }
 lvEl.onclick=e=>{const b=e.target.closest('button');if(b){lv=+b.dataset.i;showCp()}};
 tabEl.onclick=e=>{const b=e.target.closest('button');if(b){cur=+b.dataset.i;showCp()}};
 showCp();
-cp.insertAdjacentHTML('afterend','<div class="note"><b>MCB AC tidak boleh dipakai di baterai DC.</b> Arus AC melewati titik nol puluhan kali per detik sehingga busur api padam sendiri. Arus DC tidak, sehingga busur bisa bertahan dan membakar.</div>');
 
 // ----- simulasi pembagi tegangan -----
 const $=id=>document.getElementById(id);
@@ -199,6 +311,99 @@ function div(){
   else{v.className='verdict ok';v.textContent=`Aman untuk ADC 3,3 V. Hasil baca dikalikan ${(vin/vo).toFixed(1)} untuk mendapat tegangan baterai.`}
 }
 ['vin','r1','r2','rl'].forEach(id=>$(id).addEventListener('input',div)); div();
+
+// ----- animasi MCB: AC vs DC -----
+$('mfoto').innerHTML=fig(commons('Burned_Contactor-01ASD.jpg'),'kontaktor terbakar');
+$('mfoto').querySelector('figcaption').insertAdjacentHTML('afterbegin','Contoh kontak yang terbakar akibat busur api. ');
+const mcv=$('mcb'), mx=mcv.getContext('2d'), c0=performance.now();
+let Tt=null, heat=0, lastN=c0, col={};
+function mSize(){const d=Math.min(2,devicePixelRatio||1);mcv.width=mcv.clientWidth*d;mcv.height=mcv.clientHeight*d;mx.setTransform(d,0,0,d,0,0)}
+mSize(); addEventListener('resize',mSize);
+$('trip').onclick=()=>{if(Tt===null){Tt=(performance.now()-c0)/1000;heat=0}};
+$('rst').onclick=()=>{Tt=null;heat=0};
+$('mv').addEventListener('input',()=>{$('mvT').textContent=$('mv').value+' V';$('rst').onclick()});
+$('mt').addEventListener('change',()=>$('rst').onclick());
+function mLoop(now){
+  const st=getComputedStyle(document.documentElement); ['v','u','w','alert','line','dim','text'].forEach(k=>col[k]=st.getPropertyValue('--'+k).trim());
+  const clk=(now-c0)/1000, dt=Math.min(.1,(now-lastN)/1000); lastN=now;
+  const V=+$('mv').value, dcr=$('mt').value==='dc', W=mcv.clientWidth, H=mcv.clientHeight, pw=W/2;
+  const outAC=Tt===null?Infinity:Math.ceil((Tt+.15)/.5)*.5;
+  const outDC=Tt===null?Infinity:(dcr||V<=24)?Tt+.7:Infinity;
+  const iAC=t=>t<outAC?Math.sin(6.2832*t):0, iDC=t=>t<outDC?1:0;
+  const gap=Tt===null?0:Math.min(1,(clk-Tt)/.8);
+  const arcAC=Tt!==null&&clk<outAC, arcDC=Tt!==null&&clk<outDC;
+  if(arcDC&&!dcr&&V>24)heat=Math.min(1,heat+dt*.3);
+  mx.clearRect(0,0,W,H); mx.font='12px sans-serif';
+  function panel(ox,title,fn,arc,wave,isDC){
+    const ty=78,xl=ox+pw*.34,xr=xl+8+gap*pw*.22;
+    mx.fillStyle=col.dim;mx.textAlign='left';mx.fillText(title,ox+14,20);
+    mx.strokeStyle=col.text;mx.lineWidth=3;
+    mx.beginPath();mx.moveTo(ox+10,ty);mx.lineTo(xl,ty);mx.moveTo(xr,ty);mx.lineTo(ox+pw-10,ty);mx.stroke();
+    mx.fillStyle=isDC&&heat>0?`color-mix(in srgb, ${col.alert} ${Math.round(heat*100)}%, ${col.text})`:col.text;
+    mx.fillRect(xl-6,ty-12,6,24);mx.fillRect(xr,ty-12,6,24);
+    if(arc&&gap>0){
+      const p=Math.min(1,(clk-Tt)/.7), bend=(isDC&&dcr)?45*p:0;
+      mx.beginPath();
+      for(let k=0;k<=10;k++){const s=k/10,x=xl+(xr-xl)*s,y=ty-Math.sin(Math.PI*s)*bend+(k&&k<10?(Math.random()-.5)*14:0);k?mx.lineTo(x,y):mx.moveTo(x,y)}
+      mx.strokeStyle=col.u;mx.lineWidth=3;mx.shadowColor=col.u;mx.shadowBlur=18;mx.stroke();mx.shadowBlur=0;
+    }
+    mx.fillStyle=arc&&gap>0?col.u:col.dim;mx.textAlign='center';
+    mx.fillText(Tt===null?'Kontak tertutup, arus mengalir':arc?(gap<1?'Kontak membuka, api listrik muncul':'Api listrik masih menyala'):'Api padam, arus berhenti',ox+pw/2,ty+38);
+    // grafik arus
+    const x0=ox+14,w=pw-28,yb=186,am=34;
+    mx.strokeStyle=col.line;mx.lineWidth=1;mx.beginPath();mx.moveTo(x0,yb);mx.lineTo(x0+w,yb);mx.stroke();
+    mx.fillStyle=col.dim;mx.textAlign='left';mx.fillText('arus terhadap waktu',x0,yb-am-8);
+    mx.beginPath();for(let x=0;x<=w;x+=2){const t=clk-3+x/w*3,y=yb-am*fn(t);x?mx.lineTo(x0+x,y):mx.moveTo(x0+x,y)}
+    mx.strokeStyle=wave;mx.lineWidth=2;mx.stroke();
+    if(!isDC){mx.fillStyle=col.u;for(let k=Math.ceil((clk-3)*2);k<=clk*2;k++){const x=x0+(k/2-(clk-3))/3*w;mx.beginPath();mx.arc(x,yb,3,0,6.283);mx.fill()}
+      mx.fillStyle=col.dim;mx.fillText('titik kuning = arus nol',x0,yb+16)}
+    if(Tt!==null&&clk-Tt<3){const x=x0+(Tt-(clk-3))/3*w;mx.strokeStyle=col.alert;mx.setLineDash([4,4]);mx.beginPath();mx.moveTo(x,yb-am-4);mx.lineTo(x,yb+am);mx.stroke();mx.setLineDash([])}
+    if(isDC){mx.fillStyle=col.dim;mx.fillText('panas kontak',x0,H-12);mx.strokeStyle=col.line;mx.strokeRect(x0+80,H-22,w-80,10);mx.fillStyle=col.alert;mx.fillRect(x0+80,H-22,(w-80)*heat,10)}
+  }
+  panel(0,'Listrik rumah (AC) + MCB rumah',iAC,arcAC,col.w,false);
+  panel(pw,`Baterai ${V} V (DC) + ${dcr?'MCB khusus DC':'MCB rumah'}`,iDC,arcDC,col.v,true);
+  mx.strokeStyle=col.line;mx.beginPath();mx.moveTo(pw,8);mx.lineTo(pw,H-8);mx.stroke();
+  const d=$('mvd');
+  let msg,cls='verdict';
+  if(Tt===null)msg='Tekan "Putuskan arus" lalu bandingkan kedua sisi.';
+  else if(!dcr&&V>24&&Infinity===outDC){ if(heat>=1){cls+=' bad';msg='Api listrik di sisi baterai tidak padam. Kontak terbakar atau menempel, dan bisa memicu kebakaran.'}else{cls+=' warn';msg='Di sisi AC api sudah padam di titik nol arus. Di sisi baterai api terus menyala dan kontak makin panas.'} }
+  else if(clk<Math.max(outAC,isFinite(outDC)?outDC:0)){cls+=' warn';msg='Api listrik masih menyala...'}
+  else {cls+=' ok';msg=dcr?'Api diregangkan dan didinginkan oleh ruang pemadam, lalu padam. Inilah gunanya MCB khusus DC.':'Pada tegangan serendah ini api masih bisa padam, tetapi di tegangan baterai EV yang lebih tinggi MCB rumah tidak aman.'}
+  d.className=cls; d.textContent=msg;
+  requestAnimationFrame(mLoop);
+}
+requestAnimationFrame(mLoop);
+
+// ----- lembar eksperimen 3 resistor -----
+function xsim(){
+  const vs=+$('xs').value||0, R=[1,2,3].map(i=>Math.max(0,+$('x'+i).value||0)), S=R[0]+R[1]+R[2], cnt=R.filter(Boolean).length;
+  let ps=0,ms=0,n=0;
+  R.forEach((r,i)=>{
+    const k=i+1; $('xr'+k).style.display=r?'':'none'; if(!r)return;
+    const p=S?vs*r/S:0; ps+=p; $('xn'+k).textContent='R'+k+' ('+r+' kΩ)'; $('xp'+k).textContent=p.toFixed(2);
+    const m=$('xm'+k).value;
+    if(m!==''){ms+=+m;n++;$('xe'+k).textContent=(Math.abs(+m-p)/p*100).toFixed(0)+'%'}else $('xe'+k).textContent='-';
+  });
+  $('xps').textContent=ps.toFixed(2)+' V';
+  if(cnt&&n===cnt){$('xms').textContent=ms.toFixed(2)+' V';const d=ms-vs;$('xes').textContent=(d>=0?'+':'')+d.toFixed(2)+' V terhadap baterai'}
+  else{$('xms').textContent='-';$('xes').textContent='-'}
+}
+['xs','x1','x2','x3','xm1','xm2','xm3'].forEach(id=>$(id).addEventListener('input',xsim)); xsim();
+
+// ----- kalkulator pembagi (studi kasus) -----
+const E24=[1,1.1,1.2,1.3,1.5,1.6,1.8,2,2.2,2.4,2.7,3,3.3,3.6,3.9,4.3,4.7,5.1,5.6,6.2,6.8,7.5,8.2,9.1];
+function e24(k){let b=k,er=1e9;for(let d=-1;d<=4;d++)E24.forEach(e=>{const v=e*Math.pow(10,d),x=Math.abs(Math.log(v/k));if(x<er){er=x;b=v}});return b}
+const fk=v=>v>=1000?(v/1000).toFixed(2).replace(/\.?0+$/,'')+' MΩ':(+v.toFixed(2))+' kΩ';
+function dsg(){
+  const vm=+$('dv').value, vt=+$('dt').value, r2=+$('d2').value, r1=r2*(vm/vt-1), rs=e24(r1), vo=vm*r2/(rs+r2), i=vm/(rs+r2), p=i*i*rs;
+  $('dvT').textContent=vm+' V';$('dtT').textContent=vt.toFixed(1)+' V';$('d2T').textContent=r2+' kΩ';
+  $('dr1').textContent=fk(r1);$('drs').textContent=fk(rs);$('dvo').textContent=vo.toFixed(2)+' V';
+  $('dpw').textContent=i.toFixed(2)+' mA, '+p.toFixed(0)+' mW';
+  const d=$('dvd');
+  if(vo>3.3){d.className='verdict bad';d.textContent='Vout melebihi 3,3 V pada baterai penuh. Pilih R1 yang lebih besar.'}
+  else{d.className='verdict ok';d.textContent=`Aman. Saat ADC membaca ${vo.toFixed(2)} V, program mengalikannya ${(vm/vo).toFixed(1)} untuk mendapat tegangan baterai.`}
+}
+['dv','dt','d2'].forEach(id=>$(id).addEventListener('input',dsg)); dsg();
 
 // ----- simulasi pre-charge -----
 const cv=$('cap'), cx=cv.getContext('2d');

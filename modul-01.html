@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>01 Sejarah Kendaraan Listrik Dunia | Training EV</title>
+<script src="assets/tema.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#060A12;--panel:#0C1220;--line:#1B2740;--text:#E6ECF5;--dim:#8593AA;--u:#FFC857;--v:#3DDC97;--w:#4DA3FF;--alert:#FF6B8B;--disp:'Chakra Petch',system-ui,sans-serif;--body:'Sora',system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font:400 16px/1.7 var(--body)}
+main{max-width:920px;margin:0 auto;padding:40px clamp(16px,4vw,32px) 0}
+h1{font:700 clamp(28px,4vw,44px)/1.1 var(--disp);margin:0 0 8px}
+h2{font:700 24px var(--disp);margin:52px 0 6px}
+a{color:var(--w)}
+.lead{color:var(--dim);margin:0 0 20px}
+.no{font:700 15px var(--disp);color:var(--v)}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--dim);font:500 13px var(--body);cursor:pointer}
+.chip[aria-pressed=true]{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 16px;background:var(--ink);border:1px solid var(--line);border-radius:6px;color:var(--text);font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--v)}
+.opt.right{border-color:var(--v);background:color-mix(in srgb,var(--v) 14%,transparent)}
+.opt.wrong{border-color:var(--alert);background:color-mix(in srgb,var(--alert) 12%,transparent)}
+.why{font-size:14px;color:var(--dim);margin:8px 0 0}
+.verdict{padding:10px 14px;border-radius:6px;border:1px solid var(--line);margin-top:12px;font-size:14px}
+.ok{border-color:var(--v);color:var(--v)}.warn{border-color:var(--u);color:var(--u)}.bad{border-color:var(--alert);color:var(--alert)}
+/* garis waktu */
+#strip{display:flex;gap:6px;overflow-x:auto;padding:6px 2px 10px;scroll-snap-type:x proximity}
+.yb{flex:none;padding:6px 12px;border:1px solid var(--line);border-bottom:3px solid var(--c);border-radius:6px;background:var(--panel);color:var(--dim);font:600 13px var(--disp);cursor:pointer;scroll-snap-align:center}
+.yb[aria-current=true]{color:var(--ink);background:var(--c);border-color:var(--c)}
+#card{display:grid;grid-template-columns:150px 1fr;gap:6px 24px;border-left:4px solid var(--c);min-height:230px}
+#card .yr{font:700 clamp(30px,5vw,50px)/1 var(--disp);color:var(--c);overflow-wrap:anywhere}
+#card h3{font:700 22px var(--disp);margin:0 0 8px}
+#card p{margin:8px 0}
+#card .pt{padding:8px 12px;border-radius:6px;background:color-mix(in srgb,var(--c) 10%,transparent)}
+#card figure{grid-column:1/-1;margin:8px 0 0}
+#card img{max-width:100%;max-height:260px;border-radius:6px;display:block;background:#fff}
+#card figcaption{font-size:12px;color:var(--dim);margin-top:6px}
+.ph{padding:14px;border:1px dashed var(--dim);border-radius:6px;color:var(--dim);font-size:13px}
+@media(max-width:620px){#card{grid-template-columns:1fr}}
+.ctl2{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px}
+.ctl2 button{padding:9px 18px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);font:600 14px var(--disp);cursor:pointer}
+.ctl2 button:hover:not(:disabled){border-color:var(--v)}
+.ctl2 button:disabled{opacity:.35}
+/* neraca */
+#yr{width:100%;accent-color:var(--v)}
+#yt{font:700 40px var(--disp);color:var(--u)}
+.tug{display:flex;height:30px;border-radius:6px;overflow:hidden;border:1px solid var(--line);margin:10px 0}
+.tug div{display:flex;align-items:center;padding:0 10px;font:700 14px var(--disp);color:var(--ink);transition:width .25s;min-width:0;white-space:nowrap}
+#te{background:var(--v)}#tb{background:var(--u);justify-content:flex-end}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.cols{grid-template-columns:1fr}}
+.cols h4{margin:4px 0;font:600 15px var(--disp)}
+.cols li{font-size:14px;margin:4px 0}
+.cols ul{margin:0;padding-left:18px;min-height:40px}
+.vid{aspect-ratio:16/9;display:grid;place-items:center;border:1px dashed var(--dim);border-radius:8px;color:var(--dim);text-align:center;padding:16px}
+.vid iframe{width:100%;height:100%;border:0;border-radius:8px}
+.vc{font-size:12px;color:var(--dim);margin:8px 0 0}
+.lsn{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.lsn div{padding:14px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.lsn b{display:block;font:600 17px var(--disp);color:var(--u);margin-bottom:4px}
+details.dl{margin-top:20px;border:1px solid var(--line);border-radius:8px;padding:4px 16px}
+details.dl summary{cursor:pointer;padding:12px 0;color:var(--w);font-weight:500}
+.q{margin:18px 0}.q h4{margin:0 0 8px;font:600 16px var(--body)}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:44px;padding-top:20px;border-top:1px solid var(--line)}
+.nav a,.nav button{padding:10px 18px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);font:600 14px var(--disp);text-decoration:none;cursor:pointer}
+.nav button{background:var(--v);border-color:var(--v);color:var(--ink)}
+.nav button[disabled]{background:var(--panel);color:var(--v)}
+</style>
+</head>
+<body data-kode="01">
+<div id="site-header"></div>
+
+<main>
+  <div class="no">Modul 01 &nbsp;|&nbsp; Pengantar</div>
+  <h1>Sejarah Kendaraan Listrik Dunia</h1>
+  <p class="lead">Kendaraan listrik bukan barang baru. Ia pernah hampir menang, lalu menghilang hampir seratus tahun, dan kini kembali. Modul ini menjawab satu pertanyaan: <b>mengapa dulu kalah, dan mengapa sekarang menang?</b></p>
+
+  <div class="box" id="hook">
+    <b>Tebak dulu.</b> Tahun 1900, dari sekitar 4.200 mobil yang dibuat di Amerika, berapa persen yang bertenaga listrik?
+    <div id="hopt"></div>
+    <p class="why" id="hans" hidden></p>
+  </div>
+
+  <h2>1. Garis waktu</h2>
+  <p class="lead">Pilih peristiwa, atau gunakan tombol panah di keyboard. Setiap kartu memuat kaitannya dengan modul training ini.</p>
+  <div class="chips" id="fe" role="group" aria-label="Era"></div>
+  <div class="chips" id="fj" role="group" aria-label="Jenis"></div>
+  <div id="strip" role="tablist"></div>
+  <div class="box" id="card" aria-live="polite"></div>
+  <div class="ctl2"><button id="pv">Sebelumnya</button><span id="pos" style="color:var(--dim);font-size:13px"></span><button id="nx">Berikutnya</button></div>
+
+  <h2 id="neraca">2. Simulasi neraca: siapa unggul di tahun berapa?</h2>
+  <p class="lead">Geser tahun. Setiap faktor yang sedang berlaku menambah poin untuk EV atau untuk mesin bensin.</p>
+  <div class="box">
+    <div id="yt"></div>
+    <input type="range" id="yr" min="1890" max="2025" step="1" value="1900" aria-label="Tahun">
+    <div class="chips" id="jump"></div>
+    <div class="tug"><div id="te"></div><div id="tb"></div></div>
+    <div class="cols"><div><h4 style="color:var(--v)">Mendukung EV</h4><ul id="le"></ul></div><div><h4 style="color:var(--u)">Mendukung mesin bensin</h4><ul id="lb"></ul></div></div>
+    <p class="why">Ini ilustrasi untuk memudahkan cerita. Setiap faktor diberi bobot sama, jadi bukan data pasar.</p>
+  </div>
+
+  <h2>3. Pelajaran dari sejarah</h2>
+  <div class="lsn">
+    <div><b>Jarak tempuh</b>Tahun 1900 dan hari ini, pertanyaan pertama orang tetap sama: "sampai mana bisa jalan?"</div>
+    <div><b>Biaya</b>Mobil listrik seperti Baker kira-kira tiga kali lipat Model T. Harga selalu menentukan siapa yang menang.</div>
+    <div><b>Pengisian</b>Tukar baterai ada sejak 1897. Kini muncul lagi, dan bagian ini dibahas di modul pengisian.</div>
+  </div>
+  <p class="lead" style="margin-top:14px">Yang berubah bukan idenya, tetapi <b>baterai</b>. Itu sebabnya modul 14 (Baterai) menjadi inti training ini.</p>
+
+  <h2>4. Video pendukung</h2>
+  <div class="vid" id="vid">Video belum dipilih. Isi VIDEO di bagian skrip halaman ini.</div>
+  <p class="vc" id="vcr">Sumber video: belum diisi.</p>
+
+  <details class="dl"><summary>Catatan untuk pengajar</summary>
+    <p><b>Alur sekitar 50 menit:</b> tebakan pembuka (5), garis waktu (25), simulasi neraca (10), pelajaran (5), kuis (5).</p>
+    <p><b>Cerita yang mudah dituturkan:</b> (1) wanita kota dan Detroit Electric yang tidak mau memutar engkol; (2) taksi listrik New York 1897 yang menukar baterai; (3) Jenatzy dan mobil torpedo yang melewati 100 km/jam; (4) Lohner-Porsche 1900 dengan motor di dalam roda, lalu tanya peserta: "ada yang mirip di motor listrik sekarang?"</p>
+    <p><b>Pertanyaan pemicu:</b> Kalau tahun 1912 Anda membeli mobil, listrik atau bensin? Kenapa? Apa yang akan Anda pilih sekarang?</p>
+    <p><b>Pesan yang perlu ditekankan:</b> EV bukan teknologi baru. EV kalah bukan karena jelek, melainkan karena baterai, biaya, dan infrastruktur. Sekarang hambatan itu mengecil.</p>
+    <p><b>Mode penyelenggara:</b> tambahkan <code>?edit=1</code> di akhir alamat halaman untuk melihat kotak foto kosong beserta saran kata kunci pencarian foto.</p>
+  </details>
+
+  <h2>5. Kuis</h2>
+  <div id="quiz"></div>
+  <div class="verdict" id="score" hidden></div>
+
+  <p class="why" style="margin-top:30px">Sumber data: <a href="https://www.mckinsey.com/industries/automotive-and-assembly/our-insights/the-125th-anniversary-of-the-little-engine-that-couldnt" target="_blank" rel="noopener">McKinsey (komposisi mobil 1900)</a>, <a href="https://thinkev.ca/blog/what-was-the-first-electric-car-a-longer-history-than-you-think" target="_blank" rel="noopener">ThinkEV (sejarah awal dan harga)</a>, <a href="https://www.iea.org/reports/global-ev-outlook-2026" target="_blank" rel="noopener">IEA Global EV Outlook 2026</a>. Tanggal dan nama lain dari catatan sejarah umum. Perlu diverifikasi ulang sebelum dipakai sebagai rujukan resmi.</p>
+
+  <div class="nav">
+    <a href="index.html#modul">Daftar modul</a>
+    <button id="doneBtn">Tandai selesai</button>
+    <a href="modul-02.html">Berikutnya: 02</a>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script>
+const VIDEO = { id:'', judul:'', sumber:'', link:'' };
+// Foto per peristiwa: kunci = id peristiwa. Contoh:
+// FOTO.planteh = { src:'assets/foto/plante.jpg', sumber:'Wikimedia Commons, nama berkas', link:'https://...' };
+const FOTO = {};
+const EDIT = /[?&]edit/.test(location.search);
+
+// ----- layout bersama dan progres -----
+fetch('assets/layout.html').then(r=>{if(!r.ok)throw 0;return r.text()}).then(h=>{
+  const d=new DOMParser().parseFromString(h,'text/html');
+  document.head.append(...d.querySelectorAll('style'));
+  document.getElementById('site-header').replaceWith(d.querySelector('header'));
+  document.getElementById('site-footer').replaceWith(d.querySelector('footer'));
+}).catch(()=>{document.getElementById('site-header').textContent='Training EV'});
+const $=id=>document.getElementById(id);
+const kode=document.body.dataset.kode, btn=$('doneBtn');
+let done=[]; try{done=JSON.parse(localStorage.getItem('evDone')||'[]')}catch(e){}
+const mark=()=>{btn.textContent='Selesai ✓';btn.disabled=true};
+if(done.includes(kode))mark();
+btn.onclick=()=>{if(!done.includes(kode))done.push(kode);try{localStorage.setItem('evDone',JSON.stringify(done))}catch(e){}mark()};
+if(VIDEO.id){
+  $('vid').innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${VIDEO.id}" title="${VIDEO.judul||'Video pendukung'}" allowfullscreen loading="lazy"></iframe>`;
+  $('vcr').innerHTML=`Sumber video: ${VIDEO.link?`<a href="${VIDEO.link}" target="_blank" rel="noopener">${VIDEO.judul}</a>`:VIDEO.judul}, kanal ${VIDEO.sumber}.`;
+}
+
+// ----- tebakan pembuka -----
+const HO=['5%','15%','38%','70%'];
+$('hopt').innerHTML=HO.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('');
+$('hopt').onclick=e=>{
+  const b=e.target.closest('button'); if(!b||b.disabled)return;
+  [...$('hopt').children].forEach((x,i)=>{x.disabled=true;if(i===2)x.classList.add('right')});
+  if(+b.dataset.i!==2)b.classList.add('wrong');
+  const a=$('hans'); a.hidden=false;
+  a.innerHTML='Jawabannya <b>38%</b>. Sisanya 40% bertenaga uap dan 22% bensin. Listrik hampir juara. Lalu apa yang terjadi? Mari kita lihat garis waktunya.';
+};
+
+// ----- garis waktu -----
+const ERA={a:['1830–1900','var(--u)'],b:['1900–1970','var(--alert)'],c:['1990–2010','var(--w)'],d:['2010–kini','var(--v)']};
+const JN={m:'Mobil',r:'Roda dua dan transporter',t:'Baterai dan kebijakan'};
+// [id, era, jenis, tahun, judul, cerita, kenapa penting, kaitan, tautan, saran kata kunci foto]
+const E=[
+['motor','a','m','1828–1835','Motor listrik pertama dan mobil mini','Ányos Jedlik (Hongaria, 1828), Thomas Davenport (Amerika, 1834–1835), serta Stratingh dan Becker (Belanda, 1835) membuat model kendaraan kecil yang digerakkan motor listrik. Robert Anderson dari Skotlandia sering disebut membuat kereta listrik kasar pada 1830-an, tetapi catatannya sulit dipastikan.','Motor listrik lebih tua dari mesin bensin. Masalahnya sejak awal sama: sumber listriknya.','Modul 16: Motor BLDC','modul-16.html','Jedlik electric car model OR Davenport electric locomotive'],
+['planteh','a','t','1859','Baterai isi ulang pertama','Gaston Planté (Prancis) menemukan baterai timbal-asam yang bisa diisi ulang. Pada 1881 Camille Faure memperbaiki pelatnya sehingga muatannya jauh lebih besar.','Tanpa baterai isi ulang, kendaraan listrik hanya percobaan. Jenis baterai ini masih dipakai sampai sekarang sebagai aki 12 V.','Modul 14: Baterai','modul-14.html','Gaston Plante lead acid battery 1859'],
+['trouve','a','r','1881','Trisikel listrik di Paris','Gustave Trouvé memperlihatkan trisikel listrik di pameran listrik Paris tahun 1881, dengan baterai isi ulang. Ini salah satu kendaraan listrik pertama yang dipakai di jalan, dan bentuknya roda tiga.','Kendaraan listrik ringan sudah ada sejak awal, jauh sebelum mobil listrik besar.','Modul 13: Motor listrik R2','modul-13.html','Gustave Trouve electric tricycle 1881'],
+['praktis','a','m','1884–1890','Mobil listrik pertama yang praktis','Thomas Parker membuat mobil listrik berkapasitas besar di Wolverhampton, Inggris (1884). Andreas Flocken membuat Flocken Elektrowagen di Jerman (1888), yang sering disebut mobil listrik sungguhan pertama. Sekitar 1890 William Morrison membuat kereta listrik enam penumpang di Amerika.','Pada masa itu mobil listrik sudah berjalan, sementara mobil bensin masih sangat awal.','Modul 09: Mobil listrik','modul-09.html','Flocken Elektrowagen 1888'],
+['bolton','a','r','1895','Sepeda listrik dengan motor di roda','Ogden Bolton Jr. mematenkan sepeda bertenaga baterai dengan motor di dalam naf roda belakang. Itu cikal bakal hub motor yang dipakai motor listrik hari ini.','Desain motor di dalam roda sudah muncul lebih dari 125 tahun lalu.','Modul 16: Motor BLDC (hub motor)','modul-16.html','Ogden Bolton electric bicycle 1895 patent'],
+['taksi','a','m','1897','Taksi listrik dan tukar baterai','Di New York beroperasi armada taksi listrik. Baterai yang habis ditukar dengan yang penuh di stasiun, gagasan yang kini muncul lagi sebagai battery swap.','Masalah pengisian yang lama pernah diatasi dengan tukar baterai, dan ide itu kembali dipakai sekarang.','Modul 27: Ekosistem EV','modul-27.html','New York electric cab 1897 Electric Carriage and Wagon Company'],
+['jenatzy','a','m','1899','Mobil pertama melewati 100 km/jam','Camille Jenatzy (Belgia) mengemudikan La Jamais Contente, mobil listrik berbentuk torpedo, hingga sekitar 105,9 km/jam. Itu mobil pertama di dunia yang melewati 100 km/jam, dan penggeraknya listrik.','Motor listrik punya tenaga besar sejak awal. Yang terbatas hanya baterainya.','Modul 08: Mekanika dan performa','modul-08.html','La Jamais Contente Jenatzy 1899'],
+['puncak','b','m','1900','Hampir juara','Dari sekitar 4.200 mobil yang dibuat di Amerika pada 1900, 40% bertenaga uap, 38% listrik, dan 22% bensin. Mobil listrik populer di kota karena senyap, tanpa asap, dan mudah dinyalakan tanpa engkol. Merek seperti Baker dan Detroit Electric laku di kalangan perkotaan.','Listrik bukan pecundang sejarah. Pada awalnya ia salah satu pemenang.','Modul 09: Mobil listrik','modul-09.html','Detroit Electric 1900s OR Baker Electric 1901'],
+['lohner','b','m','1900','Mobil dengan motor di dalam roda','Di Pameran Dunia Paris 1900, Ferdinand Porsche memperlihatkan Lohner-Porsche dengan motor listrik di dalam roda depan (hub motor). Ada juga versi hibridanya, yang memakai mesin bensin untuk membangkitkan listrik.','Hub motor dan hibrida sudah ada 125 tahun lalu. Teknologi yang kita pelajari tidak benar-benar baru.','Modul 16: Motor BLDC (hub motor)','modul-16.html','Lohner-Porsche 1900 hub motor Semper Vivus'],
+['kalah','b','m','1901–1913','Mengapa listrik kalah','Minyak melimpah di Texas (1901) membuat bensin murah. Ford Model T (1908) dijual sekitar 850 dolar dan turun jadi sekitar 600 dolar pada 1912, sedangkan mobil listrik seperti Baker kira-kira 2.800 dolar. Starter listrik Cadillac (1912) menghapus keunggulan "tanpa engkol". Jalan antar kota membuat jarak tempuh terbatas makin terasa.','Listrik kalah karena harga, jarak tempuh, dan infrastruktur, bukan karena tekniknya jelek.','Coba simulasi neraca di bawah','#neraca','Ford Model T 1908 OR Cadillac 1912 electric starter'],
+['sepi','b','m','1920–1960','Tersisih ke pojok','Mobil listrik hampir hilang dari jalan. Ia bertahan di tugas khusus seperti forklift dan mobil pengantar susu di Inggris, tempat jarak pendek dan rute tetap tidak jadi masalah.','Ketika kebutuhannya cocok dengan kelemahan baterai, listrik tetap dipakai.','Modul 11: Kendaraan komersial','modul-11.html','electric milk float UK OR early electric forklift'],
+['bulan','b','m','1971','Mobil listrik di Bulan','Misi Apollo 15 membawa Lunar Roving Vehicle, kendaraan listrik yang berjalan di Bulan. Tiap roda punya motor listrik sendiri, dan baterainya sekali pakai.','Di tempat tanpa bensin dan tanpa udara, motor listrik jadi pilihan yang masuk akal.','Modul 16: Motor di tiap roda','modul-16.html','Lunar Roving Vehicle Apollo 15'],
+['minyak','b','t','1973','Krisis minyak','Embargo minyak 1973 membuat harga bensin melonjak dan orang mulai mencari alternatif. Beberapa mobil listrik kecil dibuat, tetapi baterai timbal-asam saat itu belum cukup baik.','Setiap krisis energi menghidupkan minat pada EV, tetapi hanya baterai bagus yang membuatnya bertahan.','Modul 28: Biaya kepemilikan','modul-28.html','1973 oil crisis gas line OR Citicar 1970s'],
+['impact','c','m','1990–2004','California, GM Impact, dan EV1','Pada 1990 GM memperkenalkan konsep Impact dan California menerbitkan aturan kendaraan nol emisi (ZEV). Hasilnya GM EV1 (1996), yang hanya disewakan terbatas. Programnya dihentikan sekitar 2003–2004, dan kisahnya diangkat dalam film dokumenter "Who Killed the Electric Car?" (2006).','Aturan emisi bisa mendorong teknologi, dan melemahnya aturan juga bisa mematikannya.','Modul 26: Regulasi','modul-26.html','GM EV1 1996'],
+['liion','c','t','1991','Baterai lithium-ion dijual','Sony memasarkan baterai lithium-ion pertama untuk produk konsumen seperti kamera dan ponsel. Kepadatan energinya jauh di atas timbal-asam, dan belakangan dipakai di kendaraan.','Ponsel dan laptop ikut membuat baterai mobil jadi mungkin.','Modul 14: Baterai','modul-14.html','Sony lithium-ion battery 1991'],
+['yamaha','c','r','1993','Sepeda listrik pedal-assist','Yamaha memasarkan PAS, sepeda listrik yang menambah tenaga saat pedal dikayuh dan dikenal sebagai salah satu yang pertama diproduksi massal.','Dari sinilah sepeda listrik menjadi produk sehari-hari.','Modul 12: Personal transporter','modul-12.html','Yamaha PAS 1993 electric assist bicycle'],
+['prius','c','m','1997','Toyota Prius','Toyota Prius diluncurkan di Jepang pada Desember 1997, hibrida produksi massal pertama. Ia memasyarakatkan rem regeneratif, yaitu mengubah gerak kendaraan kembali menjadi listrik saat mengerem.','Banyak orang pertama kali mengenal teknologi listrik lewat hibrida.','Modul 17: Rem regeneratif','modul-17.html','Toyota Prius 1997 first generation'],
+['segway','c','r','2001','Segway dan transporter pribadi','Segway PT, kendaraan roda dua yang menyeimbangkan diri, diperkenalkan pada 2001. Sejak itu skuter listrik, hoverboard, dan sepeda listrik lipat terus bermunculan. Pada 2000-an roda dua listrik juga dibuat jutaan unit per tahun di Asia.','Kendaraan listrik kecil tumbuh bersama baterai lithium-ion.','Modul 12: Personal transporter','modul-12.html','Segway PT 2001'],
+['tesla','c','m','2003–2008','Tesla mengubah citra','Tesla berdiri pada 2003. Roadster (2008) memakai ribuan sel lithium-ion dan membuktikan bahwa mobil listrik bisa kencang dan menarik. Cara pandang berubah dari "mobil golf yang lambat" menjadi "mobil masa depan".','Persepsi ikut menentukan: EV yang menyenangkan dikendarai membuat orang mau mencoba.','Modul 09: Mobil listrik','modul-09.html','Tesla Roadster 2008'],
+['leaf','d','m','2010–2012','EV untuk semua orang','Nissan Leaf dan Chevrolet Volt (2010) membuka penjualan EV massal. Tesla Model S (2012) menawarkan jarak tempuh lebih dari 400 km (rating EPA) dan jaringan Supercharger untuk pengisian cepat.','Dua penghalang lama, jarak tempuh dan pengisian, mulai teratasi.','Modul 10: Pengisian daya','modul-10.html','Nissan Leaf 2010 OR Tesla Model S Supercharger'],
+['nobel','d','t','2019','Hadiah Nobel untuk baterai','Nobel Kimia 2019 diberikan kepada John Goodenough, Stanley Whittingham, dan Akira Yoshino atas pengembangan baterai lithium-ion.','Baterai kini diakui sebagai salah satu penemuan besar zaman ini.','Modul 14: Baterai','modul-14.html','Nobel Prize chemistry 2019 lithium-ion'],
+['kini','d','t','2025','Era kebanyakan','Menurut IEA, penjualan mobil listrik dunia melewati 20 juta unit pada 2025, sekitar seperempat dari semua mobil baru. Di Tiongkok sekitar 55% mobil baru sudah listrik, dan produsen Tiongkok memasok sekitar 60% penjualan global. Prakiraan 2026 sekitar 23 juta, walau kuartal pertama 2026 turun 8% setelah perubahan kebijakan di Tiongkok dan Amerika.','Yang dulu kalah karena harga dan jarak tempuh, kini bersaing karena baterai makin murah dan makin padat energi.','Modul 02: Sejarah EV di Indonesia','modul-02.html','global electric car sales 2025 IEA']
+];
+let fe='', fj='', idx=0, L=E;
+const chip=(grp,items,cur)=>grp.innerHTML=items.map(([k,n])=>`<button class="chip" data-k="${k}" aria-pressed="${k===cur}">${n}</button>`).join('');
+function drawChips(){
+  chip($('fe'),[['','Semua era'],...Object.entries(ERA).map(([k,v])=>[k,v[0]])],fe);
+  chip($('fj'),[['','Semua jenis'],...Object.entries(JN)],fj);
+}
+function show(){
+  L=E.filter(e=>(!fe||e[1]===fe)&&(!fj||e[2]===fj));
+  if(!L.length){$('card').innerHTML='Tidak ada peristiwa untuk pilihan ini.';$('strip').innerHTML='';$('pos').textContent='';return}
+  idx=Math.max(0,Math.min(idx,L.length-1));
+  $('strip').innerHTML=L.map((e,i)=>`<button class="yb" role="tab" style="--c:${ERA[e[1]][1]}" aria-current="${i===idx}" data-i="${i}">${e[3].split('–')[0]}</button>`).join('');
+  const e=L[idx], f=FOTO[e[0]], c=ERA[e[1]][1];
+  let fig='';
+  if(f)fig=`<figure><img src="${f.src}" alt="${e[4]}" loading="lazy" onerror="this.closest('figure').style.display='none'"><figcaption>Sumber: ${f.link?`<a href="${f.link}" target="_blank" rel="noopener">${f.sumber}</a>`:f.sumber}</figcaption></figure>`;
+  else if(EDIT)fig=`<figure><div class="ph">Foto belum dipasang. Saran kata kunci: ${e[9]}</div></figure>`;
+  $('card').style.setProperty('--c',c);
+  $('card').innerHTML=`<div class="yr">${e[3]}</div><div><h3>${e[4]}</h3><p>${e[5]}</p><p class="pt"><b>Kenapa penting:</b> ${e[6]}</p><p><b>Kaitan dengan training:</b> <a href="${e[8]}">${e[7]}</a></p></div>${fig}`;
+  $('pos').textContent=`${idx+1} dari ${L.length}`;
+  $('pv').disabled=idx===0; $('nx').disabled=idx===L.length-1;
+  const a=$('strip').querySelector('[aria-current=true]'); if(a)a.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+}
+$('fe').onclick=e=>{const b=e.target.closest('button');if(b){fe=b.dataset.k;idx=0;drawChips();show()}};
+$('fj').onclick=e=>{const b=e.target.closest('button');if(b){fj=b.dataset.k;idx=0;drawChips();show()}};
+$('strip').onclick=e=>{const b=e.target.closest('button');if(b){idx=+b.dataset.i;show()}};
+$('pv').onclick=()=>{idx--;show()}; $('nx').onclick=()=>{idx++;show()};
+addEventListener('keydown',e=>{if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;if(e.key==='ArrowRight'&&idx<L.length-1){idx++;show()}if(e.key==='ArrowLeft'&&idx>0){idx--;show()}});
+drawChips(); show();
+
+// ----- neraca -----
+const FE=[['Senyap dan tanpa asap',1890,2100],['Dinyalakan tanpa engkol',1890,1912],['Krisis minyak 1973',1973,1985],['Aturan emisi California (ZEV)',1990,2100],['Baterai lithium-ion',1991,2100],['Performa tinggi dan citra baru (Tesla)',2008,2100],['Harga baterai turun drastis',2010,2100],['Pengisian cepat dan jarak lebih dari 400 km',2012,2100]];
+const FB=[['Minyak melimpah dan bensin murah (Texas)',1901,2100],['Produksi massal murah (Model T)',1908,2100],['Starter listrik, tanpa engkol (1912)',1912,2100],['Jalan antar kota dan SPBU makin banyak',1915,2100],['Isi bahan bakar 5 menit, jarak jauh',1910,2100]];
+function neraca(){
+  const y=+$('yr').value, ae=FE.filter(f=>y>=f[1]&&y<=f[2]), ab=FB.filter(f=>y>=f[1]&&y<=f[2]), t=ae.length+ab.length||1;
+  $('yt').textContent=y;
+  $('te').style.width=ae.length/t*100+'%'; $('te').textContent=ae.length;
+  $('tb').style.width=ab.length/t*100+'%'; $('tb').textContent=ab.length;
+  $('le').innerHTML=ae.map(f=>`<li>${f[0]}</li>`).join('')||'<li style="color:var(--dim)">Belum ada</li>';
+  $('lb').innerHTML=ab.map(f=>`<li>${f[0]}</li>`).join('')||'<li style="color:var(--dim)">Belum ada</li>';
+}
+$('yr').addEventListener('input',neraca);
+$('jump').innerHTML=[1900,1912,1973,1990,2010,2025].map(y=>`<button class="chip" data-y="${y}">${y}</button>`).join('');
+$('jump').onclick=e=>{const b=e.target.closest('button');if(b){$('yr').value=b.dataset.y;neraca()}};
+neraca();
+
+// ----- kuis -----
+const Q=[
+['Pada 1900, urutan jenis mobil di Amerika dari yang terbanyak adalah...',['Uap, listrik, bensin','Bensin, listrik, uap','Listrik, uap, bensin'],0,'Uap 40%, listrik 38%, bensin 22%.'],
+['Penemuan yang membuat kendaraan listrik bisa diisi ulang pada 1859 adalah baterai buatan...',['Thomas Edison','Gaston Planté','Henry Ford'],1,'Planté menemukan baterai timbal-asam isi ulang. Faure memperbaikinya pada 1881.'],
+['Mengapa starter listrik (1912) merugikan mobil listrik?',['Membuat bensin lebih murah','Menghapus keunggulan "tanpa engkol"','Membuat baterai lebih berat'],1,'Sebelumnya, mobil listrik unggul karena tidak perlu diengkol. Setelah ada starter listrik, keunggulan itu hilang.'],
+['Mobil pertama yang melewati 100 km/jam adalah...',['Ford Model T','La Jamais Contente (listrik)','Lohner-Porsche'],1,'Camille Jenatzy mencapai sekitar 105,9 km/jam dengan mobil listrik pada 1899.'],
+['Mobil yang memakai motor di dalam roda (hub motor) pada 1900 adalah...',['Lohner-Porsche','Toyota Prius','Nissan Leaf'],0,'Lohner-Porsche memperlihatkan hub motor di Paris pada 1900.'],
+['Dua hal yang membantu EV bangkit lagi sejak 1990-an adalah...',['Minyak murah dan engkol','Baterai lithium-ion dan aturan emisi','Mesin uap dan jalan baru'],1,'Lithium-ion (1991) dan aturan nol emisi California (1990) mengubah keadaan.']
+];
+let sc=0, ans=0;
+$('quiz').innerHTML=Q.map((q,i)=>`<div class="q" data-i="${i}"><h4>${i+1}. ${q[0]}</h4>${q[1].map((o,j)=>`<button class="opt" data-j="${j}">${o}</button>`).join('')}<p class="why" hidden></p></div>`).join('');
+$('quiz').onclick=e=>{
+  const b=e.target.closest('button'); if(!b||b.disabled)return;
+  const box=b.closest('.q'), q=Q[+box.dataset.i], ok=+b.dataset.j===q[2];
+  box.querySelectorAll('button').forEach((x,j)=>{x.disabled=true;if(j===q[2])x.classList.add('right')});
+  if(!ok)b.classList.add('wrong'); else sc++;
+  const w=box.querySelector('.why'); w.hidden=false; w.textContent=(ok?'Benar. ':'Belum tepat. ')+q[3];
+  if(++ans===Q.length){const s=$('score');s.hidden=false;s.className='verdict '+(sc>=5?'ok':sc>=4?'warn':'bad');s.textContent=`Skor Anda ${sc} dari ${Q.length}. `+(sc>=5?'Siap lanjut ke modul berikutnya.':'Coba ulangi garis waktunya, lalu kuis lagi.')}
+};
+</script>
+</body>
+</html>

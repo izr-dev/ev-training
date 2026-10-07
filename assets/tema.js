@@ -8,7 +8,7 @@
    3. Coba tanpa mengedit: tambahkan ?tema=magenta di akhir alamat halaman.
    ===================================================================== */
 
-const TEMA_AKTIF = 'fasa';
+const TEMA_AKTIF = 'kertas';
 
 /* Timpa nilai tema aktif. Contoh (hapus tanda // untuk memakai):
    const KUSTOM = { kursor:'petir', latar:'partikel', warna:{ v:'#00FFAA' } };       */

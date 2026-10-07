@@ -140,10 +140,29 @@ details.dl summary{cursor:pointer;padding:12px 0;color:var(--w);font-weight:500}
 <div id="site-footer"></div>
 
 <script>
-const VIDEO = { id:'', judul:'', sumber:'', link:'' };
+const VIDEO = { id:'tlwwLisGjH8', judul:'Who Killed the Electric Car? (trailer, 2006)', sumber:'ditautkan dari halaman Trailers situs resmi film (whokilledtheelectriccar.counterspill.org), hak cipta 2006 EVConfidential LLC', link:'https://www.youtube.com/watch?v=tlwwLisGjH8' };
 // Foto per peristiwa: kunci = id peristiwa. Contoh:
 // FOTO.planteh = { src:'assets/foto/plante.jpg', sumber:'Wikimedia Commons, nama berkas', link:'https://...' };
-const FOTO = {};
+const MW='https://www.communitystories.ca/v2/electric-vehicles-canada_vehicules-electriques/';
+const mus=(path,slug,ket,kredit)=>({src:MW+'wp-content/uploads/sites/151/'+path,ket,sumber:'pameran daring Wires to Wheels, Canadian Automotive Museum (Digital Museums Canada)'+(kredit?'. '+kredit:''),link:MW+'gallery/'+slug+'/'});
+const FOTO = {
+  motor:mus('2021/10/Stratinghs-Electric-demonstrator-1835-620x725.jpg','stratinghs-electric-demonstrator-1835','Model kendaraan listrik Stratingh, 1835'),
+  planteh:mus('2021/10/Plante-Secondary-Battery-1859.jpg','plante-secondary-battery-1859','Sketsa baterai sekunder Planté, 1859'),
+  trouve:mus('2021/10/Trouve-Electric-Tricycle-1881-620x452.png','trouves-electric-tricycle-1881','Ilustrasi trisikel listrik Trouvé, 1881'),
+  praktis:mus('2021/10/Morrison-Macdonald-Electric-1892-620x543.jpg','morrison-macdonald-electric-1892','Kereta listrik enam tempat duduk, ilustrasi 1892'),
+  taksi:mus('2021/10/Electrobats-in-Manhattan-1898-620x367.jpg','electrobats-in-manhattan-1898','Taksi listrik Electrobat di Manhattan, 1898'),
+  jenatzy:mus('2021/10/Jamais-Contente-1899.jpg','jamais-content-1899','La Jamais Contente, 1899','Gambar asli dari Wikimedia Commons'),
+  puncak:mus('2021/10/Dr.-Jennie-Gray-1903-620x446.jpg','dr-jennie-gray-1903','Seorang wanita dengan mobil listrik, 1903'),
+  lohner:mus('2021/10/Ferdinand-Porsche-in-a-Hybrid-1905-620x448.jpg','ferdinand-porsche-in-a-hybrid-1905','Ferdinand Porsche dalam mobil hibrida, 1905'),
+  kalah:mus('2021/10/Self-Starting-Cadillac-1912-620x630.jpg','self-starting-cadillac-1912','Iklan Cadillac dengan starter sendiri, 1912'),
+  sepi:mus('2021/10/Tokyo-Automobile-Company-Tama.-1947-620x465.jpg','tokyo-electric-automobile-company-tama-1947','Truk listrik Tama di Jepang, 1947'),
+  minyak:mus('2021/10/No-Gas-Oregon-1973-620x411.jpg','no-gas-oregon-1973','SPBU tanpa bensin di Oregon, 1973'),
+  impact:mus('2021/10/GM-Impact-1990-620x471.jpg','gm-impact-1990','GM Impact, 1990'),
+  prius:mus('2021/11/Prius-at-Auto-Show-1997.jpg','prius-at-auto-show-1997','Toyota Prius generasi pertama, 1997','Foto: "Twelve cars that made Toyota: Prius" oleh Toyota UK, lisensi CC BY-NC-ND 2.0'),
+  kini:mus('2021/11/Canada-electric-Charger-Map-2021-620x321.jpg','north-american-charging-station-map-2021','Peta stasiun pengisian kendaraan listrik di Kanada, 2021 (ilustrasi pertumbuhan infrastruktur)')
+  // Belum ada foto: bolton, bulan, liion, yamaha, segway, tesla, leaf, nobel. Tambahkan dengan pola:
+  // tesla:{src:'assets/foto/tesla.jpg',ket:'Tesla Roadster, 2008',sumber:'nama sumber',link:'https://...'}
+};
 const EDIT = /[?&]edit/.test(location.search);
 
 // ----- layout bersama dan progres -----
@@ -161,7 +180,7 @@ if(done.includes(kode))mark();
 btn.onclick=()=>{if(!done.includes(kode))done.push(kode);try{localStorage.setItem('evDone',JSON.stringify(done))}catch(e){}mark()};
 if(VIDEO.id){
   $('vid').innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${VIDEO.id}" title="${VIDEO.judul||'Video pendukung'}" allowfullscreen loading="lazy"></iframe>`;
-  $('vcr').innerHTML=`Sumber video: ${VIDEO.link?`<a href="${VIDEO.link}" target="_blank" rel="noopener">${VIDEO.judul}</a>`:VIDEO.judul}, kanal ${VIDEO.sumber}.`;
+  $('vcr').innerHTML=`Video untuk peristiwa 1990–2004 (GM EV1). Sumber: <a href="${VIDEO.link}" target="_blank" rel="noopener">${VIDEO.judul}</a>, ${VIDEO.sumber}. Jika video tidak tampil, buka lewat tautan itu.`;
 }
 
 // ----- tebakan pembuka -----
@@ -216,7 +235,7 @@ function show(){
   $('strip').innerHTML=L.map((e,i)=>`<button class="yb" role="tab" style="--c:${ERA[e[1]][1]}" aria-current="${i===idx}" data-i="${i}">${e[3].split('–')[0]}</button>`).join('');
   const e=L[idx], f=FOTO[e[0]], c=ERA[e[1]][1];
   let fig='';
-  if(f)fig=`<figure><img src="${f.src}" alt="${e[4]}" loading="lazy" onerror="this.closest('figure').style.display='none'"><figcaption>Sumber: ${f.link?`<a href="${f.link}" target="_blank" rel="noopener">${f.sumber}</a>`:f.sumber}</figcaption></figure>`;
+  if(f)fig=`<figure><img src="${f.src}" alt="${e[4]}" loading="lazy" onerror="this.closest('figure').style.display='none'"><figcaption>${f.ket?f.ket+'. ':''}Sumber: ${f.link?`<a href="${f.link}" target="_blank" rel="noopener">${f.sumber}</a>`:f.sumber}</figcaption></figure>`;
   else if(EDIT)fig=`<figure><div class="ph">Foto belum dipasang. Saran kata kunci: ${e[9]}</div></figure>`;
   $('card').style.setProperty('--c',c);
   $('card').innerHTML=`<div class="yr">${e[3]}</div><div><h3>${e[4]}</h3><p>${e[5]}</p><p class="pt"><b>Kenapa penting:</b> ${e[6]}</p><p><b>Kaitan dengan training:</b> <a href="${e[8]}">${e[7]}</a></p></div>${fig}`;

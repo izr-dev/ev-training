@@ -16,7 +16,7 @@ const TEMA_AKTIF = 'fasa';
 
 //const KUSTOM = {};
 
-const KUSTOM = {kursor:'petir'};
+const KUSTOM = { kursor:'petir', latar:'partikel', warna:{ v:'#00FFAA' } };  
 /* ---------------------------------------------------------------------
    PILIHAN NILAI
    kursor : cincin | bidik | petir | jejak | bawaan

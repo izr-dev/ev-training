@@ -15,7 +15,7 @@ const TEMA_AKTIF = 'fasa';
 
 
 //const KUSTOM = {};
-const KUSTOM = {latar:'partikel', kursor:'petir'};
+const KUSTOM = {latar:'partikel', kursor:'jejak'};
 //const KUSTOM = { kursor:'petir', latar:'partikel', warna:{ v:'#00FFAA' } };  
 /* ---------------------------------------------------------------------
    PILIHAN NILAI

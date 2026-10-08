@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>02 Sejarah Kendaraan Listrik di Indonesia | Training EV</title>
+<script src="assets/tema.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#060A12;--panel:#0C1220;--line:#1B2740;--text:#E6ECF5;--dim:#8593AA;--u:#FFC857;--v:#3DDC97;--w:#4DA3FF;--alert:#FF6B8B;--disp:'Chakra Petch',system-ui,sans-serif;--body:'Sora',system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font:400 16px/1.7 var(--body)}
+main{max-width:920px;margin:0 auto;padding:40px clamp(16px,4vw,32px) 0}
+h1{font:700 clamp(28px,4vw,44px)/1.1 var(--disp);margin:0 0 8px}
+h2{font:700 24px var(--disp);margin:52px 0 6px}
+a{color:var(--w)}
+.lead{color:var(--dim);margin:0 0 20px}
+.no{font:700 15px var(--disp);color:var(--v)}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--dim);font:500 13px var(--body);cursor:pointer}
+.chip[aria-pressed=true]{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 16px;background:var(--ink);border:1px solid var(--line);border-radius:6px;color:var(--text);font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--v)}
+.opt.right{border-color:var(--v);background:color-mix(in srgb,var(--v) 14%,transparent)}
+.opt.wrong{border-color:var(--alert);background:color-mix(in srgb,var(--alert) 12%,transparent)}
+.why{font-size:14px;color:var(--dim);margin:8px 0 0}
+.verdict{padding:10px 14px;border-radius:6px;border:1px solid var(--line);margin-top:12px;font-size:14px}
+.ok{border-color:var(--v);color:var(--v)}.warn{border-color:var(--u);color:var(--u)}.bad{border-color:var(--alert);color:var(--alert)}
+/* garis waktu */
+#strip{display:flex;gap:6px;overflow-x:auto;padding:6px 2px 10px;scroll-snap-type:x proximity}
+.yb{flex:none;padding:6px 12px;border:1px solid var(--line);border-bottom:3px solid var(--c);border-radius:6px;background:var(--panel);color:var(--dim);font:600 13px var(--disp);cursor:pointer;scroll-snap-align:center}
+.yb[aria-current=true]{color:var(--ink);background:var(--c);border-color:var(--c)}
+#card{display:grid;grid-template-columns:150px 1fr;gap:6px 24px;border-left:4px solid var(--c);min-height:230px}
+#card .yr{font:700 clamp(30px,5vw,50px)/1 var(--disp);color:var(--c);overflow-wrap:anywhere}
+#card h3{font:700 22px var(--disp);margin:0 0 8px}
+#card p{margin:8px 0}
+#card .pt{padding:8px 12px;border-radius:6px;background:color-mix(in srgb,var(--c) 10%,transparent)}
+#card figure{grid-column:1/-1;margin:8px 0 0}
+#card img{max-width:100%;max-height:260px;border-radius:6px;display:block;background:#fff}
+#card figcaption{font-size:12px;color:var(--dim);margin-top:6px}
+.ph{padding:14px;border:1px dashed var(--dim);border-radius:6px;color:var(--dim);font-size:13px}
+@media(max-width:620px){#card{grid-template-columns:1fr}}
+.ctl2{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px}
+.ctl2 button{padding:9px 18px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);font:600 14px var(--disp);cursor:pointer}
+.ctl2 button:hover:not(:disabled){border-color:var(--v)}
+.ctl2 button:disabled{opacity:.35}
+/* neraca */
+#yr{width:100%;accent-color:var(--v)}
+#yt{font:700 40px var(--disp);color:var(--u)}
+.tug{display:flex;height:30px;border-radius:6px;overflow:hidden;border:1px solid var(--line);margin:10px 0}
+.tug div{display:flex;align-items:center;padding:0 10px;font:700 14px var(--disp);color:var(--ink);transition:width .25s;min-width:0;white-space:nowrap}
+#te{background:var(--v)}#tb{background:var(--u);justify-content:flex-end}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.cols{grid-template-columns:1fr}}
+.cols h4{margin:4px 0;font:600 15px var(--disp)}
+.cols li{font-size:14px;margin:4px 0}
+.cols ul{margin:0;padding-left:18px;min-height:40px}
+.vid{aspect-ratio:16/9;display:grid;place-items:center;border:1px dashed var(--dim);border-radius:8px;color:var(--dim);text-align:center;padding:16px}
+.vid iframe{width:100%;height:100%;border:0;border-radius:8px}
+.vc{font-size:12px;color:var(--dim);margin:8px 0 0}
+.vl{display:grid;grid-template-columns:210px 1fr;gap:6px 16px;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.vl a.th{position:relative;display:block;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--ink)}
+.vl img{width:100%;height:100%;object-fit:cover;display:block}
+.vl .pl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);color:#fff;font:700 15px var(--disp)}
+.vl h4{margin:0 0 4px;font:600 16px var(--disp)}
+.vl p{margin:4px 0;font-size:14px}
+.vl .bd{display:inline-block;padding:1px 8px;border:1px solid var(--v);border-radius:999px;color:var(--v);font-size:11px;margin-right:6px}
+@media(max-width:560px){.vl{grid-template-columns:1fr}}
+.lsn{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.lsn div{padding:14px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.lsn b{display:block;font:600 17px var(--disp);color:var(--u);margin-bottom:4px}
+details.dl{margin-top:20px;border:1px solid var(--line);border-radius:8px;padding:4px 16px}
+details.dl summary{cursor:pointer;padding:12px 0;color:var(--w);font-weight:500}
+.q{margin:18px 0}.q h4{margin:0 0 8px;font:600 16px var(--body)}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:44px;padding-top:20px;border-top:1px solid var(--line)}
+.nav a,.nav button{padding:10px 18px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);font:600 14px var(--disp);text-decoration:none;cursor:pointer}
+.nav button{background:var(--v);border-color:var(--v);color:var(--ink)}
+.nav button[disabled]{background:var(--panel);color:var(--v)}
+.br{display:grid;grid-template-columns:120px 1fr 80px;gap:10px;align-items:center;margin:8px 0;font-size:14px}
+.br i{display:block;height:22px;background:var(--v);border-radius:4px;min-width:4px;justify-self:start}
+details.hb{margin:8px 0}
+details.hb p{margin:6px 0;font-size:15px}
+</style>
+</head>
+<body data-kode="02">
+<div id="site-header"></div>
+
+<main>
+  <div class="no">Modul 02 &nbsp;|&nbsp; Pengantar</div>
+  <h1>Sejarah Kendaraan Listrik di Indonesia</h1>
+  <p class="lead">Indonesia sudah mencoba kendaraan listrik sejak 1997, lalu jatuh bangun sampai 2026. Modul ini menjawab tiga hal: apa yang sudah terjadi, apa yang menghambat, dan di mana posisi kita sekarang.</p>
+
+  <div class="box" id="hook">
+    <b>Tebak dulu.</b> Dari 100 motor baru yang terjual di Indonesia pada 2025, berapa yang motor listrik?
+    <div id="hopt"></div>
+    <p class="why" id="hans" hidden></p>
+  </div>
+
+  <h2>1. Garis waktu</h2>
+  <p class="lead">Pilih peristiwa, atau gunakan tombol panah di keyboard. Setiap kartu memuat kaitannya dengan modul training ini.</p>
+  <div class="chips" id="fe" role="group" aria-label="Era"></div>
+  <div class="chips" id="fj" role="group" aria-label="Jenis"></div>
+  <div id="strip" role="tablist"></div>
+  <div class="box" id="card" aria-live="polite"></div>
+  <div class="ctl2"><button id="pv">Sebelumnya</button><span id="pos" style="color:var(--dim);font-size:13px"></span><button id="nx">Berikutnya</button></div>
+
+  <h2 id="hambatan">2. Mengapa motor listrik tertinggal?</h2>
+  <p class="lead">Roda dua adalah kendaraan terbanyak di Indonesia, tetapi motor listrik masih di bawah 1% penjualan. Klik tiap hambatan untuk melihat penjelasannya dan kaitannya dengan materi training.</p>
+  <div class="box"><div id="bars"></div><p class="why">Penjualan motor listrik, dalam ribu unit. Total motor baru 2025 sekitar 6,4 juta unit. Angka 2026 baru sampai Agustus.</p></div>
+  <div id="hb" style="margin-top:14px"></div>
+
+  <h2>3. Pelajaran dari sejarah</h2>
+  <div class="lsn">
+    <div><b>Teknologi saja tidak cukup</b>Tucuxi dan kawan-kawan membuktikan purwarupa bisa dibuat. Yang sulit adalah izin, uji, investor, dan jalur produksi.</div>
+    <div><b>Kebijakan menggerakkan pasar</b>Subsidi Rp7 juta dan insentif impor mobil membuat penjualan melonjak, lalu turun saat insentifnya berhenti.</div>
+    <div><b>Layanan dan baterai</b>Garansi, bengkel, dan kesehatan baterai menentukan kepercayaan pembeli. Di sinilah peran teknisi EV.</div>
+  </div>
+  <p class="lead" style="margin-top:14px">Ekosistem sudah tersedia di atas kertas: pabrik, baterai, dan aturan. Yang masih langka adalah tenaga yang paham baterai, BMS, dan controller. Itu alasan training ini dibuat.</p>
+
+  <h2>4. Video pendukung</h2>
+  <p class="lead">Klik gambar untuk menonton di YouTube. Tiap video disertai ringkasan singkat.</p>
+  <div id="vlist"></div>
+  <p class="why" style="margin-top:18px"><b>Cari video lain.</b> Tautan berikut membuka hasil pencarian YouTube, bukan video tertentu.</p>
+  <ul class="rec" id="vlinks"></ul>
+
+  <details class="dl"><summary>Catatan untuk pengajar</summary>
+    <p><b>Alur sekitar 40 menit:</b> tebakan pembuka (5), garis waktu (15), hambatan motor listrik (10), pelajaran (5), kuis (5).</p>
+    <p><b>Cerita yang mudah dituturkan:</b> (1) riset LIPI sejak 1997 yang berhenti karena tidak ada investor; (2) Tucuxi 2012 yang gagal di Magetan karena rem; (3) subsidi Rp7 juta yang awalnya sepi peminat lalu melonjak pada 2024; (4) Molinas, 13 Agustus 2026.</p>
+    <p><b>Pertanyaan pemicu:</b> Kalau subsidi dicabut, apakah Anda tetap membeli motor listrik? Apa yang paling Anda khawatirkan: harga, baterai, atau bengkel?</p>
+    <p><b>Pesan yang perlu ditekankan:</b> Angka penjualan dan kebijakan cepat berubah. Data di halaman ini per Agustus 2026, jadi cek ulang sebelum mengajar. Hindari mengomentari kasus hukum individu; fokus pada pelajaran teknis dan kebijakan.</p>
+    <p><b>Mode penyelenggara:</b> tambahkan <code>?edit=1</code> di akhir alamat halaman untuk melihat kotak foto kosong beserta saran kata kunci pencarian.</p>
+  </details>
+
+  <h2>5. Kuis</h2>
+  <div id="quiz"></div>
+  <div class="verdict" id="score" hidden></div>
+
+  <p class="why" style="margin-top:30px">Sumber data: <a href="https://www.goodnewsfromindonesia.id/indonesiana/iptek/perjalanan-mobil-listrik-nasional-yang-penuh-perjuangan" target="_blank" rel="noopener">Good News From Indonesia (sejarah mobil listrik nasional)</a>, <a href="https://katadata.co.id/indepth/telaah/6a8ec45dd962a/ancang-ancang-motor-listrik-nasional-di-tengah-tren-penurunan-minat-konsumen" target="_blank" rel="noopener">Katadata (motor listrik dan Molinas, Agustus 2026)</a>, <a href="https://industri.kontan.co.id/news/dominasi-pasar-byd-kuasai-56-mobil-listrik-indonesia-percepat-pembangunan-pabrik" target="_blank" rel="noopener">Kontan (BYD dan pasar BEV)</a>, <a href="https://ikpi.or.id/insentif-impor-mobil-listrik-cbu-berakhir-2025-produsen-wajib-mulai-produksi-lokal/" target="_blank" rel="noopener">IKPI (insentif impor CBU)</a>, <a href="https://www.hsfkramer.com/notes/energy/2019-09/one-step-forward-for-battery-powered-electric-vehicles-in-indonesia" target="_blank" rel="noopener">Herbert Smith Freehills Kramer (Perpres 55/2019)</a>, <a href="https://www.cnnindonesia.com/otomotif/20230313121048-603-924300/gesits-respons-lebih-awal-dapat-subsidi-rp7-juta" target="_blank" rel="noopener">CNN Indonesia (subsidi 2023)</a>. Data per Agustus 2026 dan cepat berubah. Cek ulang sebelum dipakai sebagai rujukan resmi.</p>
+
+  <div class="nav">
+    <a href="modul-01.html">Sebelumnya: 01</a>
+    <a href="index.html#modul">Daftar modul</a>
+    <button id="doneBtn">Tandai selesai</button>
+    <a href="modul-03.html">Berikutnya: 03</a>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script>
+// Daftar video: tambah atau ubah baris di sini. id = ID video YouTube, bahasa = 'Indonesia' atau 'Inggris' (kosongkan bila belum diketahui).
+const VIDEOS = [
+  // Belum ada video terpilih untuk modul ini. Tambahkan dengan pola:
+  // { id:'ID_VIDEO', judul:'Judul video', bahasa:'Indonesia', kanal:'Nama kanal', link:'https://www.youtube.com/watch?v=ID_VIDEO', desk:'Satu atau dua kalimat tentang isi video.' }
+];
+// Foto per peristiwa: kunci = id peristiwa. Contoh:
+// FOTO.planteh = { src:'assets/foto/plante.jpg', sumber:'Wikimedia Commons, nama berkas', link:'https://...' };
+const FOTO = {
+  tucuxi:{src:'https://cdn.goodnewsfromindonesia.id/gnfi/uploads/articles/large-perjalanan-mobil-listrik-nasional-yang-penuh-perjuangan-GC4K0AwAa8.jpg?tr=w-1200,h-675,fo-auto',ket:'Mobil listrik nasional Tucuxi',sumber:'Good News From Indonesia, foto dikreditkan ke Chris Woodrich (Wikimedia Commons)',link:'https://www.goodnewsfromindonesia.id/indonesiana/iptek/perjalanan-mobil-listrik-nasional-yang-penuh-perjuangan'},
+  molinas:{src:'https://cdn1.katadata.co.id/media/images/temp/2026/08/13/Presiden_Prabowo_Subianto_meresmikan_motor_listrik_nasional_bese-2026_08_13-17_08_19_a0d9b25466cabfd020eb0606fc666f9a.jpg',ket:'Peluncuran program Motor Listrik Nasional di Cikarang, 13 Agustus 2026',sumber:'Katadata, foto ANTARA/HO-BPMI Sekretariat Presiden',link:'https://katadata.co.id/indepth/telaah/6a8ec45dd962a/ancang-ancang-motor-listrik-nasional-di-tengah-tren-penurunan-minat-konsumen'}
+  // Tambah foto lain dengan pola: kunci = id peristiwa, mis. gesits:{src:'assets/foto/gesits.jpg',ket:'...',sumber:'...',link:'https://...'}
+};
+const EDIT = /[?&]edit/.test(location.search);
+
+// ----- layout bersama dan progres -----
+fetch('assets/layout.html').then(r=>{if(!r.ok)throw 0;return r.text()}).then(h=>{
+  const d=new DOMParser().parseFromString(h,'text/html');
+  document.head.append(...d.querySelectorAll('style'));
+  document.getElementById('site-header').replaceWith(d.querySelector('header'));
+  document.getElementById('site-footer').replaceWith(d.querySelector('footer'));
+}).catch(()=>{document.getElementById('site-header').textContent='Training EV'});
+const $=id=>document.getElementById(id);
+const kode=document.body.dataset.kode, btn=$('doneBtn');
+let done=[]; try{done=JSON.parse(localStorage.getItem('evDone')||'[]')}catch(e){}
+const mark=()=>{btn.textContent='Selesai ✓';btn.disabled=true};
+if(done.includes(kode))mark();
+btn.onclick=()=>{if(!done.includes(kode))done.push(kode);try{localStorage.setItem('evDone',JSON.stringify(done))}catch(e){}mark()};
+$('vlist').innerHTML=VIDEOS.map(v=>`<div class="vl"><a class="th" href="${v.link}" target="_blank" rel="noopener" aria-label="Tonton: ${v.judul}"><img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="Pratinjau ${v.judul}" loading="lazy"><span class="pl">▶ Tonton di YouTube</span></a><div><h4><a href="${v.link}" target="_blank" rel="noopener">${v.judul}</a></h4><p>${v.bahasa?`<span class="bd">${v.bahasa}</span>`:''}${v.kanal?`<span style="color:var(--dim);font-size:12px">${v.kanal}</span>`:''}</p><p>${v.desk}</p></div></div>`).join('');
+if(!VIDEOS.length)$('vlist').innerHTML='<p class="why">Belum ada video yang dipilih untuk modul ini. Gunakan tautan pencarian di bawah, lalu tambahkan video pilihan Anda di daftar VIDEOS.</p>';
+const YT='https://www.youtube.com/results?search_query=';
+const VL=[['id','sejarah mobil listrik nasional Tucuxi Dahlan Iskan','peristiwa 2012'],['id','Gesits motor listrik nasional sejarah','peristiwa Gesits'],['id','Perpres 55 2019 kendaraan listrik penjelasan','peristiwa 2019'],['id','subsidi motor listrik Rp7 juta','peristiwa 2023'],['id','Molinas motor listrik nasional 2026','peristiwa 2026']];
+$('vlinks').innerHTML=VL.map(x=>`<li><a href="${YT+encodeURIComponent(x[1])}" target="_blank" rel="noopener">${x[1]}</a> (${x[0]==='id'?'Bahasa Indonesia':'Bahasa Inggris'}, ${x[2]})</li>`).join('');
+
+// ----- tebakan pembuka -----
+const HO=['Sekitar 15','Sekitar 5','Kurang dari 1','Sekitar 30'];
+$('hopt').innerHTML=HO.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('');
+$('hopt').onclick=e=>{
+  const b=e.target.closest('button'); if(!b||b.disabled)return;
+  [...$('hopt').children].forEach((x,i)=>{x.disabled=true;if(i===2)x.classList.add('right')});
+  if(+b.dataset.i!==2)b.classList.add('wrong');
+  const a=$('hans'); a.hidden=false;
+  a.innerHTML='Jawabannya <b>kurang dari 1</b>. Pada 2025 terjual sekitar 55 ribu motor listrik dari sekitar 6,4 juta motor baru. Sebagai pembanding, mobil listrik murni sudah sekitar 9,7% pasar pada Januari–Juli 2025. Mengapa motor listrik justru tertinggal? Mari kita lihat perjalanannya.';
+};
+
+// ----- garis waktu -----
+const ERA={a:['1997–2010','var(--u)'],b:['2011–2018','var(--alert)'],c:['2019–2023','var(--w)'],d:['2024–2026','var(--v)']};
+const JN={m:'Mobil',r:'Roda dua',t:'Kebijakan dan industri'};
+// [id, era, jenis, tahun, judul, cerita, kenapa penting, kaitan, tautan, saran kata kunci foto]
+const E=[
+['lipi','a','m','1997–2005','Riset awal di LIPI','Sejak 1997 Pusat Penelitian Tenaga Listrik dan Mekatronik LIPI mengganti mesin mobil biasa dengan motor listrik dan membuat banyak purwarupa. Pada 2005 hasilnya, mobil untuk rumah sakit, polisi, dan kendaraan kota, diserahkan kepada Presiden SBY. Pengembangannya sempat terhenti karena tidak ada investor untuk produksi.','Teknologinya sudah dicoba hampir 30 tahun lalu. Yang kurang adalah modal dan jalur menuju produksi.','Modul 23: Konversi motor BBM ke listrik','modul-23.html','LIPI mobil listrik 2005 purwarupa'],
+['putra','b','m','2011–2014','Dahlan Iskan dan "Putra Petir"','Pada 2011 Menteri BUMN Dahlan Iskan menunjuk lima pemuda untuk mengembangkan kendaraan listrik: Dasep Ahmadi (Evina dan bus Ahmadi), Danet Suryatama (Tucuxi), Ravi Desai (merek Elvi), Mario Rivaldi (motor listrik), dan Ricky Elson (Selo dan Gendhis). Dahlan membiayai usaha mereka. Beberapa kendaraan sempat dipamerkan, tetapi banyak yang tidak sampai produksi massal.','Untuk pertama kalinya ada dukungan negara yang besar, tetapi tanpa jalur izin dan produksi yang jelas.','Modul 26: Regulasi dan legalitas','modul-26.html','Putra Petir Dahlan Iskan mobil listrik Evina Selo Gendhis'],
+['tucuxi','b','m','2012–2013','Tucuxi dan kecelakaan Magetan','Tucuxi diperkenalkan pada 23 Desember 2012. Saat diuji dari Solo ke Surabaya, mobil ini mengalami kecelakaan di Magetan pada 5 Januari 2013 karena masalah pada sistem pengereman. Sebagai penggantinya dibuat Selo dan Gendhis, yang sebagian besar berhenti sebagai purwarupa.','Sistem keselamatan seperti rem tidak boleh dikorbankan. Uji dan sertifikasi sama pentingnya dengan teknologinya.','Modul 04: Keselamatan dan K3','modul-04.html','Tucuxi mobil listrik 2012'],
+['tesla17','b','m','sekitar 2017','Mobil listrik impor mulai masuk','Mobil listrik kembali ramai setelah Tesla hadir lewat importir umum di Indonesia sekitar 2017. Pabrikan seperti Wuling juga mulai menyiapkan model listrik untuk pasar Indonesia.','Pasar dibentuk lebih dulu oleh merek luar negeri, bukan oleh produk nasional.','Modul 09: Mobil listrik','modul-09.html','Tesla Indonesia 2017 importir umum'],
+['perpres','c','t','8 Agustus 2019','Perpres 55/2019','Presiden menandatangani Perpres No. 55 Tahun 2019 tentang percepatan program kendaraan bermotor listrik berbasis baterai untuk transportasi jalan. Isinya insentif fiskal dan non-fiskal, kewajiban membangun pabrik di Indonesia, batas minimal kandungan lokal (TKDN) yang naik bertahap dari 35–40%, serta dasar pembangunan SPKLU dan SPBKLU. Tujuannya menarik investasi dan menjadikan Indonesia produsen baterai lithium.','Inilah aturan pertama yang menyusun seluruh ekosistem, dari pabrik sampai stasiun pengisian.','Modul 26: Regulasi dan legalitas','modul-26.html','Perpres 55 2019 kendaraan listrik'],
+['hyundai','c','t','2019–2021','Investasi pabrik dan baterai','Pada 26 November 2019 Indonesia menerima tawaran investasi Hyundai Motor Company dan menandatangani nota kesepahaman pengembangan mobil listrik. Pada 18 Desember 2020 LG Energy Solution dan Hyundai sepakat dengan PT Industri Baterai Indonesia untuk membangun pabrik sel baterai. Pada 2021 PP 74/2021 mengaitkan pajak barang mewah (PPnBM) dengan emisi gas buang.','Nikel dan baterai membuat Indonesia tidak hanya pasar, tetapi calon pemain industri.','Modul 29: Daur ulang dan teknologi masa depan','modul-29.html','Hyundai LG battery cell factory Indonesia'],
+['gesits','c','r','2019–2023','Gesits dan motor listrik nasional','Gesits, motor listrik produksi PT WIKA Industri Manufaktur, menjadi salah satu pelopor motor listrik nasional. Pada 2023 tipe G1 tercatat memiliki TKDN 46%, dan tipe Gesits Raya diklaim sekitar 60% berdasarkan audit sendiri. Merek lain seperti Alva, Volta, dan Selis ikut berkembang.','Motor listrik buatan dalam negeri bisa memenuhi syarat kandungan lokal.','Modul 13: Motor listrik R2','modul-13.html','Gesits motor listrik nasional'],
+['subsidi','c','r','20 Maret 2023','Subsidi motor listrik Rp7 juta','Pemerintah memberi bantuan Rp7 juta per unit untuk motor listrik berdasarkan Permenperin No. 6 Tahun 2023, dengan syarat TKDN minimal 40%. Kuotanya 200 ribu motor baru dan 50 ribu motor konversi pada 2023, dan dananya disalurkan lewat produsen. Awalnya peminatnya masih sedikit: pada awal Agustus 2023 baru sekitar 1.200 pengajuan.','Subsidi membuka pasar, tetapi pasar yang bergantung pada subsidi mudah goyah.','Modul 28: Biaya kepemilikan','modul-28.html','subsidi motor listrik Rp7 juta 2023'],
+['mobil24','d','m','2024','Mobil listrik impor melonjak','Selama Januari–November 2024 penjualan mobil listrik murni (dari pabrik ke diler) sekitar 38.774 unit, atau sekitar 5,45% dari total. BYD mulai beroperasi di Indonesia pada Januari 2024. Insentif impor mobil listrik utuh (CBU) mendorong penjualan, tetapi menekan produsen lokal.','Insentif impor menumbuhkan pasar dengan cepat, tetapi tidak otomatis membangun industri lokal.','Modul 27: Ekosistem EV Indonesia','modul-27.html','BYD Indonesia 2024 Sealion'],
+['mobil25','d','m','2025','Hampir sepersepuluh pasar mobil','Pada Januari–Juli 2025 mobil listrik murni (BEV) mencapai sekitar 9,7% pasar, atau sekitar 42 ribu unit. Pada Mei 2025 BEV impor sempat mencapai 64% penjualan BEV, dan BYD menguasai sekitar 56% pasar BEV pada April 2025. Insentif impor CBU berakhir 31 Desember 2025. Mulai 1 Januari 2026 hingga 31 Desember 2027, produsen wajib memproduksi di dalam negeri sebanyak unit yang diimpor.','Hampir satu dari sepuluh mobil baru kini listrik, tetapi sebagian besar masih impor. Kewajiban produksi lokal mengubah arah.','Modul 26: Regulasi dan legalitas','modul-26.html','BYD Sealion Indonesia 2025'],
+['motor25','d','r','2024–2026','Motor listrik naik lalu turun','Penjualan motor listrik mencapai sekitar 77 ribu unit pada 2024 saat subsidi berjalan, lalu turun 28% menjadi sekitar 55 ribu unit pada 2025 setelah kuota subsidi habis. Itu kurang dari 1% dari sekitar 6,4 juta motor baru. Sampai Agustus 2026 baru sekitar 25 ribu unit terjual.','Roda dua adalah mayoritas kendaraan Indonesia, tetapi motor listrik masih sangat kecil.','Lihat bagian "Mengapa motor listrik tertinggal?"','#hambatan','motor listrik Indonesia penjualan 2025'],
+['molinas','d','r','13 Agustus 2026','Program Motor Listrik Nasional','Presiden Prabowo Subianto meluncurkan program Motor Listrik Nasional (Molinas) di fasilitas PT Ilectra Motor Group (merek Alva) di Cikarang. Program ini menggandeng industri kecil dan menengah sebagai pemasok komponen. Skema subsidi baru dibicarakan, dengan anggaran yang disebut sampai Rp3 triliun untuk satu juta unit, tetapi jadwalnya berulang kali tertunda.','Arah kebijakan bergeser dari mobil ke roda dua dan ke rantai pasok lokal. Peluang besar bagi teknisi dan bengkel.','Seluruh bagian R2 di training ini','index.html#modul','Molinas motor listrik nasional Cikarang']
+];
+let fe='', fj='', idx=0, L=E;
+const chip=(grp,items,cur)=>grp.innerHTML=items.map(([k,n])=>`<button class="chip" data-k="${k}" aria-pressed="${k===cur}">${n}</button>`).join('');
+function drawChips(){
+  chip($('fe'),[['','Semua era'],...Object.entries(ERA).map(([k,v])=>[k,v[0]])],fe);
+  chip($('fj'),[['','Semua jenis'],...Object.entries(JN)],fj);
+}
+function show(){
+  L=E.filter(e=>(!fe||e[1]===fe)&&(!fj||e[2]===fj));
+  if(!L.length){$('card').innerHTML='Tidak ada peristiwa untuk pilihan ini.';$('strip').innerHTML='';$('pos').textContent='';return}
+  idx=Math.max(0,Math.min(idx,L.length-1));
+  $('strip').innerHTML=L.map((e,i)=>`<button class="yb" role="tab" style="--c:${ERA[e[1]][1]}" aria-current="${i===idx}" data-i="${i}">${(e[3].match(/\d{4}/)||[e[3]])[0]}</button>`).join('');
+  const e=L[idx], f=FOTO[e[0]], c=ERA[e[1]][1];
+  let fig='';
+  if(f)fig=`<figure><img src="${f.src}" alt="${e[4]}" loading="lazy" onerror="this.closest('figure').style.display='none'"><figcaption>${f.ket?f.ket+'. ':''}Sumber: ${f.link?`<a href="${f.link}" target="_blank" rel="noopener">${f.sumber}</a>`:f.sumber}</figcaption></figure>`;
+  else if(EDIT)fig=`<figure><div class="ph">Foto belum dipasang. Saran kata kunci: ${e[9]}</div></figure>`;
+  $('card').style.setProperty('--c',c);
+  $('card').innerHTML=`<div class="yr">${e[3]}</div><div><h3>${e[4]}</h3><p>${e[5]}</p><p class="pt"><b>Kenapa penting:</b> ${e[6]}</p><p><b>Kaitan dengan training:</b> <a href="${e[8]}">${e[7]}</a></p></div>${fig}`;
+  $('pos').textContent=`${idx+1} dari ${L.length}`;
+  $('pv').disabled=idx===0; $('nx').disabled=idx===L.length-1;
+  const a=$('strip').querySelector('[aria-current=true]'); if(a)a.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+}
+$('fe').onclick=e=>{const b=e.target.closest('button');if(b){fe=b.dataset.k;idx=0;drawChips();show()}};
+$('fj').onclick=e=>{const b=e.target.closest('button');if(b){fj=b.dataset.k;idx=0;drawChips();show()}};
+$('strip').onclick=e=>{const b=e.target.closest('button');if(b){idx=+b.dataset.i;show()}};
+$('pv').onclick=()=>{idx--;show()}; $('nx').onclick=()=>{idx++;show()};
+addEventListener('keydown',e=>{if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;if(e.key==='ArrowRight'&&idx<L.length-1){idx++;show()}if(e.key==='ArrowLeft'&&idx>0){idx--;show()}});
+drawChips(); show();
+
+// ----- hambatan motor listrik -----
+const BR=[['2024',77],['2025',55],['Jan–Agu 2026',25]];
+$('bars').innerHTML=BR.map(b=>`<div class="br"><span>${b[0]}</span><i style="width:${b[1]/77*100}%"></i><b>${b[1]} ribu</b></div>`).join('');
+const HB=[
+['Harga awal masih tinggi','Alva dijual mulai sekitar Rp18 jutaan sampai Rp35 jutaan dengan sistem sewa baterai, sedangkan Gesits sekitar Rp20–28 juta. Survei IESR 2023 menemukan selisih sekitar Rp10 juta antara harga yang mau dibayar masyarakat dan harga motor listrik.','Modul 28: Biaya kepemilikan','modul-28.html'],
+['Subsidi yang tidak pasti','Penjualan melonjak ke sekitar 77 ribu pada 2024 saat subsidi Rp7 juta berjalan, lalu turun 28% pada 2025 setelah kuotanya habis. Pada 2026 rencana subsidi baru berulang kali tertunda, sehingga banyak calon pembeli menunggu.','Modul 26: Regulasi dan legalitas','modul-26.html'],
+['Garansi dan layanan purna jual','Calon pembeli ragu soal garansi, bengkel, dan suku cadang. Ini celah besar yang bisa diisi teknisi yang paham motor listrik.','Modul 22: Diagnosa dan troubleshooting','modul-22.html'],
+['Kesehatan baterai dan nilai jual kembali','Menurut laporan Rocky Mountain Institute, pasar motor listrik bekas di Indonesia belum matang dan belum ada metode yang luas dipakai untuk menilai kesehatan baterai. Itu menyulitkan pembiayaan dan penjualan kembali.','Modul 15: BMS (SOC dan SOH)','modul-15.html'],
+['Pembiayaan','Pembiayaan motor listrik masih terkonsentrasi pada beberapa perusahaan multifinance, dan bank komersial belum banyak terlibat. Risiko produk, nilai jual kembali, dan kebijakan membuat uang muka lebih tinggi dan tenor lebih pendek.','Modul 28: Biaya kepemilikan','modul-28.html'],
+['Kapasitas produksi dan rantai pasok','Menteri Keuangan menilai kapasitas produksi motor listrik nasional belum mencapai satu juta unit dan memperkirakan paling sekitar 100.000 unit sampai akhir 2026. Molinas menggandeng industri kecil dan menengah sebagai pemasok komponen, dari rangka dan kabel sampai rumah baterai.','Modul 21: Controller, dan modul 16: Motor BLDC','modul-16.html']
+];
+$('hb').innerHTML=HB.map(h=>`<details class="dl hb"><summary>${h[0]}</summary><p>${h[1]}</p><p><b>Kaitan dengan training:</b> <a href="${h[3]}">${h[2]}</a></p></details>`).join('');
+
+// ----- kuis -----
+const Q=[
+['Perpres No. 55 Tahun 2019 mengatur tentang...',['Larangan motor bensin','Percepatan program kendaraan listrik berbasis baterai','Tarif listrik rumah tangga'],1,'Perpres itu ditandatangani 8 Agustus 2019 dan memuat insentif, kandungan lokal, serta dasar stasiun pengisian.'],
+['Tucuxi mengalami kecelakaan pada Januari 2013 karena...',['Baterai terbakar','Masalah pada sistem pengereman','Motor listrik terlalu kecil'],1,'Saat uji dari Solo ke Surabaya, kecelakaan terjadi di Magetan akibat masalah rem.'],
+['Syarat TKDN minimal untuk motor listrik penerima subsidi Rp7 juta pada 2023 adalah...',['10%','25%','40%'],2,'Motor listrik yang dibantu harus diproduksi di Indonesia dengan TKDN minimal 40%.'],
+['Apa yang berubah mulai 1 Januari 2026 bagi produsen mobil listrik impor utuh (CBU)?',['Insentif impor ditambah','Wajib memproduksi di dalam negeri sebanyak unit yang diimpor','Impor dilarang total'],1,'Insentif impor CBU berakhir 31 Desember 2025. Setelahnya produsen wajib berproduksi lokal dengan jumlah setara.'],
+['Pangsa motor listrik dari seluruh penjualan motor baru pada 2025 adalah...',['Sekitar 25%','Sekitar 10%','Kurang dari 1%'],2,'Sekitar 55 ribu dari sekitar 6,4 juta motor baru.'],
+['Siapa yang menunjuk "Putra Petir" untuk mengembangkan kendaraan listrik pada 2011?',['Dahlan Iskan, Menteri BUMN','Presiden Jokowi','Menteri Perhubungan'],0,'Dahlan Iskan, saat menjabat Menteri BUMN, menunjuk lima pemuda untuk mengembangkan kendaraan listrik nasional.']
+];
+let sc=0, ans=0;
+$('quiz').innerHTML=Q.map((q,i)=>`<div class="q" data-i="${i}"><h4>${i+1}. ${q[0]}</h4>${q[1].map((o,j)=>`<button class="opt" data-j="${j}">${o}</button>`).join('')}<p class="why" hidden></p></div>`).join('');
+$('quiz').onclick=e=>{
+  const b=e.target.closest('button'); if(!b||b.disabled)return;
+  const box=b.closest('.q'), q=Q[+box.dataset.i], ok=+b.dataset.j===q[2];
+  box.querySelectorAll('button').forEach((x,j)=>{x.disabled=true;if(j===q[2])x.classList.add('right')});
+  if(!ok)b.classList.add('wrong'); else sc++;
+  const w=box.querySelector('.why'); w.hidden=false; w.textContent=(ok?'Benar. ':'Belum tepat. ')+q[3];
+  if(++ans===Q.length){const s=$('score');s.hidden=false;s.className='verdict '+(sc>=5?'ok':sc>=4?'warn':'bad');s.textContent=`Skor Anda ${sc} dari ${Q.length}. `+(sc>=5?'Siap lanjut ke modul berikutnya.':'Coba ulangi garis waktunya, lalu kuis lagi.')}
+};
+</script>
+</body>
+</html>

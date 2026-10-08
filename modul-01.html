@@ -107,7 +107,7 @@ details.dl summary{cursor:pointer;padding:12px 0;color:var(--w);font-weight:500}
   <h2>3. Pelajaran dari sejarah</h2>
   <div class="lsn">
     <div><b>Jarak tempuh</b>Tahun 1900 dan hari ini, pertanyaan pertama orang tetap sama: "sampai mana bisa jalan?"</div>
-    <div><b>Biaya</b>Mobil listrik seperti Baker kira-kira tiga kali lipat Model T. Harga selalu menentukan siapa yang menang.</div>
+    <div><b>Biaya</b>Pada 1912 roadster listrik sekitar 1.750 dolar, mobil bensin sekitar 650 dolar. Harga selalu menentukan siapa yang menang.</div>
     <div><b>Pengisian</b>Tukar baterai ada sejak 1897. Kini muncul lagi, dan bagian ini dibahas di modul pengisian.</div>
   </div>
   <p class="lead" style="margin-top:14px">Yang berubah bukan idenya, tetapi <b>baterai</b>. Itu sebabnya modul 14 (Baterai) menjadi inti training ini.</p>
@@ -115,6 +115,8 @@ details.dl summary{cursor:pointer;padding:12px 0;color:var(--w);font-weight:500}
   <h2>4. Video pendukung</h2>
   <div class="vid" id="vid">Video belum dipilih. Isi VIDEO di bagian skrip halaman ini.</div>
   <p class="vc" id="vcr">Sumber video: belum diisi.</p>
+  <p class="why" style="margin-top:14px"><b>Cari video lain.</b> Tautan di bawah membuka hasil pencarian YouTube, bukan video tertentu. Pilih yang sesuai, lalu isi ID-nya di objek <code>VIDEO</code>.</p>
+  <ul class="rec" id="vlinks"></ul>
 
   <details class="dl"><summary>Catatan untuk pengajar</summary>
     <p><b>Alur sekitar 50 menit:</b> tebakan pembuka (5), garis waktu (25), simulasi neraca (10), pelajaran (5), kuis (5).</p>
@@ -128,7 +130,7 @@ details.dl summary{cursor:pointer;padding:12px 0;color:var(--w);font-weight:500}
   <div id="quiz"></div>
   <div class="verdict" id="score" hidden></div>
 
-  <p class="why" style="margin-top:30px">Sumber data: <a href="https://www.mckinsey.com/industries/automotive-and-assembly/our-insights/the-125th-anniversary-of-the-little-engine-that-couldnt" target="_blank" rel="noopener">McKinsey (komposisi mobil 1900)</a>, <a href="https://thinkev.ca/blog/what-was-the-first-electric-car-a-longer-history-than-you-think" target="_blank" rel="noopener">ThinkEV (sejarah awal dan harga)</a>, <a href="https://www.iea.org/reports/global-ev-outlook-2026" target="_blank" rel="noopener">IEA Global EV Outlook 2026</a>. Tanggal dan nama lain dari catatan sejarah umum. Perlu diverifikasi ulang sebelum dipakai sebagai rujukan resmi.</p>
+  <p class="why" style="margin-top:30px">Sumber data: <a href="https://www.mckinsey.com/industries/automotive-and-assembly/our-insights/the-125th-anniversary-of-the-little-engine-that-couldnt" target="_blank" rel="noopener">McKinsey (komposisi mobil 1900)</a>, <a href="https://thinkev.ca/blog/what-was-the-first-electric-car-a-longer-history-than-you-think" target="_blank" rel="noopener">ThinkEV (sejarah awal dan harga)</a>, <a href="https://www.energy.gov/articles/history-electric-car" target="_blank" rel="noopener">Departemen Energi AS (sejarah mobil listrik)</a>, <a href="https://www.iea.org/reports/global-ev-outlook-2026" target="_blank" rel="noopener">IEA Global EV Outlook 2026</a>. Tanggal dan nama lain dari catatan sejarah umum. Perlu diverifikasi ulang sebelum dipakai sebagai rujukan resmi.</p>
 
   <div class="nav">
     <a href="index.html#modul">Daftar modul</a>
@@ -159,8 +161,10 @@ const FOTO = {
   minyak:mus('2021/10/No-Gas-Oregon-1973-620x411.jpg','no-gas-oregon-1973','SPBU tanpa bensin di Oregon, 1973'),
   impact:mus('2021/10/GM-Impact-1990-620x471.jpg','gm-impact-1990','GM Impact, 1990'),
   prius:mus('2021/11/Prius-at-Auto-Show-1997.jpg','prius-at-auto-show-1997','Toyota Prius generasi pertama, 1997','Foto: "Twelve cars that made Toyota: Prius" oleh Toyota UK, lisensi CC BY-NC-ND 2.0'),
+  bolton:{src:'https://ucarecdn.com/a1917c09-6b13-4245-8fa1-caf3d26f3c8b/-/format/auto/-/preview/900x900/-/quality/lighter/',ket:'Sepeda listrik Ogden Bolton Jr., paten 1895',sumber:'artikel "The History of The Electric Bike" (Rize Bikes), gambar dikreditkan ke blog Cycle History (cyclehistory.wordpress.com)',link:'https://rizebikes.com/blogs/blog/the-history-of-the-electric-bike'},
+  bulan:{src:'https://www.nasa.gov/wp-content/uploads/2023/03/257719main_as15-86-11603_full.jpg',ket:'Astronaut James Irwin bekerja di dekat Lunar Roving Vehicle, Apollo 15, 1971',sumber:'NASA (Image Credit: NASA)',link:'https://www.nasa.gov/image-article/apollo-15-spacewalk-with-lunar-rover-july-1971/'},
   kini:mus('2021/11/Canada-electric-Charger-Map-2021-620x321.jpg','north-american-charging-station-map-2021','Peta stasiun pengisian kendaraan listrik di Kanada, 2021 (ilustrasi pertumbuhan infrastruktur)')
-  // Belum ada foto: bolton, bulan, liion, yamaha, segway, tesla, leaf, nobel. Tambahkan dengan pola:
+  // Belum ada foto: liion, yamaha, segway, tesla, leaf, nobel. Tambahkan dengan pola:
   // tesla:{src:'assets/foto/tesla.jpg',ket:'Tesla Roadster, 2008',sumber:'nama sumber',link:'https://...'}
 };
 const EDIT = /[?&]edit/.test(location.search);
@@ -179,9 +183,13 @@ const mark=()=>{btn.textContent='Selesai ✓';btn.disabled=true};
 if(done.includes(kode))mark();
 btn.onclick=()=>{if(!done.includes(kode))done.push(kode);try{localStorage.setItem('evDone',JSON.stringify(done))}catch(e){}mark()};
 if(VIDEO.id){
-  $('vid').innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${VIDEO.id}" title="${VIDEO.judul||'Video pendukung'}" allowfullscreen loading="lazy"></iframe>`;
-  $('vcr').innerHTML=`Video untuk peristiwa 1990–2004 (GM EV1). Sumber: <a href="${VIDEO.link}" target="_blank" rel="noopener">${VIDEO.judul}</a>, ${VIDEO.sumber}. Jika video tidak tampil, buka lewat tautan itu.`;
+  const v=$('vid'); v.style.cssText='padding:0;overflow:hidden;border-style:solid;border-color:var(--line)';
+  v.innerHTML=`<a href="${VIDEO.link}" target="_blank" rel="noopener" style="display:block;width:100%;height:100%;position:relative;color:#fff"><img src="https://img.youtube.com/vi/${VIDEO.id}/hqdefault.jpg" alt="${VIDEO.judul}" style="width:100%;height:100%;object-fit:cover;display:block"><span style="position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.4);font:700 20px var(--disp)">▶ Tonton di YouTube</span></a>`;
+  $('vcr').innerHTML=`Video untuk peristiwa 1990–2004 (GM EV1). Sumber: <a href="${VIDEO.link}" target="_blank" rel="noopener">${VIDEO.judul}</a>, ${VIDEO.sumber}.`;
 }
+const YT='https://www.youtube.com/results?search_query=';
+const VL=[['Lunar Roving Vehicle Apollo 15 NASA','peristiwa 1971'],['La Jamais Contente Jenatzy 1899','peristiwa 1899'],['Lohner-Porsche hub motor 1900','peristiwa 1900'],['sejarah mobil listrik dari 1800-an sampai sekarang','gambaran umum'],['Toyota Prius generasi pertama 1997','peristiwa 1997']];
+$('vlinks').innerHTML=VL.map(x=>`<li><a href="${YT+encodeURIComponent(x[0])}" target="_blank" rel="noopener">${x[0]}</a> (${x[1]})</li>`).join('');
 
 // ----- tebakan pembuka -----
 const HO=['5%','15%','38%','70%'];
@@ -208,11 +216,11 @@ const E=[
 ['jenatzy','a','m','1899','Mobil pertama melewati 100 km/jam','Camille Jenatzy (Belgia) mengemudikan La Jamais Contente, mobil listrik berbentuk torpedo, hingga sekitar 105,9 km/jam. Itu mobil pertama di dunia yang melewati 100 km/jam, dan penggeraknya listrik.','Motor listrik punya tenaga besar sejak awal. Yang terbatas hanya baterainya.','Modul 08: Mekanika dan performa','modul-08.html','La Jamais Contente Jenatzy 1899'],
 ['puncak','b','m','1900','Hampir juara','Dari sekitar 4.200 mobil yang dibuat di Amerika pada 1900, 40% bertenaga uap, 38% listrik, dan 22% bensin. Mobil listrik populer di kota karena senyap, tanpa asap, dan mudah dinyalakan tanpa engkol. Merek seperti Baker dan Detroit Electric laku di kalangan perkotaan.','Listrik bukan pecundang sejarah. Pada awalnya ia salah satu pemenang.','Modul 09: Mobil listrik','modul-09.html','Detroit Electric 1900s OR Baker Electric 1901'],
 ['lohner','b','m','1900','Mobil dengan motor di dalam roda','Di Pameran Dunia Paris 1900, Ferdinand Porsche memperlihatkan Lohner-Porsche dengan motor listrik di dalam roda depan (hub motor). Ada juga versi hibridanya, yang memakai mesin bensin untuk membangkitkan listrik.','Hub motor dan hibrida sudah ada 125 tahun lalu. Teknologi yang kita pelajari tidak benar-benar baru.','Modul 16: Motor BLDC (hub motor)','modul-16.html','Lohner-Porsche 1900 hub motor Semper Vivus'],
-['kalah','b','m','1901–1913','Mengapa listrik kalah','Minyak melimpah di Texas (1901) membuat bensin murah. Ford Model T (1908) dijual sekitar 850 dolar dan turun jadi sekitar 600 dolar pada 1912, sedangkan mobil listrik seperti Baker kira-kira 2.800 dolar. Starter listrik Cadillac (1912) menghapus keunggulan "tanpa engkol". Jalan antar kota membuat jarak tempuh terbatas makin terasa.','Listrik kalah karena harga, jarak tempuh, dan infrastruktur, bukan karena tekniknya jelek.','Coba simulasi neraca di bawah','#neraca','Ford Model T 1908 OR Cadillac 1912 electric starter'],
+['kalah','b','m','1901–1913','Mengapa listrik kalah','Minyak melimpah di Texas (1901) membuat bensin murah. Ford Model T (1908) membuat mobil bensin murah. Pada 1912 mobil bensin sekitar 650 dolar, sedangkan roadster listrik sekitar 1.750 dolar (data Departemen Energi AS). Starter listrik Cadillac (1912) menghapus keunggulan "tanpa engkol". Jalan antar kota membuat jarak tempuh terbatas makin terasa.','Listrik kalah karena harga, jarak tempuh, dan infrastruktur, bukan karena tekniknya jelek.','Coba simulasi neraca di bawah','#neraca','Ford Model T 1908 OR Cadillac 1912 electric starter'],
 ['sepi','b','m','1920–1960','Tersisih ke pojok','Mobil listrik hampir hilang dari jalan. Ia bertahan di tugas khusus seperti forklift dan mobil pengantar susu di Inggris, tempat jarak pendek dan rute tetap tidak jadi masalah.','Ketika kebutuhannya cocok dengan kelemahan baterai, listrik tetap dipakai.','Modul 11: Kendaraan komersial','modul-11.html','electric milk float UK OR early electric forklift'],
 ['bulan','b','m','1971','Mobil listrik di Bulan','Misi Apollo 15 membawa Lunar Roving Vehicle, kendaraan listrik yang berjalan di Bulan. Tiap roda punya motor listrik sendiri, dan baterainya sekali pakai.','Di tempat tanpa bensin dan tanpa udara, motor listrik jadi pilihan yang masuk akal.','Modul 16: Motor di tiap roda','modul-16.html','Lunar Roving Vehicle Apollo 15'],
 ['minyak','b','t','1973','Krisis minyak','Embargo minyak 1973 membuat harga bensin melonjak dan orang mulai mencari alternatif. Beberapa mobil listrik kecil dibuat, tetapi baterai timbal-asam saat itu belum cukup baik.','Setiap krisis energi menghidupkan minat pada EV, tetapi hanya baterai bagus yang membuatnya bertahan.','Modul 28: Biaya kepemilikan','modul-28.html','1973 oil crisis gas line OR Citicar 1970s'],
-['impact','c','m','1990–2004','California, GM Impact, dan EV1','Pada 1990 GM memperkenalkan konsep Impact dan California menerbitkan aturan kendaraan nol emisi (ZEV). Hasilnya GM EV1 (1996), yang hanya disewakan terbatas. Programnya dihentikan sekitar 2003–2004, dan kisahnya diangkat dalam film dokumenter "Who Killed the Electric Car?" (2006).','Aturan emisi bisa mendorong teknologi, dan melemahnya aturan juga bisa mematikannya.','Modul 26: Regulasi','modul-26.html','GM EV1 1996'],
+['impact','c','m','1990–2004','California, GM Impact, dan EV1','Pada 1990 GM memperkenalkan konsep Impact dan California menerbitkan aturan kendaraan nol emisi (ZEV). Hasilnya GM EV1 (1996), yang hanya disewakan terbatas. Produksinya berhenti di awal 2000-an dan mobil-mobilnya ditarik sekitar 2003–2004. Kisahnya diangkat dalam film dokumenter "Who Killed the Electric Car?" (2006).','Aturan emisi bisa mendorong teknologi, dan melemahnya aturan juga bisa mematikannya.','Modul 26: Regulasi','modul-26.html','GM EV1 1996'],
 ['liion','c','t','1991','Baterai lithium-ion dijual','Sony memasarkan baterai lithium-ion pertama untuk produk konsumen seperti kamera dan ponsel. Kepadatan energinya jauh di atas timbal-asam, dan belakangan dipakai di kendaraan.','Ponsel dan laptop ikut membuat baterai mobil jadi mungkin.','Modul 14: Baterai','modul-14.html','Sony lithium-ion battery 1991'],
 ['yamaha','c','r','1993','Sepeda listrik pedal-assist','Yamaha memasarkan PAS, sepeda listrik yang menambah tenaga saat pedal dikayuh dan dikenal sebagai salah satu yang pertama diproduksi massal.','Dari sinilah sepeda listrik menjadi produk sehari-hari.','Modul 12: Personal transporter','modul-12.html','Yamaha PAS 1993 electric assist bicycle'],
 ['prius','c','m','1997','Toyota Prius','Toyota Prius diluncurkan di Jepang pada Desember 1997, hibrida produksi massal pertama. Ia memasyarakatkan rem regeneratif, yaitu mengubah gerak kendaraan kembali menjadi listrik saat mengerem.','Banyak orang pertama kali mengenal teknologi listrik lewat hibrida.','Modul 17: Rem regeneratif','modul-17.html','Toyota Prius 1997 first generation'],

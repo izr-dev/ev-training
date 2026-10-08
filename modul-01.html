@@ -59,6 +59,14 @@ a{color:var(--w)}
 .vid{aspect-ratio:16/9;display:grid;place-items:center;border:1px dashed var(--dim);border-radius:8px;color:var(--dim);text-align:center;padding:16px}
 .vid iframe{width:100%;height:100%;border:0;border-radius:8px}
 .vc{font-size:12px;color:var(--dim);margin:8px 0 0}
+.vl{display:grid;grid-template-columns:210px 1fr;gap:6px 16px;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.vl a.th{position:relative;display:block;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--ink)}
+.vl img{width:100%;height:100%;object-fit:cover;display:block}
+.vl .pl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);color:#fff;font:700 15px var(--disp)}
+.vl h4{margin:0 0 4px;font:600 16px var(--disp)}
+.vl p{margin:4px 0;font-size:14px}
+.vl .bd{display:inline-block;padding:1px 8px;border:1px solid var(--v);border-radius:999px;color:var(--v);font-size:11px;margin-right:6px}
+@media(max-width:560px){.vl{grid-template-columns:1fr}}
 .lsn{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
 .lsn div{padding:14px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
 .lsn b{display:block;font:600 17px var(--disp);color:var(--u);margin-bottom:4px}
@@ -113,9 +121,9 @@ details.dl summary{cursor:pointer;padding:12px 0;color:var(--w);font-weight:500}
   <p class="lead" style="margin-top:14px">Yang berubah bukan idenya, tetapi <b>baterai</b>. Itu sebabnya modul 14 (Baterai) menjadi inti training ini.</p>
 
   <h2>4. Video pendukung</h2>
-  <div class="vid" id="vid">Video belum dipilih. Isi VIDEO di bagian skrip halaman ini.</div>
-  <p class="vc" id="vcr">Sumber video: belum diisi.</p>
-  <p class="why" style="margin-top:14px"><b>Cari video lain.</b> Tautan di bawah membuka hasil pencarian YouTube, bukan video tertentu. Pilih yang sesuai, lalu isi ID-nya di objek <code>VIDEO</code>.</p>
+  <p class="lead">Klik gambar untuk menonton di YouTube. Tiap video disertai ringkasan singkat.</p>
+  <div id="vlist"></div>
+  <p class="why" style="margin-top:18px"><b>Cari video lain.</b> Tautan berikut membuka hasil pencarian YouTube, bukan video tertentu.</p>
   <ul class="rec" id="vlinks"></ul>
 
   <details class="dl"><summary>Catatan untuk pengajar</summary>
@@ -142,7 +150,13 @@ details.dl summary{cursor:pointer;padding:12px 0;color:var(--w);font-weight:500}
 <div id="site-footer"></div>
 
 <script>
-const VIDEO = { id:'tlwwLisGjH8', judul:'Who Killed the Electric Car? (trailer, 2006)', sumber:'ditautkan dari halaman Trailers situs resmi film (whokilledtheelectriccar.counterspill.org), hak cipta 2006 EVConfidential LLC', link:'https://www.youtube.com/watch?v=tlwwLisGjH8' };
+// Daftar video: tambah atau ubah baris di sini. id = ID video YouTube, bahasa = 'Indonesia' atau 'Inggris' (kosongkan bila belum diketahui).
+const VIDEOS = [
+  { id:'O2cHfWiQrOM', judul:'Video pilihan penyelenggara (YouTube Shorts)', bahasa:'', kanal:'', link:'https://www.youtube.com/shorts/O2cHfWiQrOM?feature=share', desk:'Video pendek pilihan Anda untuk materi sejarah mobil listrik. Ringkasan isinya belum diisi: tonton dulu, lalu tulis deskripsi singkat di sini.' },
+  { id:'tlwwLisGjH8', judul:'Who Killed the Electric Car? (trailer, 2006)', bahasa:'Inggris', kanal:'ditautkan dari halaman Trailers situs resmi film', link:'https://www.youtube.com/watch?v=tlwwLisGjH8', desk:'Trailer film dokumenter tentang GM EV1, mobil listrik California tahun 1990-an, dan mengapa mobil itu ditarik dari jalan. Cocok untuk peristiwa 1990–2004.' }
+  // Tambahkan video berbahasa Indonesia dengan pola yang sama, misalnya:
+  // { id:'ID_VIDEO', judul:'Judul video', bahasa:'Indonesia', kanal:'Nama kanal', link:'https://www.youtube.com/watch?v=ID_VIDEO', desk:'Satu atau dua kalimat tentang isi video.' }
+];
 // Foto per peristiwa: kunci = id peristiwa. Contoh:
 // FOTO.planteh = { src:'assets/foto/plante.jpg', sumber:'Wikimedia Commons, nama berkas', link:'https://...' };
 const MW='https://www.communitystories.ca/v2/electric-vehicles-canada_vehicules-electriques/';
@@ -182,14 +196,10 @@ let done=[]; try{done=JSON.parse(localStorage.getItem('evDone')||'[]')}catch(e){
 const mark=()=>{btn.textContent='Selesai ✓';btn.disabled=true};
 if(done.includes(kode))mark();
 btn.onclick=()=>{if(!done.includes(kode))done.push(kode);try{localStorage.setItem('evDone',JSON.stringify(done))}catch(e){}mark()};
-if(VIDEO.id){
-  const v=$('vid'); v.style.cssText='padding:0;overflow:hidden;border-style:solid;border-color:var(--line)';
-  v.innerHTML=`<a href="${VIDEO.link}" target="_blank" rel="noopener" style="display:block;width:100%;height:100%;position:relative;color:#fff"><img src="https://img.youtube.com/vi/${VIDEO.id}/hqdefault.jpg" alt="${VIDEO.judul}" style="width:100%;height:100%;object-fit:cover;display:block"><span style="position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.4);font:700 20px var(--disp)">▶ Tonton di YouTube</span></a>`;
-  $('vcr').innerHTML=`Video untuk peristiwa 1990–2004 (GM EV1). Sumber: <a href="${VIDEO.link}" target="_blank" rel="noopener">${VIDEO.judul}</a>, ${VIDEO.sumber}.`;
-}
+$('vlist').innerHTML=VIDEOS.map(v=>`<div class="vl"><a class="th" href="${v.link}" target="_blank" rel="noopener" aria-label="Tonton: ${v.judul}"><img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="Pratinjau ${v.judul}" loading="lazy"><span class="pl">▶ Tonton di YouTube</span></a><div><h4><a href="${v.link}" target="_blank" rel="noopener">${v.judul}</a></h4><p>${v.bahasa?`<span class="bd">${v.bahasa}</span>`:''}${v.kanal?`<span style="color:var(--dim);font-size:12px">${v.kanal}</span>`:''}</p><p>${v.desk}</p></div></div>`).join('');
 const YT='https://www.youtube.com/results?search_query=';
-const VL=[['Lunar Roving Vehicle Apollo 15 NASA','peristiwa 1971'],['La Jamais Contente Jenatzy 1899','peristiwa 1899'],['Lohner-Porsche hub motor 1900','peristiwa 1900'],['sejarah mobil listrik dari 1800-an sampai sekarang','gambaran umum'],['Toyota Prius generasi pertama 1997','peristiwa 1997']];
-$('vlinks').innerHTML=VL.map(x=>`<li><a href="${YT+encodeURIComponent(x[0])}" target="_blank" rel="noopener">${x[0]}</a> (${x[1]})</li>`).join('');
+const VL=[['id','sejarah mobil listrik dunia','gambaran umum'],['id','sejarah motor listrik dan mobil listrik','gambaran umum'],['en','history of the electric car','gambaran umum'],['en','Lunar Roving Vehicle Apollo 15 NASA','peristiwa 1971'],['en','La Jamais Contente Jenatzy 1899','peristiwa 1899']];
+$('vlinks').innerHTML=VL.map(x=>`<li><a href="${YT+encodeURIComponent(x[1])}" target="_blank" rel="noopener">${x[1]}</a> (${x[0]==='id'?'Bahasa Indonesia':'Bahasa Inggris'}, ${x[2]})</li>`).join('');
 
 // ----- tebakan pembuka -----
 const HO=['5%','15%','38%','70%'];

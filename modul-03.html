@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>03 Dasar Kelistrikan | Training EV</title>
+<script src="assets/tema.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#060A12;--panel:#0C1220;--line:#1B2740;--text:#E6ECF5;--dim:#8593AA;--u:#FFC857;--v:#3DDC97;--w:#4DA3FF;--alert:#FF6B8B;--disp:'Chakra Petch',system-ui,sans-serif;--body:'Sora',system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font:400 16px/1.7 var(--body)}
+main{max-width:920px;margin:0 auto;padding:40px clamp(16px,4vw,32px) 0}
+h1{font:700 clamp(28px,4vw,44px)/1.1 var(--disp);margin:0 0 8px}
+h2{font:700 24px var(--disp);margin:52px 0 6px}
+a{color:var(--w)}
+.lead{color:var(--dim);margin:0 0 18px}
+.no{font:700 15px var(--disp);color:var(--v)}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;margin:12px 0}
+.goal{margin:0 0 8px;padding:14px 18px 14px 36px;border:1px solid var(--line);border-left:3px solid var(--v);border-radius:6px;background:var(--panel)}
+.ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 22px;margin:8px 0}
+.ctl label{display:block;font-size:13px;color:var(--dim)}
+.ctl b{color:var(--text);font-family:var(--disp)}
+.ctl input[type=range]{width:100%;accent-color:var(--v)}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0}
+.out div{padding:10px 12px;border:1px solid var(--line);border-radius:6px}
+.out span{display:block;font-size:12px;color:var(--dim)}
+.out strong{font:700 20px var(--disp)}
+canvas{width:100%;height:200px;display:block;background:var(--ink);border:1px solid var(--line);border-radius:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--dim);font:500 13px var(--body);cursor:pointer}
+.chip[aria-pressed=true]{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 16px;background:var(--ink);border:1px solid var(--line);border-radius:6px;color:var(--text);font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--v)}
+.opt.right{border-color:var(--v);background:color-mix(in srgb,var(--v) 14%,transparent)}
+.opt.wrong{border-color:var(--alert);background:color-mix(in srgb,var(--alert) 12%,transparent)}
+.why{font-size:14px;color:var(--dim);margin:8px 0 0}
+.verdict{padding:10px 14px;border-radius:6px;border:1px solid var(--line);margin-top:12px;font-size:14px}
+.ok{border-color:var(--v);color:var(--v)}.warn{border-color:var(--u);color:var(--u)}.bad{border-color:var(--alert);color:var(--alert)}
+.story{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.story figure{margin:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.story img{width:100%;height:230px;object-fit:contain;background:#fff;border-radius:6px;display:block}
+.story figcaption{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5}
+.story h3{margin:10px 0 4px;font:600 17px var(--disp)}
+.story p{margin:4px 0;font-size:14px}
+table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+.cmp th,.cmp td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.cmp th{color:var(--dim);font-weight:500}
+.vl{display:grid;grid-template-columns:210px 1fr;gap:6px 16px;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.vl a.th{position:relative;display:block;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--ink)}
+.vl img{width:100%;height:100%;object-fit:cover;display:block}
+.vl .pl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);color:#fff;font:700 15px var(--disp)}
+.vl h4{margin:0 0 4px;font:600 16px var(--disp)}
+.vl p{margin:4px 0;font-size:14px}
+.vl .bd{display:inline-block;padding:1px 8px;border:1px solid var(--v);border-radius:999px;color:var(--v);font-size:11px;margin-right:6px}
+@media(max-width:560px){.vl{grid-template-columns:1fr}}
+details.dl{margin-top:20px;border:1px solid var(--line);border-radius:8px;padding:4px 16px}
+details.dl summary{cursor:pointer;padding:12px 0;color:var(--w);font-weight:500}
+.exp li{margin:6px 0}
+.q{margin:18px 0}.q h4{margin:0 0 8px;font:600 16px var(--body)}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:44px;padding-top:20px;border-top:1px solid var(--line)}
+.nav a,.nav button{padding:10px 18px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);font:600 14px var(--disp);text-decoration:none;cursor:pointer}
+.nav button{background:var(--v);border-color:var(--v);color:var(--ink)}
+.nav button[disabled]{background:var(--panel);color:var(--v)}
+</style>
+</head>
+<body data-kode="03">
+<div id="site-header"></div>
+<main>
+  <div class="no">Modul 03 &nbsp;|&nbsp; Fondasi kelistrikan</div>
+  <h1>Dasar Kelistrikan</h1>
+  <p class="lead">Semua bagian EV, dari baterai sampai motor, tunduk pada beberapa hukum sederhana. Modul ini membuatnya terasa nyata lewat analogi air, simulasi, dan percobaan kecil.</p>
+  <ul class="goal">
+    <li>Menjelaskan tegangan, arus, hambatan, daya, dan energi beserta satuannya.</li>
+    <li>Memakai hukum Ohm dan menghitung arus serta energi baterai EV.</li>
+    <li>Membedakan DC, AC, dan tiga fasa, serta tahu mengapa kabel tebal penting.</li>
+  </ul>
+
+  <div class="box" id="hook">
+    <b>Tebak dulu.</b> Baterai motor listrik tertulis <b>72 V, 30 Ah</b>. Berapa energi yang tersimpan di dalamnya?
+    <div id="hopt"></div><p class="why" id="hans" hidden></p>
+  </div>
+
+  <h2>1. Kenapa namanya Volt, Ohm, dan Watt?</h2>
+  <p class="lead">Satuan listrik dinamai menurut penemunya. Dua cerita awal ini menjelaskan banyak hal.</p>
+  <div class="story" id="story"></div>
+
+  <h2>2. Hukum Ohm lewat analogi air</h2>
+  <p class="lead">Tegangan seperti tekanan air, arus seperti debit air, hambatan seperti penyempitan selang. Geser dan lihat alirannya.</p>
+  <div class="box">
+    <div class="ctl">
+      <label>Tegangan (V): <b id="ovT"></b><input type="range" id="ov" min="1" max="100" step="1" value="24"></label>
+      <label>Hambatan (Ω): <b id="orT"></b><input type="range" id="or" min="0.1" max="50" step="0.1" value="6"></label>
+    </div>
+    <canvas id="water" aria-label="Animasi aliran air sebagai analogi arus listrik"></canvas>
+    <div class="out"><div><span>Arus I = V ÷ R</span><strong id="oi"></strong></div><div><span>Daya P = V × I</span><strong id="op"></strong></div><div><span>Panas pada beban</span><strong id="oh"></strong></div></div>
+    <div class="verdict" id="ovd"></div>
+  </div>
+
+  <h2>3. Lima besaran yang harus hafal</h2>
+  <table class="cmp">
+    <tr><th>Besaran</th><th>Satuan</th><th>Analogi air</th><th>Dibaca dengan</th><th>Contoh di EV</th></tr>
+    <tr><td><b>Tegangan (V)</b></td><td>volt (V)</td><td>tekanan</td><td>voltmeter</td><td>Baterai R2 sekitar 48–96 V</td></tr>
+    <tr><td><b>Arus (I)</b></td><td>ampere (A)</td><td>debit</td><td>ampere meter, clamp</td><td>Motor menarik puluhan sampai ratusan A</td></tr>
+    <tr><td><b>Hambatan (R)</b></td><td>ohm (Ω)</td><td>penyempitan</td><td>ohmmeter (rangkaian mati)</td><td>Kabel, konektor, kumparan motor</td></tr>
+    <tr><td><b>Daya (P)</b></td><td>watt (W), kW</td><td>tenaga aliran</td><td>dihitung: V × I</td><td>Motor 3 kW</td></tr>
+    <tr><td><b>Energi (E)</b></td><td>Wh, kWh</td><td>isi tangki</td><td>dihitung: V × Ah</td><td>Baterai 2,16 kWh</td></tr>
+  </table>
+
+  <h2>4. Kalkulator baterai EV</h2>
+  <p class="lead">Dari label baterai ke arus, durasi, dan jarak. Angka konsumsi hanya perkiraan kasar.</p>
+  <div class="box">
+    <div class="ctl">
+      <label>Tegangan baterai: <b id="kvT"></b><input type="range" id="kv" min="24" max="400" step="1" value="72"></label>
+      <label>Kapasitas: <b id="kaT"></b><input type="range" id="ka" min="5" max="200" step="1" value="30"></label>
+      <label>Daya motor: <b id="kpT"></b><input type="range" id="kp" min="0.2" max="150" step="0.1" value="3"></label>
+      <label>Konsumsi: <b id="kcT"></b><input type="range" id="kc" min="20" max="250" step="5" value="40"></label>
+    </div>
+    <div class="out"><div><span>Energi baterai</span><strong id="ke"></strong></div><div><span>Arus saat daya penuh</span><strong id="kI"></strong></div><div><span>Habis jika daya penuh</span><strong id="kt"></strong></div><div><span>Perkiraan jarak</span><strong id="kj"></strong></div></div>
+    <p class="why">Energi = V × Ah. Arus = Daya ÷ V. Jarak = Energi ÷ konsumsi. Motor listrik kecil umumnya puluhan Wh/km dan mobil listrik sekitar 150–200 Wh/km (perkiraan kasar, bergantung kondisi).</p>
+  </div>
+
+  <h2>5. DC, AC, dan tiga fasa</h2>
+  <p class="lead">Baterai menghasilkan DC. Motor BLDC butuh tiga fasa. Controller mengubahnya.</p>
+  <div class="box">
+    <div class="chips" id="wm"></div>
+    <div class="ctl"><label>Frekuensi (kecepatan putar): <b id="wfT"></b><input type="range" id="wf" min="0.3" max="3" step="0.1" value="1"></label></div>
+    <canvas id="wave" aria-label="Gelombang DC, AC satu fasa, dan tiga fasa"></canvas>
+    <p class="why" id="wtx"></p>
+  </div>
+
+  <h2>6. Mengapa kabel harus tebal?</h2>
+  <p class="lead">Kabel punya hambatan kecil. Dengan arus besar, hambatan kecil itu menjadi panas dan tegangan hilang.</p>
+  <div class="box">
+    <div class="ctl">
+      <label>Arus: <b id="wiT"></b><input type="range" id="wi" min="5" max="300" step="5" value="50"></label>
+      <label>Panjang kabel satu arah: <b id="wlT"></b><input type="range" id="wl" min="0.2" max="5" step="0.1" value="1.5"></label>
+      <label>Luas penampang: <b id="waT"></b><input type="range" id="wa" min="1" max="50" step="0.5" value="6"></label>
+      <label>Tegangan baterai: <b id="wbT"></b><input type="range" id="wb" min="24" max="400" step="1" value="72"></label>
+    </div>
+    <div class="out"><div><span>Hambatan kabel (pergi-pulang)</span><strong id="wr"></strong></div><div><span>Tegangan hilang</span><strong id="wd"></strong></div><div><span>Panas di kabel</span><strong id="wh"></strong></div><div><span>Persen dari baterai</span><strong id="wp"></strong></div></div>
+    <div class="verdict" id="wv"></div>
+    <p class="why">R = ρ × L ÷ A, dengan ρ tembaga sekitar 0,0175 Ω·mm²/m. Panas = I² × R. Panjang dihitung pergi dan pulang.</p>
+  </div>
+
+  <h2>7. Susun sel: seri dan paralel</h2>
+  <div class="box">
+    <div class="ctl">
+      <label>Sel diseri (S): <b id="sST"></b><input type="range" id="sS" min="1" max="30" step="1" value="20"></label>
+      <label>Sel diparalel (P): <b id="sPT"></b><input type="range" id="sP" min="1" max="12" step="1" value="10"></label>
+    </div>
+    <div class="out"><div><span>Tegangan pack</span><strong id="sv"></strong></div><div><span>Kapasitas pack</span><strong id="sa"></strong></div><div><span>Energi</span><strong id="se"></strong></div><div><span>Jumlah sel</span><strong id="sn"></strong></div></div>
+    <p class="why">Contoh sel lithium-ion 3,6 V dan 3 Ah (angka contoh). Seri menambah tegangan, paralel menambah kapasitas. Pembahasan lengkap ada di modul 14.</p>
+  </div>
+
+  <h2>8. Percobaan: ukur sendiri</h2>
+  <div class="story"><div id="mm"></div><div>
+    <p><b>Alat:</b> beberapa baterai AA, dudukan baterai, resistor 100 Ω, dua kabel jepit, multimeter.</p>
+    <ol class="exp">
+      <li>Ukur satu baterai AA dengan voltmeter. Catat (sekitar 1,5 V).</li>
+      <li>Seri dua lalu tiga baterai. <b>Tebak dulu</b>, lalu ukur. Tegangan bertambah.</li>
+      <li>Paralel dua baterai. Tegangan tetap sama, kapasitas yang bertambah.</li>
+      <li>Hubungkan 3 V ke resistor 100 Ω. Hitung arus: I = 3 ÷ 100 = 0,03 A (30 mA). Ukur dengan ampere meter yang <b>dipasang berurutan</b> di rangkaian.</li>
+    </ol>
+    <div class="verdict bad">Jangan pernah memasang ampere meter langsung di dua kutub baterai. Itu hubung singkat. Pelajari K3 lebih lanjut di modul 04.</div>
+  </div></div>
+
+  <h2>9. Seberapa berbahaya tegangannya?</h2>
+  <table class="cmp">
+    <tr><th>Kelas (UN R100)</th><th>Tegangan DC</th><th>Contoh</th></tr>
+    <tr><td>Kelas A</td><td>sampai 60 V</td><td>Sistem 12 V dan 48 V</td></tr>
+    <tr><td>Kelas B</td><td>di atas 60 V sampai 1500 V</td><td>Mobil listrik 400–800 V, sebagian motor listrik 72–96 V</td></tr>
+  </table>
+  <p class="why">Batas ini dipakai pada regulasi kendaraan listrik. Perlakukan semua sistem baterai kendaraan dengan hati-hati, termasuk yang di bawah 60 V, karena arus besar tetap bisa membakar dan melukai. Cek ulang standar terbaru sebelum dipakai sebagai rujukan resmi.</p>
+
+  <h2>10. Video pendukung</h2>
+  <p class="lead">Klik gambar untuk menonton di YouTube.</p>
+  <div id="vlist"></div>
+  <p class="why" style="margin-top:18px"><b>Cari video lain.</b> Tautan berikut membuka hasil pencarian YouTube, bukan video tertentu.</p>
+  <ul class="rec" id="vlinks"></ul>
+
+  <details class="dl"><summary>Catatan untuk pengajar</summary>
+    <p><b>Alur sekitar 60 menit:</b> tebakan (5), cerita satuan (5), simulasi Ohm (10), kalkulator baterai (10), tiga fasa (10), kabel (10), percobaan (opsional), kuis (5).</p>
+    <p><b>Pertanyaan pemicu:</b> Kalau motor 3 kW dipasang di baterai 72 V dan 12 V, arusnya berapa? Mengapa tegangan tinggi lebih disukai untuk daya besar?</p>
+    <p><b>Pesan utama:</b> daya sama dengan tegangan kali arus. Menaikkan tegangan menurunkan arus, dan arus kecil berarti kabel lebih ramping dan rugi panas lebih kecil.</p>
+  </details>
+
+  <h2>11. Kuis</h2>
+  <div id="quiz"></div><div class="verdict" id="score" hidden></div>
+
+  <p class="why" style="margin-top:30px">Sumber foto: <a href="https://commons.wikimedia.org/wiki/File:Georg_Simon_Ohm3.jpg" target="_blank" rel="noopener">Georg Simon Ohm3.jpg</a> (domain publik), <a href="https://commons.wikimedia.org/wiki/File:Pila_di_Volta_01.jpg" target="_blank" rel="noopener">Pila di Volta 01.jpg</a> (Luigi Chiesa, CC BY-SA 3.0), <a href="https://commons.wikimedia.org/wiki/File:Digital_Multimeter_(To_measure_Voltage,_Current_and_Resistance).jpg" target="_blank" rel="noopener">Digital Multimeter</a> (K.Venkataramana, CC0), semuanya dari Wikimedia Commons. Angka contoh bersifat ilustrasi. Cek ulang sebelum dipakai sebagai rujukan resmi.</p>
+
+  <div class="nav">
+    <a href="modul-02.html">Sebelumnya: 02</a><a href="index.html#modul">Daftar modul</a>
+    <button id="doneBtn">Tandai selesai</button><a href="modul-04.html">Berikutnya: 04</a>
+  </div>
+</main>
+<div id="site-footer"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+fetch('assets/layout.html').then(r=>{if(!r.ok)throw 0;return r.text()}).then(h=>{
+  const d=new DOMParser().parseFromString(h,'text/html');
+  document.head.append(...d.querySelectorAll('style'));
+  $('site-header').replaceWith(d.querySelector('header'));$('site-footer').replaceWith(d.querySelector('footer'));
+}).catch(()=>{$('site-header').textContent='Training EV'});
+const kode=document.body.dataset.kode, btn=$('doneBtn');
+let done=[]; try{done=JSON.parse(localStorage.getItem('evDone')||'[]')}catch(e){}
+const mark=()=>{btn.textContent='Selesai ✓';btn.disabled=true};
+if(done.includes(kode))mark();
+btn.onclick=()=>{if(!done.includes(kode))done.push(kode);try{localStorage.setItem('evDone',JSON.stringify(done))}catch(e){}mark()};
+const cs=k=>getComputedStyle(document.documentElement).getPropertyValue('--'+k).trim();
+const fx=(n,d=2)=>(+n).toLocaleString('id-ID',{maximumFractionDigits:d});
+function hook(id,aid,opts,ok,html){$(id).innerHTML=opts.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('');$(id).onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;[...$(id).children].forEach((x,i)=>{x.disabled=true;if(i===ok)x.classList.add('right')});if(+b.dataset.i!==ok)b.classList.add('wrong');const a=$(aid);a.hidden=false;a.innerHTML=html}}
+hook('hopt','hans',['0,72 kWh','2,16 kWh','21,6 kWh','216 kWh'],1,'Jawabannya <b>2,16 kWh</b>. Energi (Wh) = tegangan × kapasitas = 72 × 30 = 2.160 Wh. Itu setara sekitar 2 jam menyalakan pemanas air kecil 1 kW. Mari kita pelajari dasarnya.');
+
+// ----- foto dan cerita -----
+const CM='https://commons.wikimedia.org/wiki/';
+const fp=f=>CM+'Special:FilePath/'+f+'?width=520';
+const FOTO=[
+ {h:'Volt: Alessandro Volta',t:'Pada 1800 Volta menumpuk cakram tembaga dan seng yang dipisah kain basah, dan lahirlah baterai pertama. Dari namanya muncul kata volt dan voltase.',f:'Pila_di_Volta_01.jpg',k:'Pila di Volta 01.jpg, foto Luigi Chiesa, CC BY-SA 3.0, Wikimedia Commons'},
+ {h:'Ohm: Georg Simon Ohm',t:'Pada 1827 Ohm menemukan bahwa arus sebanding dengan tegangan dan berbanding terbalik dengan hambatan. Satuan hambatan memakai namanya.',f:'Georg_Simon_Ohm3.jpg',k:'Georg Simon Ohm3.jpg, domain publik, Wikimedia Commons'}
+];
+$('story').innerHTML=FOTO.map(x=>`<figure><img src="${fp(x.f)}" alt="${x.h}" loading="lazy" onerror="this.style.display='none'"><h3>${x.h}</h3><p>${x.t}</p><figcaption>Sumber: <a href="${CM}File:${x.f}" target="_blank" rel="noopener">${x.k}</a></figcaption></figure>`).join('');
+$('mm').innerHTML=`<figure style="margin:0"><img src="${fp('Digital_Multimeter_(To_measure_Voltage,_Current_and_Resistance).jpg')}" alt="Multimeter digital" style="width:100%;max-height:300px;object-fit:contain;background:#fff;border-radius:6px" loading="lazy" onerror="this.style.display='none'"><figcaption style="font-size:12px;color:var(--dim);margin-top:6px">Multimeter digital. Foto: K.Venkataramana, CC0, <a href="${CM}File:Digital_Multimeter_(To_measure_Voltage,_Current_and_Resistance).jpg" target="_blank" rel="noopener">Wikimedia Commons</a></figcaption></figure>`;
+
+// ----- hukum Ohm + air -----
+const wc=$('water'),wx=wc.getContext('2d');let wpart=Array.from({length:70},()=>({x:Math.random(),y:Math.random()}));
+function size(c){const d=Math.min(2,devicePixelRatio||1);c.width=c.clientWidth*d;c.height=c.clientHeight*d;c.getContext('2d').setTransform(d,0,0,d,0,0)}
+function ohm(){
+  const V=+$('ov').value,R=+$('or').value,I=V/R,P=V*I;
+  $('ovT').textContent=V+' V';$('orT').textContent=fx(R,1)+' Ω';
+  $('oi').textContent=fx(I,2)+' A';$('op').textContent=fx(P,1)+' W';$('oh').textContent=P>100?'Panas sekali':P>20?'Hangat':'Dingin';
+  const v=$('ovd');
+  if(I>100){v.className='verdict bad';v.textContent='Arus sangat besar. Hambatan sekecil ini mendekati hubung singkat: kabel dan sekering bisa terbakar.'}
+  else if(I>20){v.className='verdict warn';v.textContent='Arus cukup besar. Pastikan kabel dan sekering sanggup menahannya.'}
+  else{v.className='verdict ok';v.textContent='Arus wajar. Coba perkecil hambatan atau perbesar tegangan untuk melihat arus naik.'}
+}
+['ov','or'].forEach(i=>$(i).addEventListener('input',ohm));ohm();
+function drawWater(){
+  const W=wc.clientWidth,H=wc.clientHeight,V=+$('ov').value,R=+$('or').value,I=V/R;
+  wx.clearRect(0,0,W,H);
+  const lvl=H*.85*V/100,tw=W*.14;
+  wx.fillStyle=cs('w');wx.globalAlpha=.35;wx.fillRect(10,H-lvl-8,tw,lvl);wx.globalAlpha=1;
+  wx.strokeStyle=cs('dim');wx.lineWidth=2;wx.strokeRect(10,8,tw,H-16);
+  const py=H/2,ph=44,neck=Math.max(4,ph*(1/(1+R/6)));
+  wx.fillStyle=cs('line');wx.fillRect(10+tw,py-ph/2,W-tw-20,ph);
+  wx.fillStyle=cs('ink');wx.fillRect(10+tw,py-ph/2+2,W-tw-20,ph-4);
+  const nx=W*.55;wx.fillStyle=cs('alert');wx.fillRect(nx,py-ph/2,22,(ph-neck)/2);wx.fillRect(nx,py+neck/2,22,(ph-neck)/2);
+  wx.fillStyle=cs('w');const sp=Math.min(4,.4+Math.log10(1+I)*1.6);
+  wpart.forEach(p=>{p.x=(p.x+sp*.002)%1;const x=10+tw+(W-tw-20)*p.x;const near=Math.abs(x-nx)<25;const y=py+(p.y-.5)*(near?neck-2:ph-8);wx.beginPath();wx.arc(x,y,2.4,0,6.283);wx.fill()});
+  wx.fillStyle=cs('dim');wx.font='12px sans-serif';wx.fillText('tegangan (tekanan)',10,H-1);wx.fillText('hambatan (penyempitan)',nx-24,py+ph/2+16);
+}
+
+// ----- kalkulator baterai -----
+function kal(){
+  const V=+$('kv').value,A=+$('ka').value,P=+$('kp').value,C=+$('kc').value,E=V*A/1000,I=P*1000/V,T=E/P*60,J=E*1000/C;
+  $('kvT').textContent=V+' V';$('kaT').textContent=A+' Ah';$('kpT').textContent=fx(P,1)+' kW';$('kcT').textContent=C+' Wh/km';
+  $('ke').textContent=fx(E,2)+' kWh';$('kI').textContent=fx(I,0)+' A';$('kt').textContent=T>=120?fx(T/60,1)+' jam':fx(T,0)+' menit';$('kj').textContent=fx(J,0)+' km';
+}
+['kv','ka','kp','kc'].forEach(i=>$(i).addEventListener('input',kal));kal();
+
+// ----- gelombang -----
+let wmode='3';const WM=[['d','DC (baterai)'],['1','AC satu fasa'],['3','AC tiga fasa']];
+function wmDraw(){$('wm').innerHTML=WM.map(([k,n])=>`<button class="chip" data-k="${k}" aria-pressed="${k===wmode}">${n}</button>`).join('');
+  $('wtx').textContent={d:'DC: tegangan tetap satu arah. Inilah keluaran baterai.',1:'AC satu fasa: naik turun dan berbalik arah. Daya sesaatnya berdenyut, dan arus nol dua kali tiap siklus.','3':'Tiga fasa: tiga gelombang bergeser 120 derajat. Pada setiap saat jumlah ketiganya nol (garis putus-putus), dan ketiganya menghasilkan medan magnet yang berputar. Itulah yang diberikan controller ke motor BLDC.'}[wmode]}
+$('wm').onclick=e=>{const b=e.target.closest('button');if(b){wmode=b.dataset.k;wmDraw()}};wmDraw();
+const vc=$('wave'),vx=vc.getContext('2d');let tt=0;
+$('wf').addEventListener('input',()=>$('wfT').textContent=fx($('wf').value,1)+' Hz');$('wfT').textContent='1 Hz';
+function drawWave(){
+  const W=vc.clientWidth,H=vc.clientHeight,f=+$('wf').value;tt+=.016*f;vx.clearRect(0,0,W,H);
+  const mid=H/2,am=H*.36,C=[cs('u'),cs('v'),cs('w')];
+  vx.strokeStyle=cs('line');vx.lineWidth=1;vx.beginPath();vx.moveTo(0,mid);vx.lineTo(W,mid);vx.stroke();
+  const fn=(k,x)=>Math.sin(x*.025-tt*6.283-k*2.0944);
+  const n=wmode==='3'?3:1;
+  for(let k=0;k<n;k++){vx.beginPath();for(let x=0;x<=W;x+=3){const y=wmode==='d'?mid-am*.7:mid-am*fn(k,x);x?vx.lineTo(x,y):vx.moveTo(x,y)}vx.strokeStyle=wmode==='d'?C[1]:C[k];vx.lineWidth=2.2;vx.stroke()}
+  if(wmode==='3'){vx.setLineDash([5,5]);vx.beginPath();for(let x=0;x<=W;x+=3){const s=fn(0,x)+fn(1,x)+fn(2,x);const y=mid-am*s;x?vx.lineTo(x,y):vx.moveTo(x,y)}vx.strokeStyle=cs('text');vx.lineWidth=1.4;vx.stroke();vx.setLineDash([])}
+}
+
+// ----- rugi kabel -----
+function kab(){
+  const I=+$('wi').value,L=+$('wl').value,A=+$('wa').value,Vb=+$('wb').value,R=0.0175*(2*L)/A,dV=I*R,Hh=I*I*R,pc=dV/Vb*100;
+  $('wiT').textContent=I+' A';$('wlT').textContent=fx(L,1)+' m';$('waT').textContent=fx(A,1)+' mm²';$('wbT').textContent=Vb+' V';
+  $('wr').textContent=fx(R*1000,1)+' mΩ';$('wd').textContent=fx(dV,2)+' V';$('wh').textContent=fx(Hh,0)+' W';$('wp').textContent=fx(pc,1)+'%';
+  const v=$('wv');
+  if(pc>5||Hh>150){v.className='verdict bad';v.textContent='Rugi terlalu besar. Kabel akan panas dan tenaga hilang. Pakai kabel lebih tebal atau lebih pendek.'}
+  else if(pc>2||Hh>50){v.className='verdict warn';v.textContent='Rugi mulai terasa. Periksa suhu kabel dan kualitas sambungan.'}
+  else{v.className='verdict ok';v.textContent='Rugi kecil. Penampang kabel cukup untuk arus ini.'}
+}
+['wi','wl','wa','wb'].forEach(i=>$(i).addEventListener('input',kab));kab();
+
+// ----- seri paralel -----
+function sp(){const S=+$('sS').value,P=+$('sP').value,V=S*3.6,A=P*3;$('sST').textContent=S+' S';$('sPT').textContent=P+' P';
+  $('sv').textContent=fx(V,1)+' V';$('sa').textContent=A+' Ah';$('se').textContent=fx(V*A,0)+' Wh';$('sn').textContent=S*P}
+['sS','sP'].forEach(i=>$(i).addEventListener('input',sp));sp();
+
+// ----- animasi -----
+function sizeAll(){size(wc);size(vc)}
+sizeAll();addEventListener('resize',sizeAll);
+function loop(){drawWater();drawWave();requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+
+// ----- video -----
+const VIDEOS=[
+  { id:'9OVtk6G2TnQ', judul:'How do batteries work? (TED-Ed, Adam Jacobson)', bahasa:'Inggris', kanal:'TED-Ed, pelajaran oleh Adam Jacobson', link:'https://www.youtube.com/watch?v=9OVtk6G2TnQ', desk:'Animasi tentang perselisihan Galvani dan Volta pada akhir 1700-an yang berujung pada penemuan baterai awal. Dari nama Volta lahir kata volt dan voltase.' }
+];
+$('vlist').innerHTML=VIDEOS.map(v=>`<div class="vl"><a class="th" href="${v.link}" target="_blank" rel="noopener" aria-label="Tonton: ${v.judul}"><img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="Pratinjau ${v.judul}" loading="lazy"><span class="pl">▶ Tonton di YouTube</span></a><div><h4><a href="${v.link}" target="_blank" rel="noopener">${v.judul}</a></h4><p>${v.bahasa?`<span class="bd">${v.bahasa}</span>`:''}<span style="color:var(--dim);font-size:12px">${v.kanal}</span></p><p>${v.desk}</p></div></div>`).join('');
+const YT='https://www.youtube.com/results?search_query=';
+const VL=[['id','hukum Ohm tegangan arus hambatan'],['id','listrik AC dan DC perbedaan'],['id','listrik 3 fasa penjelasan'],['en','Ohm\'s law water analogy'],['en','three phase electricity explained animation']];
+$('vlinks').innerHTML=VL.map(x=>`<li><a href="${YT+encodeURIComponent(x[1])}" target="_blank" rel="noopener">${x[1]}</a> (${x[0]==='id'?'Bahasa Indonesia':'Bahasa Inggris'})</li>`).join('');
+
+// ----- kuis -----
+const Q=[
+['Baterai 72 V 30 Ah menyimpan energi sekitar...',['0,72 kWh','2,16 kWh','21,6 kWh'],1,'72 × 30 = 2.160 Wh = 2,16 kWh.'],
+['Tegangan 12 V pada resistor 4 Ω menghasilkan arus...',['3 A','48 A','0,33 A'],0,'I = V ÷ R = 12 ÷ 4 = 3 A.'],
+['Motor 3 kW pada baterai 72 V menarik arus sekitar...',['4 A','42 A','216 A'],1,'I = P ÷ V = 3000 ÷ 72, sekitar 42 A.'],
+['Mengapa arus besar membutuhkan kabel tebal?',['Supaya kabel lebih mahal','Hambatan kecil membuat rugi panas I² × R kecil','Supaya tegangan naik'],1,'Penampang besar menurunkan hambatan, sehingga tegangan hilang dan panas di kabel kecil.'],
+['Controller motor BLDC mengubah DC baterai menjadi...',['DC bertegangan lebih rendah','AC tiga fasa untuk motor','Tegangan nol'],1,'Controller memotong DC menjadi tiga gelombang bergeser 120 derajat untuk memutar medan magnet motor.'],
+['Dua sel 3,6 V dan 3 Ah yang DISERI menghasilkan...',['3,6 V dan 6 Ah','7,2 V dan 3 Ah','7,2 V dan 6 Ah'],1,'Seri menambah tegangan, kapasitas tetap. Paralel menambah kapasitas.']
+];
+let sc=0,ans=0;
+$('quiz').innerHTML=Q.map((q,i)=>`<div class="q" data-i="${i}"><h4>${i+1}. ${q[0]}</h4>${q[1].map((o,j)=>`<button class="opt" data-j="${j}">${o}</button>`).join('')}<p class="why" hidden></p></div>`).join('');
+$('quiz').onclick=e=>{
+  const b=e.target.closest('button');if(!b||b.disabled)return;
+  const box=b.closest('.q'),q=Q[+box.dataset.i],ok=+b.dataset.j===q[2];
+  box.querySelectorAll('button').forEach((x,j)=>{x.disabled=true;if(j===q[2])x.classList.add('right')});
+  if(!ok)b.classList.add('wrong');else sc++;
+  const w=box.querySelector('.why');w.hidden=false;w.textContent=(ok?'Benar. ':'Belum tepat. ')+q[3];
+  if(++ans===Q.length){const s=$('score');s.hidden=false;s.className='verdict '+(sc>=5?'ok':sc>=4?'warn':'bad');s.textContent=`Skor Anda ${sc} dari ${Q.length}. `+(sc>=5?'Siap lanjut ke modul berikutnya.':'Ulangi simulasinya, lalu coba kuis lagi.')}
+};
+</script>
+</body>
+</html>

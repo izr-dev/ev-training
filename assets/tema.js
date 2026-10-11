@@ -12,11 +12,8 @@ const TEMA_AKTIF = 'fasa';
 
 /* Timpa nilai tema aktif. Contoh (hapus tanda // untuk memakai):
    const KUSTOM = { kursor:'petir', latar:'partikel', warna:{ v:'#00FFAA' } };       */
-
-
-//const KUSTOM = {};
 const KUSTOM = {latar:'partikel', kursor:'jejak'};
-//const KUSTOM = { kursor:'petir', latar:'partikel', warna:{ v:'#00FFAA' } };  
+
 /* ---------------------------------------------------------------------
    PILIHAN NILAI
    kursor : cincin | bidik | petir | jejak | bawaan
@@ -88,8 +85,8 @@ const TEMA = {
   .tk-bolt{width:26px;height:26px;fill:var(--u);stroke:none;filter:drop-shadow(0 0 6px var(--u))}
   .tk-hot .tk-bolt{transform:scale(1.35) rotate(-14deg);fill:var(--v)}
   .tk-down .tk-bolt{transform:scale(.8)}
-  #tk-bg{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
-  #tk-trail{position:fixed;inset:0;width:100%;height:100%;z-index:9998;pointer-events:none}`;
+  #tk-bg{position:fixed;inset:0;width:100%;height:100%;max-width:none;z-index:-1;pointer-events:none;background:transparent!important;border:0!important;border-radius:0!important;margin:0!important}
+  #tk-trail{position:fixed;inset:0;width:100%;height:100%;max-width:none;z-index:9998;pointer-events:none;background:transparent!important;border:0!important;border-radius:0!important;margin:0!important}`;
   document.head.appendChild(st);
 
   let mx = innerWidth / 2, my = innerHeight / 2;

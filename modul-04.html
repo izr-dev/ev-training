@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>04 Keselamatan Kelistrikan dan K3 | Training EV</title>
+<script src="assets/tema.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#060A12;--panel:#0C1220;--line:#1B2740;--text:#E6ECF5;--dim:#8593AA;--u:#FFC857;--v:#3DDC97;--w:#4DA3FF;--alert:#FF6B8B;--disp:'Chakra Petch',system-ui,sans-serif;--body:'Sora',system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font:400 16px/1.7 var(--body)}
+main{max-width:920px;margin:0 auto;padding:40px clamp(16px,4vw,32px) 0}
+h1{font:700 clamp(28px,4vw,44px)/1.1 var(--disp);margin:0 0 8px}
+h2{font:700 24px var(--disp);margin:52px 0 6px}
+a{color:var(--w)}
+.lead{color:var(--dim);margin:0 0 18px}
+.no{font:700 15px var(--disp);color:var(--v)}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;margin:12px 0}
+.goal{margin:0 0 8px;padding:14px 18px 14px 36px;border:1px solid var(--line);border-left:3px solid var(--v);border-radius:6px;background:var(--panel)}
+.ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 22px;margin:8px 0}
+.ctl label{display:block;font-size:13px;color:var(--dim)}
+.ctl b{color:var(--text);font-family:var(--disp)}
+.ctl input[type=range]{width:100%;accent-color:var(--v)}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0}
+.out div{padding:10px 12px;border:1px solid var(--line);border-radius:6px}
+.out span{display:block;font-size:12px;color:var(--dim)}
+.out strong{font:700 20px var(--disp)}
+canvas{width:100%;height:200px;display:block;background:var(--ink);border:1px solid var(--line);border-radius:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--dim);font:500 13px var(--body);cursor:pointer}
+.chip[aria-pressed=true]{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 16px;background:var(--ink);border:1px solid var(--line);border-radius:6px;color:var(--text);font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--v)}
+.opt.right{border-color:var(--v);background:color-mix(in srgb,var(--v) 14%,transparent)}
+.opt.wrong{border-color:var(--alert);background:color-mix(in srgb,var(--alert) 12%,transparent)}
+.why{font-size:14px;color:var(--dim);margin:8px 0 0}
+.verdict{padding:10px 14px;border-radius:6px;border:1px solid var(--line);margin-top:12px;font-size:14px}
+.ok{border-color:var(--v);color:var(--v)}.warn{border-color:var(--u);color:var(--u)}.bad{border-color:var(--alert);color:var(--alert)}
+.story{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.story figure{margin:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.story img{width:100%;height:230px;object-fit:contain;background:#fff;border-radius:6px;display:block}
+.story figcaption{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5}
+.story h3{margin:10px 0 4px;font:600 17px var(--disp)}
+.story p{margin:4px 0;font-size:14px}
+table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+.cmp th,.cmp td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.cmp th{color:var(--dim);font-weight:500}
+.vl{display:grid;grid-template-columns:210px 1fr;gap:6px 16px;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.vl a.th{position:relative;display:block;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--ink)}
+.vl img{width:100%;height:100%;object-fit:cover;display:block}
+.vl .pl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);color:#fff;font:700 15px var(--disp)}
+.vl h4{margin:0 0 4px;font:600 16px var(--disp)}
+.vl p{margin:4px 0;font-size:14px}
+.vl .bd{display:inline-block;padding:1px 8px;border:1px solid var(--v);border-radius:999px;color:var(--v);font-size:11px;margin-right:6px}
+@media(max-width:560px){.vl{grid-template-columns:1fr}}
+details.dl{margin-top:20px;border:1px solid var(--line);border-radius:8px;padding:4px 16px}
+details.dl summary{cursor:pointer;padding:12px 0;color:var(--w);font-weight:500}
+.exp li{margin:6px 0}
+.q{margin:18px 0}.q h4{margin:0 0 8px;font:600 16px var(--body)}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:44px;padding-top:20px;border-top:1px solid var(--line)}
+.nav a,.nav button{padding:10px 18px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);font:600 14px var(--disp);text-decoration:none;cursor:pointer}
+.nav button{background:var(--v);border-color:var(--v);color:var(--ink)}
+.nav button[disabled]{background:var(--panel);color:var(--v)}
+
+.zone{position:relative;height:30px;background:var(--ink);border:1px solid var(--line);border-radius:6px;margin:12px 0 26px}
+.zone i{position:absolute;left:0;top:0;bottom:0;background:var(--v);border-radius:5px 0 0 5px;transition:width .15s,background .15s}
+.zone u{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--text);opacity:.6}
+.zone span{position:absolute;top:34px;font-size:11px;color:var(--dim);transform:translateX(-50%);white-space:nowrap}
+.ord{list-style:none;margin:10px 0;padding:0;counter-reset:o}
+.ord li{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;margin:6px 0;padding:10px 12px;background:var(--ink);border:1px solid var(--line);border-radius:6px}
+.ord li::before{counter-increment:o;content:counter(o);font:700 16px var(--disp);color:var(--v)}
+.ord li.ok{border-color:var(--v)}.ord li.no{border-color:var(--alert)}
+.ord button{padding:4px 10px;margin-left:4px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);cursor:pointer}
+.btn2{padding:9px 18px;border:1px solid var(--v);border-radius:6px;background:var(--v);color:var(--ink);font:600 14px var(--disp);cursor:pointer;margin-right:8px}
+.btn2.alt{background:var(--panel);color:var(--text);border-color:var(--line)}
+.hz label{display:grid;grid-template-columns:24px 1fr;gap:8px;margin:6px 0;padding:10px 12px;background:var(--ink);border:1px solid var(--line);border-radius:6px;cursor:pointer}
+.hz label.good{border-color:var(--v)}.hz label.miss{border-color:var(--alert)}.hz label.over{border-color:var(--u)}
+details.hb{margin:8px 0}details.hb p{margin:6px 0;font-size:15px}
+</style>
+</head>
+<body data-kode="04">
+<div id="site-header"></div>
+<main>
+  <div class="no">Modul 04 &nbsp;|&nbsp; Fondasi kelistrikan</div>
+  <h1>Keselamatan Kelistrikan dan K3 Bengkel EV</h1>
+  <p class="lead">Modul ini membuat Anda pulang dengan selamat. Sebelum menyentuh baterai, controller, atau kabel oranye, pahami dulu apa yang berbahaya, cara melindungi diri, dan urutan kerja yang aman.</p>
+  <ul class="goal">
+    <li>Menjelaskan mengapa arus, bukan tegangan saja, yang melukai tubuh.</li>
+    <li>Mengenali bahaya utama di bengkel EV dan memilih APD yang tepat.</li>
+    <li>Menyusun urutan kerja aman: putus, kunci, tunggu, ukur, baru kerja.</li>
+  </ul>
+  <div class="verdict warn">Materi ini pengantar, bukan pengganti pelatihan K3 resmi dan buku servis pabrikan. Jangan pernah mengerjakan sistem tegangan tinggi sebelum berlatih langsung di bawah pengawasan orang yang berkompeten.</div>
+
+  <div class="box" id="hook">
+    <b>Tebak dulu.</b> Mana yang sebenarnya melukai tubuh saat seseorang tersengat?
+    <div id="hopt"></div><p class="why" id="hans" hidden></p>
+  </div>
+
+  <h2>1. Kenapa tersengat itu berbahaya?</h2>
+  <p class="lead">Yang melukai adalah <b>arus yang mengalir lewat tubuh</b>. Tegangan hanya mendorongnya, dan hambatan tubuh menentukan seberapa besar arusnya (hukum Ohm, modul 03). Geser dan lihat.</p>
+  <div class="box">
+    <div class="ctl">
+      <label>Tegangan yang tersentuh: <b id="tvT"></b><input type="range" id="tv" min="12" max="400" step="1" value="72"></label>
+      <label>Kondisi tubuh<select id="tc" style="width:100%;padding:6px;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:6px"><option value="10000">Kulit kering, sentuhan ringan (contoh 10 kΩ)</option><option value="2000" selected>Kulit lembap atau berkeringat (contoh 2 kΩ)</option><option value="1000">Basah, luka, atau kontak luas (contoh 1 kΩ)</option></select></label>
+    </div>
+    <div class="zone"><i id="zf"></i></div>
+    <div class="out"><div><span>Arus lewat tubuh</span><strong id="zi"></strong></div><div><span>Dampak</span><strong id="zd" style="font-size:15px"></strong></div></div>
+    <div class="verdict" id="zv"></div>
+    <p class="why">Batas yang ditandai (sekitar 0,5 mA terasa, sekitar 10 mA sulit melepas, sekitar 30 mA selama 1 detik zona fibrilasi jantung) mengacu pada IEC 60479 untuk arus bolak-balik 50/60 Hz. Arus searah (DC) berperilaku berbeda, tetapi tetap bisa mematikan. Hambatan tubuh di atas hanyalah contoh dan berubah-ubah. Jangan menganggap tegangan tertentu pasti aman.</p>
+  </div>
+
+  <h2>2. Enam bahaya di bengkel EV</h2>
+  <div id="hz6"></div>
+
+  <h2>3. APD dan peralatan</h2>
+  <div class="story"><div id="apdfig"></div><div>
+    <table class="cmp">
+      <tr><th>Perlengkapan</th><th>Catatan penting</th></tr>
+      <tr><td><b>Sarung tangan isolasi Kelas 00</b></td><td>Maksimal 500 V AC atau 750 V DC.</td></tr>
+      <tr><td><b>Sarung tangan isolasi Kelas 0</b></td><td>Maksimal 1.000 V AC atau 1.500 V DC. Umum dipakai untuk diagnosa dan perbaikan EV.</td></tr>
+      <tr><td><b>Pelindung kulit di atas sarung karet</b></td><td>Mencegah sobek. Periksa visual dan uji tiup (cari kebocoran udara) sebelum tiap pemakaian.</td></tr>
+      <tr><td><b>Sepatu dielektrik, kacamata atau face shield, pakaian tahan api</b></td><td>Melindungi dari sengatan, percikan busur api, dan lelehan.</td></tr>
+      <tr><td><b>Alat berinsulasi dan multimeter berperingkat</b></td><td>Pakai alat yang peringkat tegangannya sesuai. Peringkat itu tertulis di badan alat.</td></tr>
+      <tr><td><b>Lepas cincin, jam, dan perhiasan logam</b></td><td>Logam bisa menghubungkan kutub baterai dan menyebabkan luka bakar parah.</td></tr>
+    </table>
+    <p class="why">Sarung tangan biasa tidak bisa menggantikan sarung tangan isolasi. Simpan sarung tangan tidak terlipat, jauh dari panas, sinar matahari, dan bahan kimia. Perhatikan: sistem R2 sekitar 72–96 V tetap berarus besar. Ikuti prosedur dan peringkat APD sesuai pabrikan.</p>
+  </div></div>
+
+  <h2>4. Latihan: susun urutan kerja yang aman</h2>
+  <p class="lead">Urutkan delapan langkah berikut dengan tombol panah. Konsepnya disebut lockout-tagout (LOTO): putus energi, kunci, beri tanda, lalu buktikan tegangannya nol.</p>
+  <div class="box"><ul class="ord" id="ord"></ul>
+    <button class="btn2" id="ordChk">Periksa urutan</button><button class="btn2 alt" id="ordRst">Acak ulang</button>
+    <div class="verdict" id="ordV" hidden></div></div>
+  <div class="story"><div id="lotofig"></div><div>
+    <p><b>Mengapa "tunggu" dan "ukur" penting?</b> Setelah sistem diputus, kapasitor di controller masih bisa menyimpan muatan. Alat ukur diuji di sumber yang diketahui hidup agar bacaan nol bisa dipercaya.</p>
+    <p><b>Service disconnect bukan jaminan nol.</b> Melepasnya mengisolasi sistem dari sisa kendaraan, tetapi tegangan tinggi tetap ada di dalam paket baterai. Alat ini dirancang untuk teknisi terlatih di bengkel yang menjalankan LOTO.</p>
+    <p><b>Kabel tegangan tinggi</b> umumnya berwarna oranye, tetapi ada pabrikan yang memakai kuning atau biru. Selalu cerah supaya mudah dikenali.</p>
+  </div></div>
+
+  <h2>5. Latihan: temukan bahaya di bengkel</h2>
+  <p class="lead">Centang semua keadaan yang <b>berbahaya</b>, lalu periksa.</p>
+  <div class="box hz" id="scan"></div>
+  <button class="btn2" id="scanChk">Periksa jawaban</button><div class="verdict" id="scanV" hidden></div>
+
+  <h2>6. Kebakaran baterai</h2>
+  <div class="verdict bad">Baterai lithium yang rusak, menggembung, berasap, atau panas harus diperlakukan sebagai darurat. Jauhi, jangan dipegang sendirian, dan hubungi pemadam kebakaran.</div>
+  <p class="why">Cara memadamkannya sulit dan petunjuk dari berbagai sumber bisa berbeda, jadi saya tidak mencantumkan jenis pemadam tertentu di sini. Ikuti panduan tanggap darurat (Emergency Response Guide) dari pabrikan kendaraan dan arahan petugas pemadam kebakaran. Baterai bisa menyala ulang setelah tampak padam.</p>
+
+  <h2>7. Aturan K3 listrik di Indonesia</h2>
+  <ul class="rec">
+    <li><b>UU No. 1 Tahun 1970</b> tentang Keselamatan Kerja, dasar K3 di semua tempat kerja.</li>
+    <li><b>Permenaker No. 12 Tahun 2015</b> tentang K3 Listrik di Tempat Kerja, diubah dengan <b>Permenaker No. 33 Tahun 2015</b>. Keduanya tercatat berlaku di basis data peraturan.</li>
+    <li>Aturan yang khusus untuk bengkel kendaraan listrik masih berkembang. Ikuti prosedur pabrikan dan cek aturan terbaru.</li>
+  </ul>
+  <p class="why">Ini ringkasan edukasi, bukan nasihat hukum. Rujuk sumber resmi untuk kepastian hukum.</p>
+
+  <h2>8. Video pendukung</h2>
+  <p class="lead">Klik gambar untuk menonton di YouTube.</p>
+  <div id="vlist"></div>
+  <p class="why" style="margin-top:18px"><b>Cari video lain.</b> Tautan berikut membuka hasil pencarian YouTube, bukan video tertentu.</p>
+  <ul class="rec" id="vlinks"></ul>
+
+  <details class="dl"><summary>Catatan untuk pengajar</summary>
+    <p><b>Alur sekitar 60 menit:</b> tebakan (5), simulasi arus tubuh (10), enam bahaya (10), APD (10), latihan urutan LOTO (15), temukan bahaya (5), kuis (5).</p>
+    <p><b>Pertanyaan pemicu:</b> Apa yang Anda lakukan kalau seorang rekan terkena sengatan dan masih menempel pada kabel? (Putuskan sumber daya dulu bila aman, jangan menyentuh korban, panggil bantuan.)</p>
+    <p><b>Peragaan yang efektif:</b> tunjukkan satu sarung tangan isolasi, lakukan uji tiup bersama peserta, dan periksa peringkat tegangan yang tertera pada sarung tangan dan multimeter.</p>
+    <p><b>Pesan utama:</b> tidak ada pekerjaan yang terlalu mendesak untuk melewati urutan aman. Putus, kunci, tunggu, ukur, baru kerja.</p>
+  </details>
+
+  <h2>9. Kuis</h2>
+  <div id="quiz"></div><div class="verdict" id="score" hidden></div>
+
+  <p class="why" style="margin-top:30px">Sumber: ambang arus tubuh dari ringkasan IEC 60479 (Techniques de l'Ingénieur, UMN, isastur, EMF-Portal); kelas sarung tangan dari panduan pemasok (Warwick, Safetyware, Toolsource) yang merujuk IEC 60903 dan ASTM D120; isolasi HV EV dari <a href="https://www.evfiresafe.com/04-9-hv-isolation" target="_blank" rel="noopener">EV FireSafe</a> dan <a href="https://www.bodyshopbusiness.com/ev-safety-basics-on-the-shop-floor/" target="_blank" rel="noopener">Bodyshop Business</a>; regulasi dari <a href="https://peraturan.bpk.go.id/Details/145984/" target="_blank" rel="noopener">BPK (Permenaker 12/2015)</a>. Foto: <a href="https://commons.wikimedia.org/wiki/File:Electrical_safety_gloves.png" target="_blank" rel="noopener">Electrical safety gloves.png</a> (Powerfox, CC BY-SA 4.0) dan <a href="https://commons.wikimedia.org/wiki/File:Lockout_tagout_hasp.svg" target="_blank" rel="noopener">Lockout tagout hasp.svg</a> (Maheshkumar23, CC BY-SA 4.0), Wikimedia Commons. Cek ulang standar terbaru sebelum dipakai sebagai rujukan resmi.</p>
+
+  <div class="nav">
+    <a href="modul-03.html">Sebelumnya: 03</a><a href="index.html#modul">Daftar modul</a>
+    <button id="doneBtn">Tandai selesai</button><a href="modul-05.html">Berikutnya: 05</a>
+  </div>
+</main>
+<div id="site-footer"></div>
+<script>
+const $=id=>document.getElementById(id);
+fetch('assets/layout.html').then(r=>{if(!r.ok)throw 0;return r.text()}).then(h=>{
+  const d=new DOMParser().parseFromString(h,'text/html');
+  document.head.append(...d.querySelectorAll('style'));
+  $('site-header').replaceWith(d.querySelector('header'));$('site-footer').replaceWith(d.querySelector('footer'));
+}).catch(()=>{$('site-header').textContent='Training EV'});
+const kode=document.body.dataset.kode, btn=$('doneBtn');
+let done=[]; try{done=JSON.parse(localStorage.getItem('evDone')||'[]')}catch(e){}
+const mark=()=>{btn.textContent='Selesai ✓';btn.disabled=true};
+if(done.includes(kode))mark();
+btn.onclick=()=>{if(!done.includes(kode))done.push(kode);try{localStorage.setItem('evDone',JSON.stringify(done))}catch(e){}mark()};
+const fx=(n,d=1)=>(+n).toLocaleString('id-ID',{maximumFractionDigits:d});
+function hook(id,aid,opts,ok,html){$(id).innerHTML=opts.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('');$(id).onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;[...$(id).children].forEach((x,i)=>{x.disabled=true;if(i===ok)x.classList.add('right')});if(+b.dataset.i!==ok)b.classList.add('wrong');const a=$(aid);a.hidden=false;a.innerHTML=html}}
+hook('hopt','hans',['Tegangan saja','Arus yang mengalir lewat tubuh','Daya baterai','Warna kabel'],1,'Jawabannya <b>arus yang mengalir lewat tubuh</b>. Tegangan mendorong arus, hambatan tubuh menentukan besarnya, dan lamanya sentuhan serta jalurnya lewat tubuh menentukan akibatnya. Mari kita lihat angkanya.');
+
+// ----- simulasi arus tubuh -----
+const pos=i=>Math.min(1,Math.log10(Math.max(i,.1)/.1)/4);
+const zone=$('zf').parentNode;
+[[.5,'0,5 mA terasa'],[10,'10 mA sulit lepas'],[30,'30 mA zona fibrilasi']].forEach(([v,t])=>{zone.insertAdjacentHTML('beforeend',`<u style="left:${pos(v)*100}%"></u><span style="left:${pos(v)*100}%">${t}</span>`)});
+function tub(){
+  const V=+$('tv').value,R=+$('tc').value,I=V/R*1000;
+  $('tvT').textContent=V+' V';
+  $('zi').textContent=fx(I,I<10?2:0)+' mA';
+  $('zf').style.width=pos(I)*100+'%';
+  const z=$('zf'),v=$('zv');
+  let d,c,m;
+  if(I<.5){d='Nyaris tak terasa';c='ok';m='Arusnya sangat kecil. Tetap jangan jadikan ini alasan ceroboh.'}
+  else if(I<10){d='Terasa, otot menegang';c='warn';m='Terasa sebagai sengatan dan bisa membuat gerakan refleks yang berbahaya, misalnya menjatuhkan alat ke bagian lain.'}
+  else if(I<30){d='Sulit melepas genggaman';c='bad';m='Otot bisa mengunci sehingga tangan tidak bisa melepas. Semakin lama, semakin berbahaya.'}
+  else{d='Zona bahaya jantung';c='bad';m='Arus pada tingkat ini yang mengalir sekitar satu detik atau lebih dapat memicu fibrilasi jantung. Ini kondisi gawat darurat.'}
+  $('zd').textContent=d;v.className='verdict '+c;v.textContent=m;
+  z.style.background=c==='ok'?'var(--v)':c==='warn'?'var(--u)':'var(--alert)';
+}
+['tv','tc'].forEach(i=>$(i).addEventListener('input',tub));tub();
+
+// ----- enam bahaya -----
+const HZ=[
+['Sengatan listrik','Arus tubuh dari sistem tegangan tinggi atau kapasitor yang masih bermuatan.','Pakai APD berperingkat, putus dan kunci sistem, buktikan tegangan nol sebelum menyentuh.'],
+['Busur api dan hubung singkat','Alat logam, cincin, atau jam yang menghubungkan kutub baterai bisa membuat percikan dan luka bakar parah.','Lepas perhiasan logam, pakai alat berinsulasi, tutup kutub terbuka, pakai face shield.'],
+['Kebakaran baterai','Baterai rusak, basah, atau hubung singkat bisa panas berlebih dan menyala, bahkan bisa menyala ulang.','Periksa baterai sebelum dikerjakan, isolasi baterai rusak jauh dari bangunan, siapkan rencana darurat dan hubungi pemadam.'],
+['Kapasitor masih bermuatan','Setelah sistem diputus, kapasitor di controller dan inverter bisa menyimpan muatan.','Tunggu waktu pengosongan sesuai pabrikan, lalu ukur tegangannya.'],
+['Kendaraan senyap tapi siap jalan','EV bisa terlihat mati padahal siap bergerak. Motor yang mendadak berputar bisa melukai.','Pastikan mode mati, rem parkir, roda diganjal atau diangkat, dan kunci disimpan di saku Anda.'],
+['Bahan kimia dan gas','Elektrolit baterai lithium dapat mengiritasi dan asap kebakarannya beracun.','Kerja di ruang berventilasi, pakai sarung tangan kimia dan kacamata saat menangani baterai bocor.']
+];
+$('hz6').innerHTML=HZ.map(h=>`<details class="dl hb"><summary>${h[0]}</summary><p>${h[1]}</p><p><b>Pencegahan:</b> ${h[2]}</p></details>`).join('');
+
+// ----- foto -----
+const CM='https://commons.wikimedia.org/wiki/',fp=f=>CM+'Special:FilePath/'+f+'?width=520';
+const fig=(f,alt,cap,k,by)=>`<figure style="margin:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)"><img src="${fp(f)}" alt="${alt}" style="width:100%;max-height:260px;object-fit:contain;background:#fff;border-radius:6px;display:block" loading="lazy" onerror="this.closest('figure').style.display='none'"><figcaption style="font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5">${cap}. Sumber: <a href="${CM}File:${f}" target="_blank" rel="noopener">${k}</a>, ${by}, Wikimedia Commons</figcaption></figure>`;
+$('apdfig').innerHTML=fig('Electrical_safety_gloves.png','Sarung tangan keselamatan listrik','Sarung tangan keselamatan listrik','Electrical safety gloves.png','Powerfox, CC BY-SA 4.0');
+$('lotofig').innerHTML=fig('Lockout_tagout_hasp.svg','Gembok kelompok untuk lockout-tagout','Ilustrasi hasp lockout-tagout yang bisa memuat sampai 6 gembok untuk kerja berkelompok','Lockout tagout hasp.svg','Maheshkumar23, CC BY-SA 4.0');
+
+// ----- urutan LOTO -----
+const ST=['Parkir di area kering, matikan kendaraan, dan simpan kunci atau smart key di saku Anda','Pakai APD dan periksa sarung tangan isolasi (uji tiup)','Putuskan sistem tegangan tinggi sesuai buku servis (service disconnect atau konektor baterai)','Kunci dan beri tanda pada titik putus (lockout-tagout)','Tunggu waktu pengosongan kapasitor sesuai pabrikan','Uji multimeter pada sumber yang diketahui hidup','Ukur tegangan di titik kerja dan pastikan nol','Uji lagi multimeter pada sumber hidup, baru mulai bekerja'];
+let ord=[3,6,0,5,2,7,1,4];
+function drawOrd(res){
+  $('ord').innerHTML=ord.map((k,p)=>`<li data-p="${p}" class="${res?(k===p?'ok':'no'):''}"><span>${ST[k]}</span><span><button data-d="-1" aria-label="Naik">↑</button><button data-d="1" aria-label="Turun">↓</button></span></li>`).join('');
+}
+drawOrd();
+$('ord').onclick=e=>{const b=e.target.closest('button');if(!b)return;const p=+b.closest('li').dataset.p,q=p+ +b.dataset.d;if(q<0||q>=ord.length)return;[ord[p],ord[q]]=[ord[q],ord[p]];drawOrd();$('ordV').hidden=true};
+$('ordChk').onclick=()=>{drawOrd(true);const bad=ord.findIndex((k,p)=>k!==p),v=$('ordV');v.hidden=false;
+  if(bad<0){v.className='verdict ok';v.textContent='Urutannya benar. Putus, kunci, tunggu, ukur, uji alat ukur, baru kerja.'}
+  else{v.className='verdict warn';v.textContent='Belum tepat. Kotak hijau sudah di tempat yang benar, merah belum. Ingat: buktikan nol hanya setelah menunggu, dan uji alat ukur sebelum dan sesudah mengukur.'}};
+$('ordRst').onclick=()=>{ord=[3,6,0,5,2,7,1,4];drawOrd();$('ordV').hidden=true};
+
+// ----- temukan bahaya -----
+const SC=[
+['Memakai cincin dan jam logam saat bekerja di dekat baterai',1],
+['Sarung tangan isolasi disimpan terlipat di laci bersama oli dan kunci',1],
+['Bekerja sendirian di bengkel saat mengerjakan sistem tegangan tinggi',1],
+['Lantai bengkel basah di sekitar kendaraan yang sedang dikerjakan',1],
+['Kabel tegangan tinggi diberi pembatas dan rambu di area kerja',0],
+['Kunci kendaraan disimpan di saku teknisi selama pekerjaan',0],
+['Alat berinsulasi diperiksa dan peringkat tegangannya sesuai',0],
+['Multimeter diuji pada sumber hidup sebelum dan sesudah mengukur',0]
+];
+$('scan').innerHTML=SC.map((s,i)=>`<label data-i="${i}"><input type="checkbox"><span>${s[0]}</span></label>`).join('');
+$('scanChk').onclick=()=>{
+  let ok=0,miss=0,over=0;
+  [...$('scan').children].forEach((l,i)=>{const c=l.querySelector('input').checked,b=SC[i][1];l.className='';
+    if(b&&c){l.className='good';ok++}else if(b&&!c){l.className='miss';miss++}else if(!b&&c){l.className='over';over++}});
+  const v=$('scanV');v.hidden=false;
+  if(!miss&&!over){v.className='verdict ok';v.textContent='Semua benar. Empat bahaya terdeteksi dan empat praktik baik tidak salah dituduh.'}
+  else{v.className='verdict warn';v.textContent=`Bahaya terdeteksi ${ok} dari 4. Merah: bahaya yang terlewat (${miss}). Kuning: praktik baik yang salah ditandai (${over}).`}};
+
+// ----- video -----
+const VIDEOS=[
+  { id:'fbWg48eW_Is', judul:'Disconnecting High Voltage Systems in Vehicles (TÜV SÜD Academy)', bahasa:'Inggris', kanal:'TÜV SÜD Academy', link:'https://www.youtube.com/watch?v=fbWg48eW_Is', desk:'Video pelatihan tentang cara memutus sistem tegangan tinggi pada kendaraan dan hal-hal yang perlu diperhatikan.' },
+  { id:'YFMFbdZhaF0', judul:'Extrication Minutes - HV Service Disconnect', bahasa:'Inggris', kanal:'AdvancedExtrication.com', link:'https://www.youtube.com/watch?v=YFMFbdZhaF0', desk:'Penjelasan singkat tentang service disconnect tegangan tinggi pada kendaraan hibrida dan listrik, dari sudut pandang penyelamatan korban kecelakaan.' },
+  { id:'2LBPuFbmoJk', judul:'UPDATED EV SAFETY FOR EMERGENCY RESPONDERS! How to ISOLATE EV HV systems', bahasa:'Inggris', kanal:'', link:'https://www.youtube.com/watch?v=2LBPuFbmoJk', desk:'Cara mengisolasi sistem tegangan tinggi EV untuk petugas tanggap darurat. Berguna sebagai gambaran umum, bukan prosedur bengkel.' }
+];
+$('vlist').innerHTML=VIDEOS.map(v=>`<div class="vl"><a class="th" href="${v.link}" target="_blank" rel="noopener" aria-label="Tonton: ${v.judul}"><img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="Pratinjau ${v.judul}" loading="lazy"><span class="pl">▶ Tonton di YouTube</span></a><div><h4><a href="${v.link}" target="_blank" rel="noopener">${v.judul}</a></h4><p>${v.bahasa?`<span class="bd">${v.bahasa}</span>`:''}<span style="color:var(--dim);font-size:12px">${v.kanal}</span></p><p>${v.desk}</p></div></div>`).join('');
+const YT='https://www.youtube.com/results?search_query=';
+const VL=[['id','K3 listrik keselamatan kerja teknisi'],['id','keselamatan bengkel kendaraan listrik tegangan tinggi'],['id','lockout tagout LOTO penjelasan'],['en','EV technician high voltage safety lockout tagout']];
+$('vlinks').innerHTML=VL.map(x=>`<li><a href="${YT+encodeURIComponent(x[1])}" target="_blank" rel="noopener">${x[1]}</a> (${x[0]==='id'?'Bahasa Indonesia':'Bahasa Inggris'})</li>`).join('');
+
+// ----- kuis -----
+const Q=[
+['Yang paling langsung melukai tubuh saat tersengat adalah...',['Tegangan baterai saja','Arus yang mengalir lewat tubuh','Warna kabel'],1,'Arus tubuh menentukan akibatnya. Tegangan dan hambatan menentukan besarnya arus.'],
+['Ambang kesetrum mulai terasa untuk arus bolak-balik kira-kira...',['0,5 mA','50 mA','5 A'],0,'Sekitar 0,5 mA mulai terasa, sekitar 10 mA sulit melepas, dan sekitar 30 mA selama 1 detik masuk zona fibrilasi.'],
+['Sarung tangan isolasi Kelas 0 bertegangan kerja maksimal...',['500 V AC / 750 V DC','1.000 V AC / 1.500 V DC','17.000 V AC'],1,'Kelas 00 adalah 500 V AC dan 750 V DC. Kelas 0 adalah 1.000 V AC dan 1.500 V DC.'],
+['Setelah service disconnect dilepas, bagian dalam paket baterai...',['Bebas tegangan','Masih bertegangan tinggi','Otomatis dikosongkan'],1,'Service disconnect mengisolasi sistem dari sisa kendaraan, tetapi tegangan tinggi tetap ada di dalam paket baterai.'],
+['Mengapa multimeter diuji pada sumber hidup sebelum mengukur nol?',['Agar baterai terisi','Agar bacaan nol benar-benar bisa dipercaya','Agar kabel lebih panjang'],1,'Alat ukur rusak bisa menunjukkan nol padahal sistem bertegangan. Uji dulu dan uji lagi sesudahnya.'],
+['Mengapa cincin dan jam logam harus dilepas?',['Supaya tangan lebih ringan','Logam bisa menghubungkan kutub baterai dan menyebabkan luka bakar','Supaya sarung tangan muat'],1,'Logam yang menyentuh dua titik bertegangan menyebabkan hubung singkat, percikan, dan luka bakar parah.']
+];
+let sc=0,ans=0;
+$('quiz').innerHTML=Q.map((q,i)=>`<div class="q" data-i="${i}"><h4>${i+1}. ${q[0]}</h4>${q[1].map((o,j)=>`<button class="opt" data-j="${j}">${o}</button>`).join('')}<p class="why" hidden></p></div>`).join('');
+$('quiz').onclick=e=>{
+  const b=e.target.closest('button');if(!b||b.disabled)return;
+  const box=b.closest('.q'),q=Q[+box.dataset.i],ok=+b.dataset.j===q[2];
+  box.querySelectorAll('button').forEach((x,j)=>{x.disabled=true;if(j===q[2])x.classList.add('right')});
+  if(!ok)b.classList.add('wrong');else sc++;
+  const w=box.querySelector('.why');w.hidden=false;w.textContent=(ok?'Benar. ':'Belum tepat. ')+q[3];
+  if(++ans===Q.length){const s=$('score');s.hidden=false;s.className='verdict '+(sc>=5?'ok':sc>=4?'warn':'bad');s.textContent=`Skor Anda ${sc} dari ${Q.length}. `+(sc>=5?'Siap lanjut ke modul berikutnya.':'Ulangi bagian yang meleset, lalu coba kuis lagi.')}
+};
+</script>
+</body>
+</html>

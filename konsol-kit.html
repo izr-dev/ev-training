@@ -1,0 +1,1966 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISC EV Control Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0F1316;
+    --panel:#171D22;
+    --panel-2:#1C232A;
+    --border:#2A323A;
+    --text:#E9EDF1;
+    --text-dim:#8B96A1;
+    --live:#43D9A3;
+    --warn:#F2A93B;
+    --alert:#FF5C5C;
+    --data:#4FA3E3;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 18% -10%, rgba(79,163,227,0.10), transparent 55%),
+      radial-gradient(circle at 85% 0%, rgba(67,217,163,0.08), transparent 50%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Space Grotesk',sans-serif;
+    min-height:100vh;
+    transition:background .6s ease;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  /* ---------- HEADER ---------- */
+  header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 26px;
+    border-bottom:1px solid var(--border);
+    background:linear-gradient(180deg,#12171B,#0F1316);
+  }
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand .mark{
+    width:34px;height:34px;border-radius:8px;
+    background:conic-gradient(from 220deg,var(--data),var(--live));
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:12px;color:#0F1316;
+  }
+  .brand h1{font-size:17px;margin:0;font-weight:600;letter-spacing:.3px;text-shadow:0 0 18px rgba(79,163,227,.35);}
+  .brand p{margin:0;font-size:12px;color:var(--text-dim);}
+
+  .conn-area{display:flex;align-items:center;gap:14px;}
+  .status-pill{
+    display:flex;align-items:center;gap:8px;
+    padding:7px 14px;border-radius:999px;
+    border:1px solid var(--border);
+    font-size:13px;color:var(--text-dim);
+    background:var(--panel);
+  }
+  .status-dot{width:9px;height:9px;border-radius:50%;background:var(--text-dim);}
+  body.connected .status-dot{background:var(--live);box-shadow:0 0 8px var(--live);}
+  body.connected .status-pill{color:var(--live);border-color:rgba(67,217,163,.35);}
+  body.searching .status-dot{background:var(--warn);animation:pulse 1.2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.25;}}
+
+  button.connect-btn{
+    background:var(--data);color:#08141C;border:none;
+    padding:10px 18px;border-radius:8px;font-weight:600;font-size:14px;
+    cursor:pointer;font-family:inherit;
+  }
+  body.connected button.connect-btn{background:var(--alert);color:#26080A;}
+  button.connect-btn:hover{filter:brightness(1.08);}
+
+  /* ---------- LAYOUT ---------- */
+  main{
+    max-width:1280px;margin:0 auto;padding:22px 26px 100px;
+    display:grid;grid-template-columns:repeat(12,1fr);gap:18px;
+    filter:grayscale(0.85) opacity(0.55);
+    transition:filter .6s ease;
+  }
+  body.connected main{filter:none;}
+
+  .panel{
+    background:var(--panel);border:1px solid var(--border);
+    border-radius:var(--radius);padding:18px 20px;
+  }
+  .panel h2{
+    margin:0 0 14px;font-size:13px;font-weight:600;color:var(--text-dim);
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .panel h2 span.tag{font-size:11px;color:var(--text-dim);font-family:'IBM Plex Mono',monospace;}
+
+  /* ---------- HERO (gauge + status cards) ---------- */
+  .hero{grid-column:span 12;}
+  .hero-main{display:flex;gap:24px;align-items:center;flex-wrap:wrap;}
+  .hero-grid{flex:1;min-width:260px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  @media(max-width:900px){.hero-grid{grid-template-columns:1fr 1fr;} .hero-main{flex-direction:column;}}
+
+  .speed-gauge{
+    --pct:0;
+    width:176px;height:176px;border-radius:50%;flex-shrink:0;
+    background:conic-gradient(var(--live) calc(var(--pct)*1%), rgba(255,255,255,0.06) 0);
+    display:flex;align-items:center;justify-content:center;position:relative;
+    box-shadow:0 0 34px rgba(67,217,163,0.22), inset 0 0 18px rgba(0,0,0,0.55);
+    transition:background .25s linear;
+  }
+  .speed-gauge::before{content:'';position:absolute;inset:10px;border-radius:50%;background:var(--panel);}
+  .speed-gauge-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;}
+  .speed-gauge-value{font-size:36px;font-weight:600;text-shadow:0 0 16px currentColor;color:var(--live);}
+  .speed-gauge-label{font-size:10px;color:var(--text-dim);letter-spacing:1.5px;margin-top:2px;}
+
+  .status-card{
+    background:var(--panel-2);border:1px solid var(--border);border-left:4px solid var(--text-dim);
+    border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;
+    transition:border-color .2s,color .2s;
+  }
+  .status-card-label{font-size:12px;color:var(--text-dim);}
+  .status-card-value{font-size:18px;font-weight:600;}
+  .status-card-raw{font-size:11px;color:var(--text-dim);}
+  .status-card.state-live{border-left-color:var(--live);box-shadow:0 0 16px rgba(67,217,163,.08);}
+  .status-card.state-live .status-card-value{color:var(--live);}
+  .status-card.state-warn{border-left-color:var(--warn);}
+  .status-card.state-warn .status-card-value{color:var(--warn);}
+  .status-card.state-alert{border-left-color:var(--alert);box-shadow:0 0 16px rgba(255,92,92,.10);}
+  .status-card.state-alert .status-card-value{color:var(--alert);}
+  .status-card.state-neutral{border-left-color:var(--data);}
+  .status-card.state-neutral .status-card-value{color:var(--data);}
+  .hero-footer{display:flex;justify-content:flex-end;margin-top:14px;}
+
+  /* ---------- BAR METERS ---------- */
+  .meter-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;}
+  .meter{display:flex;flex-direction:column;gap:5px;}
+  .meter-top{display:flex;justify-content:space-between;font-size:12px;color:var(--text-dim);}
+  .meter-value{font-family:'IBM Plex Mono',monospace;color:var(--text);}
+  .meter-track{height:7px;border-radius:4px;background:var(--panel-2);overflow:hidden;}
+  .meter-fill{height:100%;background:var(--data);width:0%;transition:width .2s ease;}
+
+  /* ---------- DIGITAL BADGES ---------- */
+  .badge-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+  .badge{
+    display:flex;align-items:center;gap:10px;padding:9px 12px;
+    border-radius:8px;background:var(--panel-2);border:1px solid var(--border);
+    font-size:13px;
+  }
+  .badge .led{width:9px;height:9px;border-radius:50%;background:var(--text-dim);}
+  .badge.on .led{background:var(--live);box-shadow:0 0 6px var(--live);}
+  .badge.on{color:var(--live);}
+
+  /* ---------- TOGGLES ---------- */
+  .toggle-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+  .toggle-row{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:9px 12px;border-radius:8px;background:var(--panel-2);
+    border:1px solid var(--border);font-size:13px;transition:opacity .2s;
+  }
+  .toggle-row.locked{opacity:.45;pointer-events:none;}
+  .auto-tag{
+    display:none;margin-left:8px;font-size:10px;color:var(--warn);
+    border:1px solid var(--warn);padding:1px 6px;border-radius:999px;vertical-align:middle;
+  }
+  .auto-tag.show{display:inline-block;}
+  .switch{
+    position:relative;width:40px;height:22px;border-radius:999px;
+    background:#333d46;cursor:pointer;flex-shrink:0;transition:background .2s;
+  }
+  .switch::after{
+    content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;
+    border-radius:50%;background:#cfd6dc;transition:transform .2s;
+  }
+  .switch.on{background:var(--live);}
+  .switch.on::after{transform:translateX(18px);background:#08201A;}
+
+  /* ---------- CHARGING SIMULATION ---------- */
+  .charge-modes{display:flex;gap:10px;margin-bottom:14px;}
+  .mode-btn{
+    flex:1;padding:12px;border-radius:8px;border:1px solid var(--border);
+    background:var(--panel-2);color:var(--text);font-family:inherit;font-size:13px;font-weight:600;
+    cursor:pointer;transition:all .2s;
+  }
+  .mode-btn:hover:not(:disabled){border-color:var(--data);color:var(--data);}
+  .mode-btn:disabled{opacity:.4;cursor:not-allowed;}
+  .mode-btn.active{border-color:var(--live);color:var(--live);background:rgba(67,217,163,.08);}
+  .mode-btn.active:disabled{opacity:1;}
+  .charge-status{font-size:13px;color:var(--text-dim);margin-bottom:10px;min-height:18px;}
+  .charge-progress-track{height:10px;border-radius:6px;background:var(--panel-2);overflow:hidden;margin-bottom:6px;}
+  .charge-progress-fill{
+    height:100%;background:linear-gradient(90deg,var(--warn),var(--live));width:0%;
+    transition:width .2s linear;box-shadow:0 0 10px var(--live);
+  }
+  .charge-progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text-dim);margin-bottom:12px;}
+
+  /* ---------- RIDE SIMULATION ---------- */
+  .ride-toggle-row{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:9px 12px;border-radius:8px;background:var(--panel-2);
+    border:1px solid var(--border);font-size:13px;margin-bottom:12px;
+  }
+  .ride-readout-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px;}
+  .ride-chip{padding:8px 10px;border-radius:8px;background:var(--panel-2);border:1px solid var(--border);font-size:12px;color:var(--text-dim);}
+  .ride-chip.on{color:var(--live);border-color:rgba(67,217,163,.4);}
+  .ride-note{font-size:11px;color:var(--text-dim);line-height:1.5;margin:0;}
+
+  /* ---------- MOTOR SLIDER ---------- */
+  .motor-panel{display:flex;flex-direction:column;gap:14px;}
+  .motor-readout{display:flex;justify-content:space-between;align-items:baseline;}
+  .motor-readout .val{font-size:28px;font-family:'IBM Plex Mono',monospace;}
+  .motor-readout .dir{font-size:13px;color:var(--text-dim);}
+  input[type=range]{
+    -webkit-appearance:none;width:100%;height:8px;border-radius:4px;
+    background:linear-gradient(90deg,var(--warn),#333d46 50%,var(--data));
+    outline:none;
+  }
+  input[type=range]:disabled{opacity:.35;}
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:22px;height:22px;border-radius:50%;
+    background:var(--text);border:3px solid var(--panel);cursor:pointer;
+  }
+  .motor-scale{display:flex;justify-content:space-between;font-size:11px;color:var(--text-dim);}
+  .motor-auto-note{
+    font-size:11px;color:var(--warn);background:rgba(242,169,59,.08);
+    border:1px solid rgba(242,169,59,.3);padding:8px 10px;border-radius:8px;display:none;
+  }
+  .stop-btn{
+    align-self:center;padding:8px 22px;border-radius:8px;border:1px solid var(--border);
+    background:var(--panel-2);color:var(--text-dim);cursor:pointer;font-family:inherit;font-size:12px;
+  }
+
+  /* ---------- RFID ---------- */
+  .rfid-box{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:8px;padding:22px 0;
+  }
+  .rfid-uid{font-family:'IBM Plex Mono',monospace;font-size:20px;letter-spacing:2px;color:var(--live);}
+  .rfid-empty{color:var(--text-dim);font-size:13px;}
+  .rfid-hint{font-size:11px;color:var(--text-dim);font-family:'IBM Plex Mono',monospace;}
+
+  /* ---------- TOAST ---------- */
+  #toasts{position:fixed;top:18px;right:18px;display:flex;flex-direction:column;gap:8px;z-index:50;}
+  .toast{
+    padding:10px 16px;border-radius:8px;background:var(--panel);border:1px solid var(--border);
+    font-size:13px;box-shadow:0 6px 18px rgba(0,0,0,.4);
+    animation:fadein .25s ease;
+  }
+  .toast.live{border-color:rgba(67,217,163,.4);color:var(--live);}
+  .toast.alert{border-color:rgba(255,92,92,.4);color:var(--alert);}
+  .toast.warn{border-color:rgba(242,169,59,.4);color:var(--warn);}
+  @keyframes fadein{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+
+  .span-4{grid-column:span 4;}
+  .span-6{grid-column:span 6;}
+  .span-8{grid-column:span 8;}
+  .span-12{grid-column:span 12;}
+  @media(max-width:900px){
+    .span-4,.span-6,.span-8{grid-column:span 12;}
+    .meter-grid,.badge-grid,.toggle-grid,.ride-readout-grid{grid-template-columns:1fr;}
+  }
+
+  /* ================= TABS ================= */
+  .tabbar{
+    position:sticky;top:0;z-index:40;display:flex;gap:8px;padding:10px 26px;
+    background:rgba(15,19,22,.88);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);overflow-x:auto;
+  }
+  .tab-btn{
+    flex-shrink:0;padding:9px 20px;border-radius:10px;border:1px solid var(--border);
+    background:var(--panel);color:var(--text-dim);font-family:inherit;font-size:13px;font-weight:600;
+    cursor:pointer;transition:all .2s;
+  }
+  .tab-btn:hover{color:var(--text);border-color:#3a4652;}
+  .tab-btn.active{color:var(--live);border-color:rgba(67,217,163,.5);background:rgba(67,217,163,.08);box-shadow:0 0 18px rgba(67,217,163,.14);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;animation:tabin .3s ease;}
+  @keyframes tabin{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+  .page{max-width:1280px;margin:0 auto;padding:22px 26px 100px;}
+  body.disconnected .dim-when-off{filter:grayscale(.85) opacity(.55);}
+  .dim-when-off{transition:filter .6s ease;}
+  .conn-banner{
+    display:none;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    padding:10px 16px;margin-bottom:18px;border-radius:10px;font-size:13px;
+    border:1px solid rgba(242,169,59,.35);background:rgba(242,169,59,.07);color:var(--warn);
+  }
+  body.disconnected .conn-banner{display:flex;}
+
+  /* ================= HOME ================= */
+  .home-hero{
+    position:relative;overflow:hidden;padding:56px 40px;border-radius:18px;margin-bottom:22px;
+    border:1px solid var(--border);
+    background:radial-gradient(120% 140% at 15% 0%,rgba(79,163,227,.18),transparent 55%),
+               radial-gradient(90% 120% at 100% 100%,rgba(67,217,163,.14),transparent 55%),var(--panel);
+  }
+  .home-glow{
+    position:absolute;right:-90px;top:-90px;width:380px;height:380px;border-radius:50%;
+    background:conic-gradient(from 0deg,transparent 0 55%,rgba(67,217,163,.5),rgba(79,163,227,.5),transparent 95%);
+    filter:blur(26px);opacity:.55;animation:spin 14s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .home-hello{position:relative;font-size:15px;color:var(--live);margin:0 0 10px;}
+  .home-title{position:relative;font-size:44px;line-height:1.1;margin:0 0 14px;font-weight:700;letter-spacing:.2px;text-shadow:0 0 28px rgba(79,163,227,.35);}
+  .home-sub{position:relative;max-width:620px;font-size:15px;line-height:1.6;color:var(--text-dim);margin:0 0 26px;}
+  .home-conn{position:relative;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .home-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:22px;}
+  @media(max-width:900px){.home-cards{grid-template-columns:1fr;} .home-title{font-size:32px;} .home-hero{padding:34px 22px;}}
+  .home-card{
+    text-align:left;padding:24px;border-radius:14px;border:1px solid var(--border);background:var(--panel);
+    color:var(--text);font-family:inherit;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;
+  }
+  .home-card:hover{transform:translateY(-3px);border-color:rgba(67,217,163,.5);box-shadow:0 10px 30px rgba(0,0,0,.35),0 0 24px rgba(67,217,163,.12);}
+  .home-card .hc-idx{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--data);margin-bottom:26px;}
+  .home-card h3{margin:0 0 8px;font-size:20px;}
+  .home-card p{margin:0;font-size:13px;line-height:1.55;color:var(--text-dim);}
+  .home-guide ol{margin:0;padding-left:20px;display:grid;gap:10px;font-size:14px;color:var(--text-dim);line-height:1.55;}
+  .home-guide li b{color:var(--text);font-weight:600;}
+
+  /* ================= SIMULASI: CHARGING ================= */
+  .sim-grid{display:grid;grid-template-columns:1fr 1.25fr;gap:24px;}
+  @media(max-width:980px){.sim-grid{grid-template-columns:1fr;}}
+  .sc-sub{font-size:12px;font-weight:600;color:var(--text-dim);margin:0 0 10px;}
+  .sc-sub:not(:first-child){margin-top:20px;}
+  .sc-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .sc-opt{
+    text-align:left;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:var(--panel-2);
+    color:var(--text);font-family:inherit;cursor:default;transition:all .2s;
+  }
+  .sc-opt b{display:block;font-size:15px;margin-bottom:3px;}
+  .sc-opt span{font-size:11px;color:var(--text-dim);line-height:1.4;display:block;}
+  .sc-opt.clickable{cursor:pointer;}
+  .sc-opt.clickable:hover{border-color:var(--data);}
+  .sc-opt.active{border-color:var(--live);background:rgba(67,217,163,.08);box-shadow:0 0 16px rgba(67,217,163,.16);}
+  .sc-opt.active b{color:var(--live);}
+  .sc-sensor{margin-top:10px;font-size:11px;color:var(--text-dim);font-family:'IBM Plex Mono',monospace;}
+  .sc-manual{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px;color:var(--text-dim);cursor:pointer;}
+  .sc-steps{list-style:none;margin:0;padding:0;display:grid;gap:8px;}
+  .sc-steps li{
+    display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:10px;
+    border:1px solid var(--border);background:var(--panel-2);color:var(--text-dim);font-size:13px;transition:all .25s;
+  }
+  .sc-steps .n{
+    width:24px;height:24px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:700;border:1px solid var(--border);font-family:'IBM Plex Mono',monospace;
+  }
+  .sc-steps li small{display:block;font-size:11px;opacity:.75;margin-top:1px;}
+  .sc-steps li.done{color:var(--text);}
+  .sc-steps li.done .n{background:var(--live);color:#08201A;border-color:var(--live);}
+  .sc-steps li.active{border-color:var(--warn);color:var(--text);background:rgba(242,169,59,.08);box-shadow:0 0 16px rgba(242,169,59,.14);}
+  .sc-steps li.active .n{border-color:var(--warn);color:var(--warn);animation:pulse 1.1s infinite;}
+  .sc-steps li.error{border-color:var(--alert);color:var(--alert);}
+  .sc-pay{margin-top:12px;padding:12px 14px;border-radius:10px;border:1px dashed var(--border);font-size:12px;color:var(--text-dim);line-height:1.55;}
+  .sc-pay .row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+  .mini-btn{
+    padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:var(--panel-2);color:var(--text);
+    font-family:inherit;font-size:12px;cursor:pointer;transition:all .2s;
+  }
+  .mini-btn:hover:not(:disabled){border-color:var(--data);color:var(--data);}
+  .mini-btn:disabled{opacity:.35;cursor:not-allowed;}
+  .mini-btn.active{border-color:var(--live);color:var(--live);background:rgba(67,217,163,.1);}
+  .sc-pay.fail{border-color:var(--alert);color:var(--alert);}
+  .sc-soc{display:flex;align-items:flex-end;gap:22px;flex-wrap:wrap;}
+  .sc-soc-num{font-family:'IBM Plex Mono',monospace;font-size:64px;font-weight:600;line-height:1;color:var(--live);text-shadow:0 0 22px rgba(67,217,163,.45);}
+  .sc-soc-num small{font-size:24px;color:var(--text-dim);margin-left:2px;text-shadow:none;}
+  .sc-stats{display:grid;grid-template-columns:repeat(3,auto);gap:4px 22px;font-size:12px;color:var(--text-dim);}
+  .sc-stats b{display:block;font-family:'IBM Plex Mono',monospace;font-size:15px;color:var(--text);font-weight:500;}
+  .sc-anim{width:100%;height:auto;display:block;margin-top:2px;}
+  .sc-anim .st-body{fill:#1C232A;stroke:#2f3b46;stroke-width:2;}
+  .sc-anim .st-screen{fill:#0b1216;stroke:#2f3b46;}
+  .sc-anim .st-txt{fill:var(--live);font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;}
+  .sc-anim .st-led{fill:#2a3540;transition:fill .3s;}
+  .sc-anim .cable-base{fill:none;stroke:#26323b;stroke-width:9;stroke-linecap:round;}
+  .sc-anim .cable-flow{fill:none;stroke:var(--live);stroke-width:4;stroke-linecap:round;stroke-dasharray:8 14;opacity:0;}
+  .sc-anim .plug{fill:#2a3540;stroke:#3a4652;}
+  .sc-anim .batt-body{fill:#0d1317;stroke:#3a4652;stroke-width:3;transition:stroke .3s;}
+  .sc-anim .batt-term{fill:#3a4652;}
+  .sc-anim .batt-txt{fill:#fff;font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:600;text-anchor:middle;paint-order:stroke;stroke:rgba(0,0,0,.55);stroke-width:3px;}
+  .sc-anim .bolt{fill:var(--warn);opacity:0;}
+  #scAnim{--flow-dur:.6s;--glow:rgba(67,217,163,.55);}
+  #scAnim.flow-cc .cable-flow,#scAnim.flow-cv .cable-flow{opacity:1;animation:cableflow var(--flow-dur) linear infinite;}
+  #scAnim.flow-cc{--flow-dur:.5s;}
+  #scAnim.flow-cv{--flow-dur:2.6s;--glow:rgba(242,169,59,.5);}
+  #scAnim.flow-cv .cable-flow{stroke:var(--warn);}
+  #scAnim.flow-cc .batt-body,#scAnim.flow-cv .batt-body{stroke:var(--live);filter:drop-shadow(0 0 10px var(--glow));animation:battglow 1.4s ease-in-out infinite;}
+  #scAnim.flow-cv .batt-body{stroke:var(--warn);}
+  #scAnim.flow-cc .bolt{opacity:1;animation:pulse .6s infinite;}
+  #scAnim.flow-cv .bolt{opacity:1;animation:pulse 2.4s infinite;}
+  @keyframes cableflow{to{stroke-dashoffset:-44;}}
+  @keyframes battglow{0%,100%{filter:drop-shadow(0 0 4px var(--glow));}50%{filter:drop-shadow(0 0 14px var(--glow));}}
+  .sc-phase{display:flex;align-items:center;gap:10px;margin-top:6px;font-size:12px;color:var(--text-dim);flex-wrap:wrap;}
+  .phase-badge{padding:4px 12px;border-radius:999px;border:1px solid var(--border);font-weight:600;}
+  .phase-badge.cc{color:var(--live);border-color:rgba(67,217,163,.5);background:rgba(67,217,163,.08);}
+  .phase-badge.cv{color:var(--warn);border-color:rgba(242,169,59,.55);background:rgba(242,169,59,.09);animation:pulse 1.6s infinite;}
+  .cur-bar{flex:1;min-width:120px;height:7px;border-radius:4px;background:var(--panel-2);overflow:hidden;}
+  .cur-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--warn),var(--live));transition:width .25s linear;}
+  .sc-explain{
+    max-height:0;opacity:0;overflow:hidden;margin-top:0;border-radius:12px;
+    border:1px solid rgba(242,169,59,.45);background:rgba(242,169,59,.06);
+    transition:max-height .6s ease,opacity .5s ease,margin .4s ease,padding .4s ease;padding:0 18px;
+  }
+  .sc-explain.show{max-height:640px;opacity:1;margin-top:20px;padding:16px 18px;}
+  .sc-explain h3{margin:0 0 6px;font-size:15px;color:var(--warn);display:flex;align-items:center;gap:8px;}
+  .sc-explain .slow-ico{display:inline-flex;gap:2px;}
+  .sc-explain .slow-ico i{width:6px;height:14px;background:var(--warn);border-radius:2px;animation:slowbars 1.8s ease-in-out infinite;}
+  .sc-explain .slow-ico i:nth-child(2){animation-delay:.3s;}
+  .sc-explain .slow-ico i:nth-child(3){animation-delay:.6s;}
+  @keyframes slowbars{0%,100%{opacity:.25;}50%{opacity:1;}}
+  .sc-explain .ex-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:18px;align-items:start;}
+  @media(max-width:900px){.sc-explain .ex-grid{grid-template-columns:1fr;}}
+  .sc-explain ul{margin:8px 0 0;padding-left:18px;display:grid;gap:6px;font-size:12.5px;line-height:1.55;color:var(--text);}
+  .sc-explain ul li span{color:var(--text-dim);}
+  .sc-explain .analogi{margin-top:10px;font-size:12px;color:var(--text-dim);font-style:italic;}
+  .cvchart{width:100%;height:auto;display:block;}
+  .cvchart .zone-cc{fill:rgba(67,217,163,.08);}
+  .cvchart .zone-cv{fill:rgba(242,169,59,.12);}
+  .cvchart .axis{stroke:#3a4652;stroke-width:1;}
+  .cvchart .curve{fill:none;stroke:var(--text);stroke-width:2;}
+  .cvchart .lbl{fill:var(--text-dim);font-size:9px;font-family:'Space Grotesk',sans-serif;}
+  .cvchart .mk{fill:var(--warn);filter:drop-shadow(0 0 5px var(--warn));}
+  .cvchart .mkline{stroke:rgba(242,169,59,.5);stroke-dasharray:3 3;}
+
+  /* ================= SIMULASI: HEAD UNIT ================= */
+  .hu{
+    position:relative;border-radius:24px;padding:22px 26px 24px;overflow:hidden;
+    background:radial-gradient(120% 90% at 50% 0%,#0d1b24 0%,#05090c 72%);
+    border:1px solid #17313c;
+    box-shadow:inset 0 0 70px rgba(0,229,255,.05),0 0 44px rgba(0,229,255,.07);
+  }
+  .hu::before{content:'';position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(0deg,rgba(255,255,255,.016) 0 1px,transparent 1px 3px);}
+  .hu-top{position:relative;display:grid;grid-template-columns:90px 1fr 90px;align-items:center;gap:12px;transition:opacity .45s;}
+  .hu-modes{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;}
+  .hu-mode{padding:6px 16px;border-radius:999px;border:1px solid #1a3541;color:#2a4854;font-size:12px;letter-spacing:2px;font-weight:700;transition:all .18s;}
+  .hu-mode.lit.eco{color:#43D9A3;border-color:#43D9A3;box-shadow:0 0 14px rgba(67,217,163,.55),inset 0 0 10px rgba(67,217,163,.18);text-shadow:0 0 8px #43D9A3;}
+  .hu-mode.lit.normal{color:#4FA3E3;border-color:#4FA3E3;box-shadow:0 0 14px rgba(79,163,227,.6),inset 0 0 10px rgba(79,163,227,.18);text-shadow:0 0 8px #4FA3E3;}
+  .hu-mode.lit.sport{color:#FF5C5C;border-color:#FF5C5C;box-shadow:0 0 14px rgba(255,92,92,.6),inset 0 0 10px rgba(255,92,92,.18);text-shadow:0 0 8px #FF5C5C;}
+  .hu-sein{display:flex;justify-content:center;}
+  .hu-sein svg{width:66px;height:46px;fill:#10261f;transition:fill .12s,filter .12s;}
+  .hu-sein.lit svg{fill:#43D9A3;filter:drop-shadow(0 0 8px #43D9A3) drop-shadow(0 0 22px rgba(67,217,163,.65));}
+  .hu-center{position:relative;width:min(100%,430px);margin:4px auto 0;transition:opacity .45s;}
+  .hu-gauge{width:100%;height:auto;display:block;}
+  .hu-gauge .track{fill:none;stroke:#0f2530;stroke-width:14;stroke-linecap:round;}
+  .hu-gauge .arc{fill:none;stroke:url(#huGrad);stroke-width:14;stroke-linecap:round;filter:url(#huGlow);transition:opacity .3s;}
+  .hu-gauge .tick{stroke:#2c5463;stroke-width:2;}
+  .hu-gauge .tick.major{stroke:#5aa9bb;stroke-width:3;}
+  .hu-gauge .tlbl{fill:#5aa9bb;font-size:11px;font-family:'IBM Plex Mono',monospace;text-anchor:middle;dominant-baseline:middle;}
+  .hu-readout{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:6px;pointer-events:none;}
+  .hu-speed{font-family:'IBM Plex Mono',monospace;font-size:88px;font-weight:600;line-height:1;color:#E9FBFF;text-shadow:0 0 18px rgba(0,229,255,.7),0 0 44px rgba(0,229,255,.35);}
+  .hu-unit{font-size:13px;letter-spacing:5px;color:#5aa9bb;margin-top:4px;}
+  .hu-bottom{position:relative;display:grid;grid-template-columns:repeat(3,auto) 1fr;align-items:center;gap:14px;margin-top:2px;}
+  @media(max-width:720px){.hu-bottom{grid-template-columns:repeat(3,1fr);} .hu-batt{grid-column:1 / -1;} .hu-speed{font-size:64px;}}
+  .hu-ind{
+    min-width:58px;height:54px;padding:0 16px;display:flex;align-items:center;justify-content:center;border-radius:14px;
+    border:1px solid #1a3541;color:#2a4854;font-weight:700;font-size:20px;letter-spacing:1px;transition:all .15s,opacity .45s;
+  }
+  .hu-ind.lit.park{color:#FF5C5C;border-color:#FF5C5C;box-shadow:0 0 16px rgba(255,92,92,.6),inset 0 0 12px rgba(255,92,92,.2);text-shadow:0 0 10px #FF5C5C;}
+  .hu-ind.lit.rev{color:#F2A93B;border-color:#F2A93B;box-shadow:0 0 16px rgba(242,169,59,.6),inset 0 0 12px rgba(242,169,59,.2);text-shadow:0 0 10px #F2A93B;}
+  .hu-ind.lit.ready{color:#43D9A3;border-color:#43D9A3;box-shadow:0 0 16px rgba(67,217,163,.6),inset 0 0 12px rgba(67,217,163,.2);text-shadow:0 0 10px #43D9A3;font-size:15px;}
+  .hu-batt{display:flex;align-items:center;justify-content:flex-end;gap:14px;min-width:0;}
+  .hu-batt-bar{display:flex;gap:5px;padding:6px;border-radius:10px;border:1px solid #1a3541;transition:border-color .2s,box-shadow .2s;}
+  .hu-batt-bar .seg{display:block;width:26px;height:26px;border-radius:5px;background:#0f2530;transition:all .15s;}
+  .hu-batt[data-level="ok"] .seg.lit{background:#43D9A3;box-shadow:0 0 12px rgba(67,217,163,.8);}
+  .hu-batt[data-level="mid"] .seg.lit{background:#F2A93B;box-shadow:0 0 12px rgba(242,169,59,.8);}
+  .hu-batt[data-level="low"] .seg.lit{background:#FF5C5C;box-shadow:0 0 12px rgba(255,92,92,.8);}
+  .hu-batt.charging .seg.lit:last-of-type,.hu-batt.charging .seg.chg{animation:pulse .9s infinite;}
+  .hu-batt.empty .hu-batt-bar{border-color:#FF5C5C;box-shadow:0 0 14px rgba(255,92,92,.7);}
+  .hu-batt-num{font-family:'IBM Plex Mono',monospace;font-size:26px;color:#E9FBFF;text-shadow:0 0 12px rgba(0,229,255,.5);}
+  .hu-batt-num small{font-size:13px;color:#5aa9bb;}
+  .hu-batt-tag{font-size:11px;font-weight:700;letter-spacing:2px;color:#2a4854;min-width:70px;text-align:center;transition:all .15s;}
+  .hu-batt.empty .hu-batt-tag{color:#FF5C5C;text-shadow:0 0 10px #FF5C5C;}
+  .hu-batt.charging .hu-batt-tag{color:#43D9A3;text-shadow:0 0 10px #43D9A3;}
+  .hu-overlay{
+    position:absolute;inset:0;display:none;align-items:center;justify-content:center;z-index:3;
+    background:rgba(3,7,10,.55);color:#5aa9bb;font-size:14px;letter-spacing:3px;
+  }
+  .hu[data-power="off"] .hu-top,.hu[data-power="off"] .hu-center,.hu[data-power="off"] .hu-ind{opacity:.28;}
+  .hu[data-power="off"] .hu-gauge .arc{opacity:0;}
+  .hu[data-power="off"] .hu-speed{text-shadow:none;color:#1f3a45;}
+  .hu[data-power="off"] .hu-batt{opacity:.22;}
+  .hu[data-power="charge"] .hu-top,.hu[data-power="charge"] .hu-center,.hu[data-power="charge"] .hu-ind{opacity:.16;}
+  .hu[data-power="charge"] .hu-gauge .arc{opacity:0;}
+  .hu[data-power="charge"] .hu-speed{text-shadow:none;color:#1f3a45;}
+  .hu[data-power="bulb"]{box-shadow:inset 0 0 90px rgba(0,229,255,.16),0 0 60px rgba(0,229,255,.2);}
+  .hu-controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center;}
+  .hu-controls .hint{font-size:12px;color:var(--text-dim);margin-left:auto;}
+  .hu-status{margin-top:14px;font-size:12px;color:var(--text-dim);display:flex;gap:18px;flex-wrap:wrap;}
+  .hu-status b{color:var(--text);font-weight:600;}
+
+  /* ================= PENGATURAN (dummy ala Votol) ================= */
+  .set-note{font-size:12px;color:var(--warn);background:rgba(242,169,59,.07);border:1px solid rgba(242,169,59,.3);padding:8px 12px;border-radius:8px;margin-bottom:14px;}
+  .set-tabs{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:16px;}
+  .set-tab{padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--panel-2);color:var(--text-dim);font-family:inherit;font-size:13px;cursor:pointer;}
+  .set-tab.active{color:var(--data);border-color:var(--data);background:rgba(79,163,227,.1);}
+  .set-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 22px;}
+  @media(max-width:900px){.set-grid{grid-template-columns:1fr;}}
+  .set-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:8px;background:var(--panel-2);border:1px solid var(--border);font-size:13px;}
+  .set-row.mod{border-color:var(--warn);}
+  .set-row label{color:var(--text);flex:1;}
+  .set-row small{display:block;color:var(--text-dim);font-size:11px;margin-top:2px;}
+  .set-ctl{display:flex;align-items:center;gap:6px;}
+  .set-ctl input[type=number],.set-ctl select{
+    background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:6px 8px;
+    font-family:'IBM Plex Mono',monospace;font-size:13px;width:110px;
+  }
+  .set-ctl .u{font-size:11px;color:var(--text-dim);width:28px;}
+  .set-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:14px;border-top:1px solid var(--border);}
+  .set-info-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;}
+  @media(max-width:900px){.set-info-grid{grid-template-columns:repeat(2,1fr);}}
+  .set-info-card{padding:12px;border-radius:8px;background:var(--panel-2);border:1px solid var(--border);}
+  .set-info-card span{display:block;font-size:11px;color:var(--text-dim);margin-bottom:4px;}
+  .set-info-card b{font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:500;}
+  table.fault{width:100%;border-collapse:collapse;font-size:12px;}
+  table.fault th,table.fault td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);}
+  table.fault th{color:var(--text-dim);font-weight:600;}
+  .set-export{width:100%;height:150px;margin-top:12px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:10px;font-family:'IBM Plex Mono',monospace;font-size:12px;display:none;}
+  .set-progress{height:5px;border-radius:3px;background:var(--panel-2);overflow:hidden;margin-top:10px;display:none;}
+  .set-progress i{display:block;height:100%;width:0;background:var(--data);transition:width .1s linear;}
+
+  .hu-batt.charging .seg.chg{background:rgba(67,217,163,.55);animation:pulse .9s infinite;}
+</style>
+</head>
+<body class="disconnected">
+
+<div id="toasts"></div>
+
+<header>
+  <div class="brand">
+    <div class="mark">ISC</div>
+    <div>
+      <h1>ISC EV Control Console</h1>
+      <p>Mikrokontroller ESP32-S3 &middot; Mega2560 Pro &middot; Bluetooth Low Energy (BLE)</p>
+    </div>
+  </div>
+  <div class="conn-area">
+    <div class="status-pill"><span class="status-dot"></span><span id="statusText">Belum terhubung</span></div>
+    <button class="connect-btn" id="connectBtn">Hubungkan BLE</button>
+  </div>
+</header>
+<nav class="tabbar" id="tabbar">
+  <button class="tab-btn active" data-tab="tab-home">Home</button>
+  <button class="tab-btn" data-tab="tab-sim">Simulasi</button>
+  <button class="tab-btn" data-tab="tab-dashboard">Dashboard</button>
+  <button class="tab-btn" data-tab="tab-settings">Pengaturan</button>
+</nav>
+
+<!-- ============ TAB 1 : HOME ============ -->
+<section class="tab-panel active" id="tab-home">
+  <div class="page">
+    <div class="home-hero">
+      <div class="home-glow"></div>
+      <p class="home-hello">Selamat datang di panel kendali kendaraan listrik Anda.</p>
+      <h1 class="home-title">ISC EV Control Console</h1>
+      <p class="home-sub">Pantau dan kendalikan kit ESP32-S3 + Mega2560 lewat Bluetooth. Pilih menu di bawah untuk mulai: simulasi charging dan head unit, dashboard telemetri lengkap, atau pengaturan controller.</p>
+      <div class="home-conn">
+        <span class="status-pill"><span class="status-dot"></span><span id="homeStatusText">Belum terhubung</span></span>
+        <button class="connect-btn" id="homeConnectBtn">Hubungkan BLE</button>
+      </div>
+    </div>
+
+    <div class="home-cards">
+      <button class="home-card" data-goto="tab-sim">
+        <div class="hc-idx">01</div>
+        <h3>Simulasi</h3>
+        <p>Simulasi proses charging lengkap dengan animasi dan penjelasan, serta head unit futuristik yang mengikuti input Mega.</p>
+      </button>
+      <button class="home-card" data-goto="tab-dashboard">
+        <div class="hc-idx">02</div>
+        <h3>Dashboard</h3>
+        <p>Telemetri analog, input digital, kontrol semua output ESP/Mega, kontrol motor, dan RFID dalam satu layar.</p>
+      </button>
+      <button class="home-card" data-goto="tab-settings">
+        <div class="hc-idx">03</div>
+        <h3>Pengaturan</h3>
+        <p>Parameter controller lengkap bergaya Votol: dasar, motor, throttle, kecepatan, proteksi, regeneratif (versi dummy).</p>
+      </button>
+    </div>
+
+    <div class="panel home-guide">
+      <h2>Alur penggunaan cepat</h2>
+      <ol>
+        <li><b>Hubungkan BLE</b> dari tombol di atas (Chrome/Edge di Android atau desktop).</li>
+        <li>Buka <b>Simulasi</b>. Colokkan charger: mode Fast/Slow terdeteksi dari sensor, lalu tap kartu RFID yang valid untuk membayar dan memulai charging.</li>
+        <li>Setelah selesai, <b>cabut charger</b> lalu nyalakan <b>Ignition</b>: semua indikator di head unit dan kit menyala sebentar (bulb check).</li>
+        <li>Putar <b>throttle</b>: kecepatan dibatasi sesuai mode Speed 1/2/3, baterai berkurang, dan head unit mengikuti.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TAB 2 : SIMULASI ============ -->
+<section class="tab-panel" id="tab-sim">
+  <div class="page">
+    <div class="conn-banner">
+      <span>BLE belum terhubung. Hubungkan dulu agar simulasi mengikuti data kit.</span>
+      <button class="connect-btn" id="simConnectBtn">Hubungkan BLE</button>
+    </div>
+
+    <div class="dim-when-off">
+      <!-- A. SIMULASI CHARGING -->
+      <section class="panel" style="margin-bottom:22px;">
+        <h2>A. Simulasi Charging <span class="tag" id="scStateTag">IDLE</span></h2>
+        <div class="sim-grid">
+          <div>
+            <div class="sc-sub">1. Pilihan charging</div>
+            <div class="sc-options">
+              <button class="sc-opt" id="scOptFast"><b>Fast Charge</b><span>Arus tinggi. Sekitar 10 detik dari 20% ke 100%.</span></button>
+              <button class="sc-opt" id="scOptSlow"><b>Slow Charge</b><span>Arus rendah. Sekitar 20 detik dari 20% ke 100%.</span></button>
+            </div>
+            <div class="sc-sensor" id="scSensor">Sensor charger (ADC ESP): --</div>
+            <label class="sc-manual"><input type="checkbox" id="scManualChk"> Pilih manual (tanpa sensor charger)</label>
+
+            <div class="sc-sub">2. Urutan proses charging</div>
+            <ol class="sc-steps">
+              <li id="scStep0"><span class="n">1</span><div>Charger terhubung<small>Mode terdeteksi</small></div></li>
+              <li id="scStep1"><span class="n">2</span><div>Menunggu pembayaran<small>Tempelkan kartu RFID</small></div></li>
+              <li id="scStep2"><span class="n">3</span><div>Pembayaran diterima<small>Kartu valid</small></div></li>
+              <li id="scStep3"><span class="n">4</span><div>Charging cepat (CC)<small>Arus konstan, 0% sampai 80%</small></div></li>
+              <li id="scStep4"><span class="n">5</span><div>Charging melambat (CV)<small>Tegangan konstan, 80% sampai 100%</small></div></li>
+              <li id="scStep5"><span class="n">6</span><div>Selesai<small>Cabut charger untuk berkendara</small></div></li>
+            </ol>
+            <div class="sc-pay" id="scPay">
+              <div id="scPayText">Menunggu charger terhubung.</div>
+              <div class="row">
+                <button class="mini-btn" id="scTapValid" disabled>Tap kartu valid (virtual)</button>
+                <button class="mini-btn" id="scTapBad" disabled>Tap kartu salah (virtual)</button>
+                <button class="mini-btn" id="scReset">Reset / cabut charger</button>
+              </div>
+              <div style="margin-top:8px;" class="mono" id="scUid">UID terakhir: --</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="sc-sub">3. SOC baterai saat ini</div>
+            <div class="sc-soc">
+              <div class="sc-soc-num"><span id="scSocNum">0</span><small>%</small></div>
+              <div class="sc-stats">
+                <div>Fase<b id="scPhase">--</b></div>
+                <div>Arus relatif<b id="scCurrent">--</b></div>
+                <div>Sisa waktu<b id="scRemain">--</b></div>
+              </div>
+            </div>
+
+            <div class="sc-sub">4. Animasi charging</div>
+            <svg class="sc-anim flow-off" id="scAnim" viewBox="0 0 560 190">
+              <defs>
+                <linearGradient id="gBatt" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#43D9A3"/><stop offset="1" stop-color="#4FA3E3"/></linearGradient>
+                <clipPath id="clipBatt"><rect x="360" y="52" width="150" height="86" rx="12"/></clipPath>
+              </defs>
+              <rect class="st-body" x="20" y="28" width="90" height="136" rx="16"/>
+              <rect class="st-screen" x="34" y="42" width="62" height="38" rx="7"/>
+              <text class="st-txt" id="scStationTxt" x="65" y="66" text-anchor="middle">--</text>
+              <circle class="st-led" id="scStationLed" cx="65" cy="106" r="7"/>
+              <rect x="44" y="124" width="42" height="8" rx="4" fill="#26323b"/>
+              <path class="cable-base" d="M110 105 C 190 105, 260 105, 346 105"/>
+              <path class="cable-flow" d="M110 105 C 190 105, 260 105, 346 105"/>
+              <rect class="plug" x="340" y="92" width="22" height="26" rx="5"/>
+              <polygon class="bolt" points="236,78 222,106 234,106 228,132 248,98 236,98"/>
+              <rect class="batt-body" x="360" y="52" width="150" height="86" rx="14"/>
+              <rect class="batt-term" x="512" y="82" width="12" height="26" rx="4"/>
+              <g clip-path="url(#clipBatt)"><rect id="scFill" x="360" y="52" width="0" height="86" fill="url(#gBatt)"/></g>
+              <text class="batt-txt" id="scBattTxt" x="435" y="104" dominant-baseline="middle">0%</text>
+            </svg>
+            <div class="sc-phase">
+              <span class="phase-badge" id="scBadge">Standby</span>
+              <span>Arus</span><span class="cur-bar"><i id="scCurBar"></i></span>
+            </div>
+
+            <div class="sc-sub">Kurva pengisian (CC &rarr; CV)</div>
+            <svg class="cvchart" id="cvChart" viewBox="0 0 300 130"></svg>
+          </div>
+        </div>
+
+        <!-- 5. penjelasan saat 80% -> 100% -->
+        <div class="sc-explain" id="scExplain">
+          <h3><span class="slow-ico"><i></i><i></i><i></i></span> Charging melambat: tahap CV (Constant Voltage)</h3>
+          <div class="ex-grid">
+            <div>
+              <div style="font-size:13px;">Mulai sekitar 80%, charger berpindah dari arus konstan (CC) ke tegangan konstan (CV). Arus sengaja diturunkan bertahap.</div>
+              <ul>
+                <li>Tegangan sel mendekati batas maksimum <span>(sekitar 4,2 V per sel Li-ion). Kalau arus tetap besar, tegangan melewati batas dan sel rusak.</span></li>
+                <li>Mengurangi panas <span>(rugi daya I&sup2;R di resistansi internal sel) agar baterai tidak overheat.</span></li>
+                <li>Mencegah lithium plating <span>yang memperpendek umur dan berisiko keselamatan.</span></li>
+                <li>Memberi waktu BMS menyeimbangkan sel <span>(balancing) supaya semua sel sama-sama penuh.</span></li>
+              </ul>
+              <div class="analogi">Analogi: mengisi gelas dengan air. Cepat di awal, pelan-pelan saat hampir penuh supaya tidak tumpah.</div>
+            </div>
+            <div style="font-size:11px;color:var(--text-dim);">Posisi saat ini pada kurva arus (garis putus-putus oranye di grafik &ldquo;Kurva pengisian&rdquo; di atas). Arus turun, SOC naik lebih lambat.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- B. HEAD UNIT -->
+      <section class="panel">
+        <h2>B. Head Unit <span class="tag" id="huPowerTag">OFF</span></h2>
+        <div class="hu" id="hu" data-power="off">
+          <div class="hu-overlay" id="huOverlay">MENUNGGU KONEKSI BLE</div>
+          <div class="hu-top">
+            <div class="hu-sein" id="huSeinL"><svg viewBox="0 0 66 46"><polygon points="2,23 28,2 28,15 64,15 64,31 28,31 28,44"/></svg></div>
+            <div class="hu-modes">
+              <span class="hu-mode eco" id="huModeEco">ECO</span>
+              <span class="hu-mode normal" id="huModeNormal">NORMAL</span>
+              <span class="hu-mode sport" id="huModeSport">SPORT</span>
+            </div>
+            <div class="hu-sein" id="huSeinR"><svg viewBox="0 0 66 46"><polygon points="64,23 38,2 38,15 2,15 2,31 38,31 38,44"/></svg></div>
+          </div>
+
+          <div class="hu-center">
+            <svg class="hu-gauge" id="huGauge" viewBox="0 0 300 250">
+              <defs>
+                <linearGradient id="huGrad" gradientUnits="userSpaceOnUse" x1="40" y1="0" x2="260" y2="0">
+                  <stop offset="0" stop-color="#00E5FF"/><stop offset=".6" stop-color="#43D9A3"/><stop offset="1" stop-color="#F2A93B"/>
+                </linearGradient>
+                <filter id="huGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+            </svg>
+            <div class="hu-readout">
+              <div class="hu-speed" id="huSpeed">0</div>
+              <div class="hu-unit">KM/H</div>
+            </div>
+          </div>
+
+          <div class="hu-bottom">
+            <div class="hu-ind park" id="huPark">P</div>
+            <div class="hu-ind rev" id="huRev">R</div>
+            <div class="hu-ind ready" id="huReady">READY</div>
+            <div class="hu-batt" id="huBatt" data-level="ok">
+              <div class="hu-batt-tag" id="huBattTag">BATT</div>
+              <div class="hu-batt-bar"><i class="seg" id="huSeg0"></i><i class="seg" id="huSeg1"></i><i class="seg" id="huSeg2"></i><i class="seg" id="huSeg3"></i></div>
+              <div class="hu-batt-num"><span id="huSoc">--</span><small>%</small></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hu-controls">
+          <button class="mini-btn" id="btnSeinL">Sein kiri</button>
+          <button class="mini-btn" id="btnHazard">Hazard</button>
+          <button class="mini-btn" id="btnSeinR">Sein kanan</button>
+          <span class="hint">Tidak ada input sein di Mega, jadi sein dinyalakan dari tombol ini lalu dikirim ke output Left/Right.</span>
+        </div>
+        <div class="hu-status">
+          <span>Mode kontrol: <b id="huCtrlMode">Otomatis</b></span>
+          <span>Ignition: <b id="huIgn">--</b></span>
+          <span>Batas kecepatan mode: <b id="huLimit">--</b></span>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TAB 3 : DASHBOARD (isi lama) ============ -->
+<div class="tab-panel" id="tab-dashboard">
+<main>
+
+  <!-- HERO -->
+  <section class="panel hero">
+    <h2>Status Kendaraan Listrik</h2>
+    <div class="hero-main">
+      <div class="speed-gauge" id="speedGaugeRing">
+        <div class="speed-gauge-inner">
+          <div class="speed-gauge-value mono" id="gaugeSpeedVal">0</div>
+          <div class="speed-gauge-label">SPEED SENSOR</div>
+        </div>
+      </div>
+      <div class="hero-grid">
+        <div class="status-card" id="cardCharging">
+          <div class="status-card-label">Charging</div>
+          <div class="status-card-value" id="valCharging">--</div>
+          <div class="status-card-raw mono" id="rawCharging">--</div>
+        </div>
+        <div class="status-card" id="cardBattery">
+          <div class="status-card-label">Kelas Baterai</div>
+          <div class="status-card-value" id="valBattery">--</div>
+          <div class="status-card-raw mono" id="rawBattery">--</div>
+        </div>
+        <div class="status-card" id="cardSpeedMode">
+          <div class="status-card-label">Mode Speed</div>
+          <div class="status-card-value" id="valSpeedMode">--</div>
+          <div class="status-card-raw mono" id="rawSpeedMode">--</div>
+        </div>
+        <div class="status-card" id="cardBldc">
+          <div class="status-card-label">Kelas Motor BLDC</div>
+          <div class="status-card-value" id="valBldc">--</div>
+          <div class="status-card-raw mono" id="rawBldc">--</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-footer">
+      <span class="status-pill">
+        <span class="status-dot" id="megaLinkDot"></span>
+        <span id="megaLinkText">Link Mega: --</span>
+      </span>
+    </div>
+  </section>
+
+  <!-- TELEMETRY -->
+  <section class="panel span-8">
+    <h2>Telemetri Analog <span class="tag">raw ADC</span></h2>
+    <div class="meter-grid" id="telemetryGrid"></div>
+  </section>
+
+  <!-- DIGITAL INPUTS -->
+  <section class="panel span-4">
+    <h2>Input Digital</h2>
+    <div class="badge-grid" id="digitalInputsGrid"></div>
+  </section>
+
+  <!-- SIMULASI CHARGING -->
+  <section class="panel span-6">
+    <h2>Simulasi Charging <span class="tag" id="chargeStateTag">IDLE</span></h2>
+    <div class="charge-modes">
+      <button class="mode-btn" id="btnFastCharge" disabled>Fast Charge</button>
+      <button class="mode-btn" id="btnSlowCharge" disabled>Slow Charge</button>
+    </div>
+    <div class="rfid-hint" style="margin-bottom:10px;">Mode terdeteksi otomatis dari pembacaan sensor Charger (ESP)</div>
+    <div class="charge-status" id="chargeStatusText">Menunggu charger terhubung.</div>
+    <div class="charge-progress-track"><div class="charge-progress-fill" id="chargeProgressFill"></div></div>
+    <div class="charge-progress-label"><span id="chargePercentLabel">0%</span><span class="rfid-hint">UID valid: 0F 15 F1 48</span></div>
+    <button class="stop-btn" id="btnResetCharge">Reset Simulasi</button>
+  </section>
+
+  <!-- MODE BERKENDARA -->
+  <section class="panel span-6">
+    <h2>Mode Berkendara <span class="tag" id="rideModeTag">AUTO</span></h2>
+    <div class="ride-toggle-row">
+      <span>Mode Otomatis (head unit &amp; kendaraan)</span>
+      <span class="switch on" id="rideAutoToggle"></span>
+    </div>
+    <div class="ride-readout-grid">
+      <div class="ride-chip" id="chipIgnition">Ignition: --</div>
+      <div class="ride-chip" id="chipReverse">Reverse: --</div>
+      <div class="ride-chip" id="chipPark">Standside/Park: --</div>
+      <div class="ride-chip" id="chipBrake">Brake: --</div>
+      <div class="ride-chip" id="chipBattery">Baterai: --</div>
+    </div>
+    <p class="ride-note">Mode Otomatis (default): semua indikator Mega (bar baterai, Empty, ALM, sein, Speed 1/2/3, Reverse, Park, Ready) dan kontrol motor dikendalikan controller sesuai ignition, throttle, rem, standar, dan charging. Matikan untuk kontrol manual penuh.</p>
+  </section>
+
+  <!-- OUTPUT ESP -->
+  <section class="panel span-6">
+    <h2>Output ESP32S3 <span class="tag">manual</span></h2>
+    <div class="toggle-grid" id="espOutGrid"></div>
+  </section>
+
+  <!-- OUTPUT MEGA -->
+  <section class="panel span-6">
+    <h2>Output Mega2560 <span class="tag">manual</span></h2>
+    <div class="toggle-grid" id="megaOutGrid"></div>
+  </section>
+
+  <!-- MOTOR -->
+  <section class="panel span-6 motor-panel">
+    <h2>Kontrol Motor (L298N)</h2>
+    <div class="motor-readout">
+      <div class="val mono" id="motorVal">0</div>
+      <div class="dir" id="motorDir">STOP</div>
+    </div>
+    <input type="range" id="motorSlider" min="-255" max="255" value="0">
+    <div class="motor-scale"><span>CCW max</span><span>STOP</span><span>CW max</span></div>
+    <div class="motor-auto-note" id="motorAutoNote">Motor sedang dikendalikan otomatis oleh Mode Berkendara (Auto).</div>
+    <button class="stop-btn" id="motorStopBtn">Stop Motor</button>
+  </section>
+
+  <!-- RFID -->
+  <section class="panel span-6">
+    <h2>RFID RC522</h2>
+    <div class="rfid-box">
+      <div id="rfidUid" class="rfid-empty">Belum ada kartu terbaca</div>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<!-- ============ TAB 4 : PENGATURAN (dummy ala Votol) ============ -->
+<section class="tab-panel" id="tab-settings">
+  <div class="page">
+    <div class="panel">
+      <h2>Pengaturan Controller <span class="tag">DUMMY &middot; gaya Votol</span></h2>
+      <div class="set-note">Semua nilai di sini hanya contoh tampilan. Belum terhubung ke controller maupun firmware. Detail akan kita bahas dan sambungkan nanti.</div>
+      <div class="set-tabs" id="setTabs"></div>
+      <div id="setBody"></div>
+      <div class="set-progress" id="setProgress"><i></i></div>
+      <div class="set-actions">
+        <button class="mini-btn" id="setRead">Baca dari controller</button>
+        <button class="mini-btn" id="setWrite">Tulis ke controller</button>
+        <button class="mini-btn" id="setDefault">Kembalikan default</button>
+        <button class="mini-btn" id="setExportBtn">Ekspor JSON</button>
+      </div>
+      <textarea class="set-export" id="setExport" readonly></textarea>
+    </div>
+  </div>
+</section>
+
+
+<script>
+// ===================== KONFIGURASI BLE =====================
+const SERVICE_UUID = '4fafc201-1fb5-459e-8fcc-c5c9c331914b';
+const CHAR_DATA_UUID = 'beb5483e-36e1-4688-b7f5-ea07361b26a8'; // Notify
+const CHAR_CMD_UUID  = '0000ff01-0000-1000-8000-00805f9b34fb'; // Write
+
+// ===================== PETA BIT (sinkron dengan firmware) =====================
+const ESP_OUT_BITS = ['Charging','Finish','Error','Slow','Fast','Buzz','Pay','Ready (ESP)'];
+const MEGA_OUT_BITS = ['One (Batt 1)','Two (Batt 2)','Three (Batt 3)','Four (Batt Full)','Empty (Batt Habis)',
+  'Alarm/Buzzer','Relay','Contactor','Left','Right','Speed 3','Speed 2','Speed 1','Reverse','Park','Ready (Mega)'];
+const DIGITAL_IN_BITS = ['HALL','CAN Head Unit','CAN BMS','Ignition','Reverse SW','Standside','Brake'];
+
+const ESP_BIT_CHARGING=0, ESP_BIT_FINISH=1, ESP_BIT_ERROR=2, ESP_BIT_SLOW=3,
+      ESP_BIT_FAST=4, ESP_BIT_BUZZ=5, ESP_BIT_PAY=6, ESP_BIT_READY=7;
+const BIT_ONE=0, BIT_TWO=1, BIT_THREE=2, BIT_FOUR=3, BIT_EMPTY=4, MEGA_BIT_ALM=5,
+      BIT_LEFT=8, BIT_RIGHT=9, BIT_SPEED3=10, BIT_SPEED2=11, BIT_SPEED1=12,
+      BIT_REVERSE=13, BIT_PARK=14, BIT_READY_MEGA=15;
+const DIN_BIT_IGN=3, DIN_BIT_REV=4, DIN_BIT_STD=5, DIN_BIT_BRK=6;
+
+// Bit indikator yang dikuasai "Head Unit controller" saat Mode Otomatis aktif
+// (bar baterai, Empty, ALM, sein, speed, reverse, park, ready). REL & CONTACTOR tetap manual.
+const CTRL_MASK = 0xFF3F;
+// Bit yang menyala saat bulb check ignition (tanpa Empty, ALM, REL, CON)
+const BULB_MASK = 0xFF0F;
+// Bit LED ESP yang dikuasai simulasi charging selama proses berjalan
+const ESP_SIM_MASK = (1<<ESP_BIT_CHARGING)|(1<<ESP_BIT_FINISH)|(1<<ESP_BIT_SLOW)|(1<<ESP_BIT_FAST)|(1<<ESP_BIT_PAY);
+
+const TELEMETRY = [
+  {key:'TH',label:'Throttle',max:1023},
+  {key:'SPD',label:'Speed',max:1023},
+  {key:'V5',label:'5V Rail',max:1023},
+  {key:'LOC',label:'Lock',max:1023},
+  {key:'REG',label:'Regenerative',max:1023},
+  {key:'W',label:'Motor W',max:1023},
+  {key:'V',label:'Motor V',max:1023},
+  {key:'U',label:'Motor U',max:1023},
+  {key:'BATTMINUS',label:'Batt -',max:1023},
+  {key:'BATTPLUS',label:'Batt +',max:1023},
+  {key:'CHARGER',label:'Charger (ESP)',max:4095},
+];
+
+// ===================== PARAMETER SIMULASI =====================
+const VALID_CARD_HEX = '0F15F148';
+// Profil charging. cc = %/detik di tahap CC (0..80%), cvAvg = rata-rata %/detik di tahap CV (80..100%).
+// Dari 20%: Fast = 4 dtk + 6 dtk = 10 dtk, Slow = 8 dtk + 12 dtk = 20 dtk.
+const CHARGE_PROFILE = {
+  fast: { cc: 15,  cvAvg: 20/6,  label: 'Fast' },
+  slow: { cc: 7.5, cvAvg: 20/12, label: 'Slow' },
+};
+// Batas per mode speed: maxPwm = batas PWM motor, maxDisplay = batas angka km/h di head unit,
+// drain = laju pengurangan baterai (%/detik) pada throttle penuh.
+const SPEED_MODE_LIMITS = {
+  eco:    { maxPwm: 110, maxDisplay: 40,  drain: 0.5, label: 'ECO' },
+  normal: { maxPwm: 180, maxDisplay: 80,  drain: 1.0, label: 'NORMAL' },
+  sport:  { maxPwm: 255, maxDisplay: 120, drain: 2.0, label: 'SPORT' },
+};
+const REVERSE_FACTOR = 0.35;                 // kecepatan mundur dibatasi 35% dari batas mode
+const THROTTLE_MIN = 0, THROTTLE_MAX = 1023; // kalibrasi throttle (ADC)
+const ACCEL_PWM_S = 260, DECEL_PWM_S = 600, BRAKE_PWM_S = 1500; // inersia motor (PWM per detik)
+const BULB_MS = 1600;       // lama bulb check saat ignition ON
+const PAID_MS = 1500;       // lama tampilan "pembayaran diterima"
+const ALM_ON_MS = 250, ALM_OFF_MS = 2200; // bunyi singkat, hening lebih lama
+const EMPTY_BLINK_MS = 400, SEIN_BLINK_MS = 350;
+const CHG_DEBOUNCE_MS = 500; // pembacaan charger harus stabil dulu sebelum dianggap berubah
+
+// Pola buzzer ESP: [[1=bunyi/0=hening, durasi ms], ...]
+const BUZZ = {
+  detected: [[1,100]],
+  accepted: [[1,250]],
+  reject:   [[1,120],[0,180],[1,120]],
+  success:  [[1,90],[0,90],[1,150]],
+  cancel:   [[1,400]],
+  error:    [[1,120],[0,120],[1,120],[0,120],[1,120],[0,900]],
+};
+
+// ===================== STATE =====================
+let device, server, dataChar, cmdChar;
+let bleConnected = false, gotFirstData = false;
+
+// Data terakhir yang dilaporkan perangkat
+const dev = { charger:0, espBits:0, rfidLen:0, rfidHex:'', rfidBytes:[], th:0, spd:0, v5:0, loc:0, reg:0,
+              w:0, v:0, u:0, battMinus:0, battPlus:0, din:0, megaBits:0, motor:0, megaOnline:0 };
+
+// State yang DIINGINKAN dashboard (sumber kebenaran untuk perintah; bukan data telemetri)
+let espManualBits = 0, megaManualBits = 0, motorManual = 0;
+let rideAutoMode = true;        // Mode Otomatis: head unit & kendaraan dikendalikan controller
+let motorAuto = 0, motorOutF = 0;
+
+// Baterai (persisten selama halaman terbuka). Pertama kali menyala = kosong.
+let batteryPercent = 0;
+
+// Simulasi charging
+let chargeState = 'IDLE';       // IDLE | WAIT_CARD | PAID | CHARGING | DONE | ERROR
+let chargeMode = null;          // 'fast' | 'slow'
+let chargeStartTs = 0, chargeStartPercent = 0, paidUntil = 0;
+let chargeInfo = null, chargeRemain = 0;
+let manualChargeSelect = false;
+let chargerAlarmActive = false;
+let chgCand = null, chgCandSince = 0, chgStable = {label:'Ready', state:'neutral'};
+let payFailTs = -99999;
+
+// RFID (deteksi tap = perubahan UID; baseline diambil dari data pertama)
+let rfidInit = false, lastRfidHex = '', lastShownUid = '';
+
+// Head unit / kendaraan
+const hu = { power:'off', modeKey:'eco', ready:false, park:false, rev:false, almActive:false };
+let modeKey = 'eco';
+let prevIgn = null, bulbStart = 0, bulbUntil = 0;
+let seinMode = 'off';           // off | left | right | hazard
+let almStartTs = null;
+let lastStepTs = 0;
+let huSpeedDisp = 0, huLastNow = 0;
+
+// Buzzer ESP berbasis pola waktu
+let buzzSeq = null;
+
+// Pelacak perintah terakhir yang DIKIRIM (dedup + resend berkala)
+let lastSentEsp = -1, lastSentMega = -1, lastSentMotor = null, lastResendTs = 0;
+
+// Hook uji: jam bisa dioverride
+let clockOverride = null;
+function nowMs(){ return clockOverride !== null ? clockOverride : performance.now(); }
+
+// ===================== UTIL =====================
+const $ = (id) => document.getElementById(id);
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+function setText(id, txt){ const el=$(id); if(el && el.textContent!==txt) el.textContent=txt; }
+function setClass(id, cls, on){ const el=$(id); if(el) el.classList.toggle(cls, !!on); }
+const hex2 = (b) => b.toString(16).padStart(2,'0').toUpperCase();
+
+function toast(msg, type='') {
+  const box = document.createElement('div');
+  box.className = 'toast ' + type;
+  box.textContent = msg;
+  $('toasts').appendChild(box);
+  setTimeout(() => box.remove(), 4000);
+}
+
+// ===================== KLASIFIKASI STATUS =====================
+function classifyCharging(v) {
+  if (v > 2500) return {label:'Fast Charging', state:'live'};
+  if (v >= 1400 && v <= 2200) return {label:'Charging Error', state:'alert'};
+  if (v >= 700 && v <= 1200) return {label:'Ready', state:'neutral'};
+  if (v < 600) return {label:'Slow Charging', state:'warn'};
+  return {label:'Transisi / Tidak Diketahui', state:'neutral'}; // zona abu-abu: 600-700, 1200-1400, 2200-2500
+}
+function classifyBattery(battPlus, battMinus) {
+  if (battMinus > 300) return {label:'Battery Error', state:'alert'};
+  if (battPlus > 1000 && battMinus > 200 && battMinus < 330) return {label:'48V', state:'live'};
+  if (battPlus >= 700 && battPlus <= 1000 && battMinus > 200 && battMinus <= 300) return {label:'60V', state:'live'};
+  if (battPlus >= 400 && battPlus <= 1000 && battMinus <= 200) return {label:'60V + Precharge', state:'live'};
+  if (battPlus >= 550 && battPlus < 700 && battMinus > 200 && battMinus <= 300) return {label:'72V', state:'live'};
+  if (battPlus >= 250 && battPlus < 400 && battMinus <= 200) return {label:'72V + Precharge', state:'live'};
+  if (battPlus >= 150 && battPlus < 550 && battMinus > 200 && battMinus <= 300) return {label:'90V (Tegangan tinggi wajib pakai Precharge)', state:'live'};
+  if (battPlus >= 150 && battPlus < 250 && battMinus <= 200) return {label:'90V + Precharge', state:'live'};
+  return {label:'BATERAI OFF', state:'neutral'};
+}
+function classifySpeedMode(spd) {
+  if (spd > 1000) return {label:'Speed 1 (ECO)', state:'live'};
+  if (spd >= 680 && spd <= 850) return {label:'Speed 2 (NORMAL)', state:'warn'};
+  if (spd <= 679) return {label:'Speed 3 (SPORT)', state:'alert'};
+  return {label:'Netral / Tidak Diketahui', state:'neutral'};
+}
+function classifyBldc(u, v, w) {
+  const catOf = (val) => {
+    if (val < 400) return '400W';
+    if (val >= 410 && val <= 700) return '2000W';
+    if (val > 710) return '8000W';
+    return null;
+  };
+  const cu = catOf(u), cv = catOf(v), cw = catOf(w);
+  if (cu && cu === cv && cv === cw) return {label:'BLDC ' + cu, state:'live'};
+  return {label:'BLDC Motor Error', state:'alert'};
+}
+
+// ===================== BUZZER ESP (pola berbasis waktu) =====================
+function playBuzz(steps, loop, now) {
+  buzzSeq = { t0: (now !== undefined ? now : nowMs()), steps, loop: !!loop,
+              total: steps.reduce((a,s) => a + s[1], 0) };
+}
+function buzzNow(now) {
+  if (!buzzSeq) return false;
+  let t = now - buzzSeq.t0;
+  if (t < 0) t = 0;
+  if (t >= buzzSeq.total) {
+    if (buzzSeq.loop) t = t % buzzSeq.total;
+    else { buzzSeq = null; return false; }
+  }
+  let acc = 0;
+  for (const s of buzzSeq.steps) { acc += s[1]; if (t < acc) return !!s[0]; }
+  return false;
+}
+
+// ===================== OUTPUT COMPOSER =====================
+// Semua perintah dihitung dari state yang DIINGINKAN (bukan dari telemetri yang bisa
+// basi), dikirim hanya saat berubah + resend tiap 1 detik (self-heal).
+function simEspBits() {
+  const mode = chargeMode === 'fast' ? (1<<ESP_BIT_FAST) : (1<<ESP_BIT_SLOW);
+  switch (chargeState) {
+    case 'WAIT_CARD': case 'PAID': return (1<<ESP_BIT_PAY) | mode;
+    case 'CHARGING':  return (1<<ESP_BIT_CHARGING) | mode;
+    case 'DONE':      return (1<<ESP_BIT_FINISH);
+    default:          return 0;
+  }
+}
+function composeEspBits(now) {
+  let b = espManualBits;
+  if (chargeState !== 'IDLE') b = (b & ~ESP_SIM_MASK) | simEspBits();
+  if (chargerAlarmActive) b |= (1<<ESP_BIT_ERROR);
+  if (buzzNow(now)) b |= (1<<ESP_BIT_BUZZ);
+  return b & 0xFF;
+}
+function batteryBitsFromPercent(p) {
+  if (p >= 100) return (1<<BIT_ONE)|(1<<BIT_TWO)|(1<<BIT_THREE)|(1<<BIT_FOUR);
+  if (p >= 75)  return (1<<BIT_ONE)|(1<<BIT_TWO)|(1<<BIT_THREE);
+  if (p >= 50)  return (1<<BIT_ONE)|(1<<BIT_TWO);
+  if (p >= 25)  return (1<<BIT_ONE);
+  return 0; // <25% & >0%: belum capai bar pertama. Empty (kedip) menangani <=0%
+}
+function seinPhaseOn(now) { return Math.floor(now / SEIN_BLINK_MS) % 2 === 0; }
+function computeKitBits(now) {
+  const p = hu.power;
+  if (p === 'bulb') return BULB_MASK;
+  if (p === 'off') return 0;
+  let b = batteryBitsFromPercent(batteryPercent);
+  if (batteryPercent <= 0 && Math.floor(now / EMPTY_BLINK_MS) % 2 === 0) b |= (1<<BIT_EMPTY);
+  if (p === 'charge') return b;               // saat charging hanya baterai yang menyala
+  if (hu.almActive && almStartTs !== null && ((now - almStartTs) % (ALM_ON_MS + ALM_OFF_MS)) < ALM_ON_MS) b |= (1<<MEGA_BIT_ALM);
+  if (hu.ready) b |= (1<<BIT_READY_MEGA);
+  if (hu.park)  b |= (1<<BIT_PARK);
+  if (hu.rev)   b |= (1<<BIT_REVERSE);
+  b |= (1 << (modeKey === 'eco' ? BIT_SPEED1 : (modeKey === 'normal' ? BIT_SPEED2 : BIT_SPEED3)));
+  if (seinMode !== 'off' && seinPhaseOn(now)) {
+    if (seinMode === 'left'  || seinMode === 'hazard') b |= (1<<BIT_LEFT);
+    if (seinMode === 'right' || seinMode === 'hazard') b |= (1<<BIT_RIGHT);
+  }
+  return b;
+}
+function composeMegaBits(now) {
+  if (!rideAutoMode) return megaManualBits & 0xFFFF;
+  return ((megaManualBits & ~CTRL_MASK) | computeKitBits(now)) & 0xFFFF;
+}
+function composeMotor() { return rideAutoMode ? motorAuto : motorManual; }
+
+const pendingCmd = {};
+let cmdPumping = false, lastFailToastTs = 0;
+function sendCmd(target, value) {
+  pendingCmd[target] = value;
+  if (!cmdPumping) pumpCmd();
+}
+async function pumpCmd() {
+  cmdPumping = true;
+  try {
+    while (true) {
+      const keys = Object.keys(pendingCmd);
+      if (!keys.length) break;
+      const t = Number(keys[0]); const v = pendingCmd[t]; delete pendingCmd[t];
+      if (!cmdChar) continue;
+      const buf = new Uint8Array(3);
+      buf[0] = t; buf[1] = v & 0xFF; buf[2] = (v >> 8) & 0xFF;
+      try { await cmdChar.writeValueWithoutResponse(buf); }
+      catch (e) {
+        try { await cmdChar.writeValue(buf); }
+        catch (e2) {
+          const n = Date.now();
+          if (n - lastFailToastTs > 3000) { toast('Gagal kirim perintah', 'alert'); lastFailToastTs = n; }
+        }
+      }
+    }
+  } finally { cmdPumping = false; }
+}
+function syncOutputs(now) {
+  if (!cmdChar || !bleConnected || !gotFirstData) return;
+  const e = composeEspBits(now), m = composeMegaBits(now), mo = composeMotor();
+  const force = (now - lastResendTs) > 1000;
+  if (force || e !== lastSentEsp)   { lastSentEsp = e;   sendCmd(0, e); }
+  if (force || m !== lastSentMega)  { lastSentMega = m;  sendCmd(1, m); }
+  if (force || mo !== lastSentMotor){ lastSentMotor = mo; sendCmd(2, mo); }
+  if (force) lastResendTs = now;
+}
+
+// ===================== SIMULASI CHARGING =====================
+// SOC(t): dari s0 naik ke 80% dengan laju tetap (CC), lalu 80..100% melambat
+// (CV, mengikuti kurva ease-out sehingga arus turun halus).
+function chargeModel(mode, s0, tSec) {
+  const p = CHARGE_PROFILE[mode];
+  const T1 = s0 < 80 ? (80 - s0) / p.cc : 0;
+  const s2 = Math.max(s0, 80);
+  const T2 = (100 - s2) / p.cvAvg;
+  if (tSec < T1) return { soc: s0 + p.cc * tSec, rate: p.cc, phase: 'cc', done: false, T1, T2 };
+  const x = Math.min(1, (tSec - T1) / T2);
+  const soc = s2 + (100 - s2) * (1 - (1 - x) * (1 - x));
+  const rate = (100 - s2) * 2 * (1 - x) / T2;
+  return { soc, rate, phase: 'cv', done: x >= 1, T1, T2 };
+}
+function isChargerConnected() {
+  return chargeState === 'WAIT_CARD' || chargeState === 'PAID' || chargeState === 'CHARGING' || chargeState === 'DONE';
+}
+function startChargeMode(mode, now) {
+  if (chargeState !== 'IDLE') return;
+  chargeMode = mode; chargeState = 'WAIT_CARD';
+  playBuzz(BUZZ.detected, false, now);
+  toast('Charger terdeteksi: ' + CHARGE_PROFILE[mode].label + ' Charging. Tempelkan kartu RFID.', 'live');
+}
+function onRfidTap(hex, now) {
+  if (chargeState !== 'WAIT_CARD') return;
+  if (hex === VALID_CARD_HEX) {
+    chargeState = 'PAID'; paidUntil = now + PAID_MS;
+    playBuzz(BUZZ.accepted, false, now);
+    toast('Pembayaran diterima. Memulai charging...', 'live');
+  } else {
+    payFailTs = now;
+    playBuzz(BUZZ.reject, false, now);
+    toast('Kartu tidak valid.', 'alert');
+  }
+}
+function beginCharging(now) {
+  if (batteryPercent >= 99.5) { finishCharging(now); return; }
+  chargeState = 'CHARGING'; chargeStartTs = now; chargeStartPercent = batteryPercent;
+}
+function finishCharging(now) {
+  batteryPercent = 100; chargeState = 'DONE'; chargeInfo = null;
+  playBuzz(BUZZ.success, false, now);
+  toast('Charging selesai. Cabut charger untuk berkendara.', 'live');
+}
+function resetSimulation() {
+  chargeState = 'IDLE'; chargeMode = null; chargeInfo = null; paidUntil = 0;
+}
+function evaluateCharger(now) {
+  const c = classifyCharging(dev.charger);
+  if (!chgCand || chgCand.label !== c.label) { chgCand = c; chgCandSince = now; }
+  if (now - chgCandSince >= CHG_DEBOUNCE_MS) chgStable = c;
+  const st = chgStable;
+
+  // Watchdog error charger (selalu aktif). LED Error ON + buzzer kode error.
+  const isErr = st.state === 'alert';
+  if (isErr && !chargerAlarmActive) {
+    chargerAlarmActive = true;
+    if (chargeState !== 'IDLE' && chargeState !== 'ERROR') chargeState = 'ERROR';
+    playBuzz(BUZZ.error, true, now);
+    toast('Charger Error terdeteksi!', 'alert');
+  } else if (!isErr && chargerAlarmActive) {
+    chargerAlarmActive = false; buzzSeq = null;
+    if (chargeState === 'ERROR') { chargeState = 'IDLE'; chargeMode = null; toast('Charger normal kembali.', 'live'); }
+  }
+  if (chargerAlarmActive || manualChargeSelect) return;
+
+  // Mode Fast/Slow ditentukan otomatis dari bacaan analog charger
+  const label = st.label;
+  const isFast = label === 'Fast Charging', isSlow = label === 'Slow Charging';
+  const transitional = label.indexOf('Transisi') === 0;
+  if (chargeState === 'IDLE') {
+    if (isFast) startChargeMode('fast', now); else if (isSlow) startChargeMode('slow', now);
+  } else if (chargeState === 'WAIT_CARD' || chargeState === 'PAID' || chargeState === 'CHARGING') {
+    const ok = (chargeMode === 'fast' && isFast) || (chargeMode === 'slow' && isSlow);
+    if (!ok && !transitional) {
+      toast('Charger dicabut / mode berubah. Proses dibatalkan.', 'warn');
+      playBuzz(BUZZ.cancel, false, now);
+      resetSimulation();
+    }
+  } else if (chargeState === 'DONE') {
+    if (!isFast && !isSlow && !transitional) { toast('Charger dicabut.', 'live'); resetSimulation(); }
+  }
+}
+
+// ===================== CONTROLLER KENDARAAN + HEAD UNIT =====================
+function stepController(now) {
+  if (!gotFirstData) return;
+  let dt = (now - lastStepTs) / 1000;
+  if (!(dt > 0)) dt = 0; if (dt > 0.5) dt = 0.5;
+  lastStepTs = now;
+
+  const ign = !!((dev.din >> DIN_BIT_IGN) & 1);
+  const rev = !!((dev.din >> DIN_BIT_REV) & 1);
+  const std = !!((dev.din >> DIN_BIT_STD) & 1);
+  const brk = !!((dev.din >> DIN_BIT_BRK) & 1);
+
+  evaluateCharger(now);
+  if (chargeState === 'PAID' && now >= paidUntil) beginCharging(now);
+  if (chargeState === 'CHARGING') {
+    const tSec = (now - chargeStartTs) / 1000;
+    chargeInfo = chargeModel(chargeMode, chargeStartPercent, tSec);
+    batteryPercent = Math.min(100, chargeInfo.soc);
+    chargeRemain = Math.max(0, chargeInfo.T1 + chargeInfo.T2 - tSec);
+    if (chargeInfo.done || batteryPercent >= 100) finishCharging(now);
+  }
+
+  // Ignition: bulb check saat ON, sein dimatikan saat OFF
+  const connected = isChargerConnected();
+  if (prevIgn === null) prevIgn = ign;
+  if (ign && !prevIgn && !connected && rideAutoMode) { bulbStart = now; bulbUntil = now + BULB_MS; }
+  if (!ign && prevIgn) { seinMode = 'off'; bulbUntil = 0; }
+  prevIgn = ign;
+
+  // Mode daya head unit / kit
+  let power;
+  if (!rideAutoMode) power = 'manual';
+  else if (connected) power = 'charge';
+  else if (!ign) power = 'off';
+  else if (now < bulbUntil) power = 'bulb';
+  else power = 'on';
+  hu.power = power;
+
+  // Mode speed (sticky: zona "tidak diketahui" memakai mode terakhir)
+  const sc = classifySpeedMode(dev.spd);
+  if (sc.label.indexOf('ECO') >= 0) modeKey = 'eco';
+  else if (sc.label.indexOf('NORMAL') >= 0) modeKey = 'normal';
+  else if (sc.label.indexOf('SPORT') >= 0) modeKey = 'sport';
+  hu.modeKey = modeKey;
+
+  const bc = classifyBattery(dev.battPlus, dev.battMinus);
+  const batteryOk = bc.label !== 'Battery Error' && bc.label !== 'BATERAI OFF';
+  hu.ready = ign && batteryOk && (power === 'on' || power === 'bulb');
+  hu.park = std; hu.rev = rev;
+
+  // Motor: throttle dibatasi sesuai mode speed, dengan inersia
+  const lim = SPEED_MODE_LIMITS[modeKey];
+  let target = 0;
+  if (power === 'on' && hu.ready && !std && !brk) {
+    const frac = clamp((dev.th - THROTTLE_MIN) / (THROTTLE_MAX - THROTTLE_MIN), 0, 1);
+    let base = Math.round(lim.maxPwm * frac);
+    if (rev) base = Math.round(base * REVERSE_FACTOR);
+    target = rev ? -base : base;
+  }
+  if (power !== 'on') {
+    motorOutF = 0;
+  } else {
+    const speedingUp = Math.abs(target) > Math.abs(motorOutF) && (Math.sign(target) === Math.sign(motorOutF) || motorOutF === 0);
+    const rate = brk ? BRAKE_PWM_S : (speedingUp ? ACCEL_PWM_S : DECEL_PWM_S);
+    const step = rate * dt;
+    motorOutF += clamp(target - motorOutF, -step, step);
+  }
+  motorAuto = Math.round(motorOutF);
+
+  // Baterai berkurang sesuai mode & beban (hanya saat ignition ON dan tidak charging)
+  if (power === 'on') {
+    const f = clamp(Math.abs(motorOutF) / lim.maxPwm, 0, 1);
+    batteryPercent = Math.max(0, batteryPercent - lim.drain * (0.08 + 0.92 * f) * dt);
+  }
+
+  // Alarm baterai habis (ALM Mega): bunyi singkat, hening lebih lama
+  hu.almActive = (power === 'on' && batteryPercent <= 0);
+  if (!hu.almActive) almStartTs = null;
+  else if (almStartTs === null) almStartTs = now;
+}
+
+// ===================== KONEKSI BLE =====================
+async function toggleConnection() {
+  if (bleConnected) { if (device && device.gatt.connected) device.gatt.disconnect(); return; }
+  try {
+    setSearching(true);
+    device = await navigator.bluetooth.requestDevice({ filters: [{ services: [SERVICE_UUID] }] });
+    device.addEventListener('gattserverdisconnected', onDisconnected);
+    server = await device.gatt.connect();
+    const service = await server.getPrimaryService(SERVICE_UUID);
+    dataChar = await service.getCharacteristic(CHAR_DATA_UUID);
+    cmdChar  = await service.getCharacteristic(CHAR_CMD_UUID);
+    resetSessionState();
+    bleConnected = true;
+    await dataChar.startNotifications();
+    dataChar.addEventListener('characteristicvaluechanged', onDataNotify);
+    setConnected(true);
+    toast('BLE tersambung ke ' + device.name, 'live');
+  } catch (err) {
+    bleConnected = false;
+    setSearching(false);
+    toast('Gagal terhubung: ' + err.message, 'alert');
+  }
+}
+function resetSessionState() {
+  gotFirstData = false;
+  chargeState = 'IDLE'; chargeMode = null; chargeInfo = null; paidUntil = 0;
+  chargerAlarmActive = false; buzzSeq = null; chgCand = null; chgStable = {label:'Ready', state:'neutral'};
+  motorOutF = 0; motorAuto = 0; prevIgn = null; bulbUntil = 0; seinMode = 'off'; almStartTs = null;
+  lastSentEsp = -1; lastSentMega = -1; lastSentMotor = null; lastResendTs = 0;
+  rfidInit = false; lastRfidHex = '';
+  hu.power = 'off';
+  for (const k of Object.keys(pendingCmd)) delete pendingCmd[k];
+}
+function onDisconnected() {
+  bleConnected = false; cmdChar = null; dataChar = null;
+  resetSessionState();
+  setConnected(false);
+  toast('BLE terputus', 'alert');
+}
+function setSearching(v) { document.body.classList.toggle('searching', v); }
+function setConnected(v) {
+  document.body.classList.remove('searching');
+  document.body.classList.toggle('connected', v);
+  document.body.classList.toggle('disconnected', !v);
+  const t = v ? 'Terhubung' : 'Belum terhubung';
+  setText('statusText', t); setText('homeStatusText', t);
+  const b = v ? 'Putuskan' : 'Hubungkan BLE';
+  ['connectBtn','homeConnectBtn','simConnectBtn'].forEach(id => setText(id, b));
+}
+
+// ===================== PARSE DATA (37 byte) =====================
+function parsePacket(dv) {
+  const rfidLen = dv.getUint8(3);
+  const rb = []; for (let i = 0; i < 7; i++) rb.push(dv.getUint8(4 + i));
+  const n = Math.min(rfidLen, 7);
+  return {
+    charger: dv.getUint16(0, true), espBits: dv.getUint8(2),
+    rfidLen, rfidBytes: rb.slice(0, n), rfidHex: n > 0 ? rb.slice(0, n).map(hex2).join('') : '',
+    th: dv.getUint16(11, true), spd: dv.getUint16(13, true), v5: dv.getUint16(15, true),
+    loc: dv.getUint16(17, true), reg: dv.getUint16(19, true), w: dv.getUint16(21, true),
+    v: dv.getUint16(23, true), u: dv.getUint16(25, true),
+    battMinus: dv.getUint16(27, true), battPlus: dv.getUint16(29, true),
+    din: dv.getUint8(31), megaBits: dv.getUint16(32, true), motor: dv.getInt16(34, true),
+    megaOnline: dv.getUint8(36),
+  };
+}
+function onDataNotify(event) {
+  const dv = event.target.value;
+  if (!dv || dv.byteLength < 37) return;
+  Object.assign(dev, parsePacket(dv));
+  const now = nowMs();
+  if (!gotFirstData) {
+    gotFirstData = true;
+    // Unit "baru dinyalakan": keadaan bersih, hanya ESP Ready yang menyala
+    espManualBits = (1 << ESP_BIT_READY); megaManualBits = 0; motorManual = 0;
+    lastStepTs = now;
+    prevIgn = !!((dev.din >> DIN_BIT_IGN) & 1);
+  }
+  detectRfid(now);
+  refreshDashboardTab();
+  stepController(now);
+  syncOutputs(now);
+}
+// Tap kartu = UID berubah dari yang terakhir terbaca. Data pertama hanya jadi baseline.
+// Catatan: firmware menyimpan UID terakhir, jadi kartu YANG SAMA tidak bisa terdeteksi dua kali berturut-turut.
+function detectRfid(now) {
+  const hex = dev.rfidHex;
+  if (hex) lastShownUid = dev.rfidBytes.map(hex2).join(' ');
+  if (!rfidInit) { rfidInit = true; lastRfidHex = hex; return; }
+  if (!hex) { lastRfidHex = ''; return; }
+  if (hex !== lastRfidHex) { lastRfidHex = hex; onRfidTap(hex, now); }
+}
+
+// ===================== BUILD UI (tab Dashboard) =====================
+function buildTelemetryUI() {
+  const grid = $('telemetryGrid');
+  TELEMETRY.forEach(t => {
+    const el = document.createElement('div');
+    el.className = 'meter';
+    el.innerHTML = `<div class="meter-top"><span>${t.label}</span><span class="meter-value" id="val_${t.key}">--</span></div>
+      <div class="meter-track"><div class="meter-fill" id="bar_${t.key}"></div></div>`;
+    grid.appendChild(el);
+  });
+}
+function buildDigitalInputsUI() {
+  const grid = $('digitalInputsGrid');
+  DIGITAL_IN_BITS.forEach((label, i) => {
+    const el = document.createElement('div');
+    el.className = 'badge'; el.id = 'din_' + i;
+    el.innerHTML = `<span class="led"></span><span>${label}</span>`;
+    grid.appendChild(el);
+  });
+}
+function buildToggleUI(containerId, labels, target) {
+  const grid = $(containerId);
+  labels.forEach((label, i) => {
+    const row = document.createElement('div');
+    row.className = 'toggle-row';
+    row.innerHTML = `<span>${label}<span class="auto-tag" id="${containerId}_${i}_tag">AUTO</span></span><span class="switch" id="${containerId}_${i}"></span>`;
+    row.querySelector('.switch').addEventListener('click', () => toggleOutputBit(target, i));
+    grid.appendChild(row);
+  });
+}
+function toggleOutputBit(target, bitIndex) {
+  if (!gotFirstData) return;
+  if (target === 'esp') espManualBits ^= (1 << bitIndex);
+  else megaManualBits ^= (1 << bitIndex);
+  syncOutputs(nowMs());
+}
+
+// ===================== REFRESH TAB DASHBOARD (dipanggil tiap data masuk) =====================
+function updateToggles(containerId, labels, bits) {
+  labels.forEach((_, i) => { const el = $(containerId + '_' + i); if (el) el.classList.toggle('on', !!((bits >> i) & 1)); });
+}
+function updateStatusCard(prefix, result, rawText) {
+  setText('val' + prefix, result.label); setText('raw' + prefix, rawText);
+  const card = $('card' + prefix);
+  card.classList.remove('state-live','state-warn','state-alert','state-neutral');
+  card.classList.add('state-' + result.state);
+}
+function refreshDashboardTab() {
+  const vals = {TH:dev.th, SPD:dev.spd, V5:dev.v5, LOC:dev.loc, REG:dev.reg, W:dev.w, V:dev.v, U:dev.u,
+                BATTMINUS:dev.battMinus, BATTPLUS:dev.battPlus, CHARGER:dev.charger};
+  TELEMETRY.forEach(t => {
+    const v = vals[t.key];
+    setText('val_' + t.key, String(v));
+    $('bar_' + t.key).style.width = Math.min(100, (v / t.max) * 100) + '%';
+  });
+  DIGITAL_IN_BITS.forEach((_, i) => $('din_' + i).classList.toggle('on', !!((dev.din >> i) & 1)));
+  updateToggles('espOutGrid', ESP_OUT_BITS, dev.espBits);
+  updateToggles('megaOutGrid', MEGA_OUT_BITS, dev.megaBits);
+
+  setText('motorVal', String(dev.motor));
+  setText('motorDir', dev.motor > 0 ? 'CW' : (dev.motor < 0 ? 'CCW' : 'STOP'));
+  const slider = $('motorSlider');
+  if (rideAutoMode) slider.value = dev.motor;
+
+  const rb = $('rfidUid');
+  if (lastShownUid) { rb.className = 'rfid-uid'; setText('rfidUid', lastShownUid); }
+  else { rb.className = 'rfid-empty'; setText('rfidUid', 'Belum ada kartu terbaca'); }
+
+  const pct = clamp(dev.spd / 1023 * 100, 0, 100);
+  $('speedGaugeRing').style.setProperty('--pct', pct.toFixed(1));
+  setText('gaugeSpeedVal', String(dev.spd));
+
+  updateStatusCard('Charging', classifyCharging(dev.charger), 'raw: ' + dev.charger);
+  updateStatusCard('Battery', classifyBattery(dev.battPlus, dev.battMinus), 'BATT+: ' + dev.battPlus + '  BATT-: ' + dev.battMinus);
+  updateStatusCard('SpeedMode', classifySpeedMode(dev.spd), 'raw: ' + dev.spd);
+  updateStatusCard('Bldc', classifyBldc(dev.u, dev.v, dev.w), 'U:' + dev.u + ' V:' + dev.v + ' W:' + dev.w);
+
+  const online = !!dev.megaOnline;
+  setText('megaLinkText', 'Link Mega: ' + (online ? 'Online' : 'Offline'));
+  $('megaLinkDot').style.background = online ? 'var(--live)' : 'var(--alert)';
+  $('megaLinkDot').style.boxShadow = online ? '0 0 8px var(--live)' : 'none';
+
+  const chip = (id, label, on) => { setText(id, label + ': ' + (on ? 'ON' : 'OFF')); setClass(id, 'on', on); };
+  chip('chipIgnition','Ignition', !!((dev.din >> DIN_BIT_IGN) & 1));
+  chip('chipReverse','Reverse', !!((dev.din >> DIN_BIT_REV) & 1));
+  chip('chipPark','Standside/Park', !!((dev.din >> DIN_BIT_STD) & 1));
+  chip('chipBrake','Brake', !!((dev.din >> DIN_BIT_BRK) & 1));
+}
+
+// ===================== MODE OTOMATIS =====================
+function setRideAutoMode(on) {
+  if (on === rideAutoMode) return;
+  const now = nowMs();
+  if (!on) { megaManualBits = composeMegaBits(now); motorManual = 0; $('motorSlider').value = 0; }
+  else { megaManualBits &= ~CTRL_MASK; motorManual = 0; motorOutF = 0; }
+  rideAutoMode = on;
+  setClass('rideAutoToggle', 'on', on);
+  setText('rideModeTag', on ? 'AUTO' : 'MANUAL');
+  $('motorSlider').disabled = on;
+  $('motorAutoNote').style.display = on ? 'block' : 'none';
+  setText('huCtrlMode', on ? 'Otomatis' : 'Manual');
+  _lockSig = '';
+  syncOutputs(now);
+}
+let _lockSig = '';
+function lockToggle(containerId, index, locked) {
+  const sw = $(containerId + '_' + index); if (!sw) return;
+  sw.closest('.toggle-row').classList.toggle('locked', locked);
+  const tag = $(containerId + '_' + index + '_tag'); if (tag) tag.classList.toggle('show', locked);
+}
+function renderAutoLocks() {
+  const sig = (rideAutoMode ? 1 : 0) + '|' + (chargeState !== 'IDLE' ? 1 : 0) + '|' + (chargerAlarmActive ? 1 : 0);
+  if (sig === _lockSig) return; _lockSig = sig;
+  for (let i = 0; i < 16; i++) lockToggle('megaOutGrid', i, rideAutoMode && !!((CTRL_MASK >> i) & 1));
+  for (let i = 0; i < 8; i++) lockToggle('espOutGrid', i,
+    (chargeState !== 'IDLE' && !!((ESP_SIM_MASK >> i) & 1)) || (chargerAlarmActive && i === ESP_BIT_ERROR));
+}
+
+// ===================== RENDER: SIMULASI CHARGING =====================
+const STATE_LABEL = {IDLE:'IDLE', WAIT_CARD:'MENUNGGU PEMBAYARAN', PAID:'PEMBAYARAN DITERIMA', CHARGING:'CHARGING', DONE:'SELESAI', ERROR:'ERROR'};
+function payText(now) {
+  switch (chargeState) {
+    case 'IDLE': return 'Menunggu charger terhubung. Mode Fast/Slow terdeteksi otomatis dari sensor.';
+    case 'WAIT_CARD': return (now - payFailTs < 3500) ? 'Kartu tidak valid. Coba kartu lain.' : 'Menunggu pembayaran: tempelkan kartu RFID yang valid.';
+    case 'PAID': return 'Pembayaran diterima. Memulai charging...';
+    case 'CHARGING': return 'Charging berlangsung.';
+    case 'DONE': return 'Charging selesai. Cabut charger untuk berkendara.';
+    case 'ERROR': return 'Charger error. Periksa sensor / kabel charger.';
+  }
+  return '';
+}
+function setStepState(id, s) {
+  const el = $(id); if (!el) return;
+  el.classList.toggle('done', s === 'done'); el.classList.toggle('active', s === 'active'); el.classList.toggle('error', s === 'error');
+}
+const I80 = 0.4444;   // arus relatif tepat setelah pindah CC -> CV (sama untuk Fast & Slow)
+function currentRel(soc) { return soc < 80 ? 1 : I80 * Math.sqrt(Math.max(0, 1 - (soc - 80) / 20)); }
+const CV_X0 = 30, CV_W = 250, CV_Y0 = 108, CV_H = 88;
+const cvX = (soc) => CV_X0 + CV_W * soc / 100;
+const cvY = (i) => CV_Y0 - CV_H * i;
+function buildCvChart() {
+  let pts = `M ${cvX(0)} ${cvY(1)} L ${cvX(80)} ${cvY(1)} L ${cvX(80)} ${cvY(I80)}`;
+  for (let s = 81; s <= 100; s++) pts += ` L ${cvX(s).toFixed(1)} ${cvY(currentRel(s)).toFixed(1)}`;
+  $('cvChart').innerHTML = `
+    <rect class="zone-cc" x="${cvX(0)}" y="14" width="${cvX(80) - cvX(0)}" height="${CV_Y0 - 14}"/>
+    <rect class="zone-cv" x="${cvX(80)}" y="14" width="${cvX(100) - cvX(80)}" height="${CV_Y0 - 14}"/>
+    <line class="axis" x1="${CV_X0}" y1="${CV_Y0}" x2="${CV_X0 + CV_W}" y2="${CV_Y0}"/>
+    <line class="axis" x1="${CV_X0}" y1="14" x2="${CV_X0}" y2="${CV_Y0}"/>
+    <path class="curve" d="${pts}"/>
+    <text class="lbl" x="${cvX(40)}" y="26" text-anchor="middle">CC: arus konstan</text>
+    <text class="lbl" x="${cvX(90)}" y="26" text-anchor="middle">CV: arus turun</text>
+    <text class="lbl" x="${CV_X0}" y="122" text-anchor="middle">0%</text>
+    <text class="lbl" x="${cvX(80)}" y="122" text-anchor="middle">80%</text>
+    <text class="lbl" x="${cvX(100)}" y="122" text-anchor="middle">100%</text>
+    <text class="lbl" x="8" y="${CV_Y0 - CV_H / 2}" transform="rotate(-90 8 ${CV_Y0 - CV_H / 2})" text-anchor="middle">Arus</text>
+    <line class="mkline" id="cvMkLine" x1="0" y1="14" x2="0" y2="${CV_Y0}" style="display:none"/>
+    <circle class="mk" id="cvMk" r="5" cx="0" cy="0" style="display:none"/>`;
+}
+function renderChargeSim(now) {
+  const st = chargeState;
+  setText('scStateTag', STATE_LABEL[st]);
+  setText('scSensor', 'Sensor charger (ADC ESP): ' + dev.charger + '  ->  ' + classifyCharging(dev.charger).label + (manualChargeSelect ? '  (diabaikan: mode manual)' : ''));
+  const clickable = manualChargeSelect && st === 'IDLE';
+  setClass('scOptFast', 'clickable', clickable); setClass('scOptSlow', 'clickable', clickable);
+  const modeOn = st !== 'IDLE' && st !== 'ERROR';
+  setClass('scOptFast', 'active', modeOn && chargeMode === 'fast');
+  setClass('scOptSlow', 'active', modeOn && chargeMode === 'slow');
+
+  const S = ['pending','pending','pending','pending','pending','pending'];
+  if (st === 'WAIT_CARD') { S[0] = 'done'; S[1] = 'active'; }
+  else if (st === 'PAID') { S[0] = S[1] = 'done'; S[2] = 'active'; }
+  else if (st === 'CHARGING') { S[0] = S[1] = S[2] = 'done'; if (batteryPercent < 80) S[3] = 'active'; else { S[3] = 'done'; S[4] = 'active'; } }
+  else if (st === 'DONE') { for (let i = 0; i < 6; i++) S[i] = 'done'; }
+  else if (st === 'ERROR') { S[0] = 'error'; }
+  for (let i = 0; i < 6; i++) setStepState('scStep' + i, S[i]);
+
+  const fail = st === 'WAIT_CARD' && (now - payFailTs < 3500);
+  setText('scPayText', payText(now)); setClass('scPay', 'fail', fail);
+  $('scTapValid').disabled = st !== 'WAIT_CARD'; $('scTapBad').disabled = st !== 'WAIT_CARD';
+  setText('scUid', 'UID terakhir: ' + (lastShownUid || '--'));
+
+  const soc = batteryPercent;
+  setText('scSocNum', String(Math.round(soc)));
+  $('scFill').setAttribute('width', (150 * soc / 100).toFixed(1));
+  setText('scBattTxt', Math.round(soc) + '%');
+
+  const charging = st === 'CHARGING';
+  const phase = charging && chargeInfo ? (soc >= 80 ? 'cv' : 'cc') : null;
+  const irel = charging && chargeInfo ? clamp(chargeInfo.rate / CHARGE_PROFILE[chargeMode].cc, 0, 1) : 0;
+  setText('scPhase', phase ? (phase === 'cc' ? 'CC' : 'CV') : '--');
+  setText('scCurrent', charging ? Math.round(irel * 100) + '%' : '--');
+  setText('scRemain', charging ? chargeRemain.toFixed(1) + ' dtk' : '--');
+  $('scCurBar').style.width = (irel * 100).toFixed(0) + '%';
+
+  const flow = charging ? (soc >= 80 ? 'flow-cv' : 'flow-cc') : 'flow-off';
+  const anim = $('scAnim'); const cls = 'sc-anim ' + flow;
+  if (anim.getAttribute('class') !== cls) anim.setAttribute('class', cls);
+  setText('scStationTxt', chargeMode ? CHARGE_PROFILE[chargeMode].label.toUpperCase() : '--');
+  const led = $('scStationLed');
+  led.style.fill = charging ? (soc >= 80 ? '#F2A93B' : '#43D9A3') : (st === 'WAIT_CARD' || st === 'PAID' ? '#F2A93B' : (st === 'DONE' ? '#43D9A3' : (st === 'ERROR' ? '#FF5C5C' : '#2a3540')));
+
+  const badge = $('scBadge');
+  let bt = 'Standby', bc = 'phase-badge';
+  if (st === 'WAIT_CARD') bt = 'Menunggu pembayaran';
+  else if (st === 'PAID') bt = 'Pembayaran diterima';
+  else if (st === 'CHARGING') { bt = phase === 'cv' ? 'CV: melambat' : 'CC: arus konstan'; bc += ' ' + phase; }
+  else if (st === 'DONE') bt = 'Selesai';
+  else if (st === 'ERROR') bt = 'Error';
+  setText('scBadge', bt); if (badge.className !== bc) badge.className = bc;
+
+  setClass('scExplain', 'show', charging && soc >= 80);
+  const showMk = charging || st === 'DONE';
+  const mk = $('cvMk'), ml = $('cvMkLine');
+  if (mk) {
+    mk.style.display = showMk ? '' : 'none'; ml.style.display = showMk ? '' : 'none';
+    if (showMk) {
+      const i = st === 'DONE' ? 0 : currentRel(soc);
+      mk.setAttribute('cx', cvX(soc).toFixed(1)); mk.setAttribute('cy', cvY(i).toFixed(1));
+      ml.setAttribute('x1', cvX(soc).toFixed(1)); ml.setAttribute('x2', cvX(soc).toFixed(1));
+    }
+  }
+}
+
+// ===================== RENDER: PANEL CHARGING DI TAB DASHBOARD =====================
+function renderChargeTab3(now) {
+  setText('chargeStateTag', STATE_LABEL[chargeState]);
+  setText('chargeStatusText', payText(now));
+  const pct = Math.round(batteryPercent);
+  $('chargeProgressFill').style.width = clamp(pct, 0, 100) + '%';
+  setText('chargePercentLabel', pct + '%');
+  const modeOn = chargeState !== 'IDLE' && chargeState !== 'ERROR';
+  setClass('btnFastCharge', 'active', modeOn && chargeMode === 'fast');
+  setClass('btnSlowCharge', 'active', modeOn && chargeMode === 'slow');
+  const chip = $('chipBattery');
+  setText('chipBattery', 'Baterai: ' + pct + '%');
+  chip.classList.toggle('on', pct > 20);
+  chip.style.color = pct <= 0 ? 'var(--alert)' : (pct < 20 ? 'var(--warn)' : '');
+}
+
+// ===================== HEAD UNIT =====================
+const HU_MAX = 120, HU_CX = 150, HU_CY = 140, HU_R = 110, HU_A0 = 150, HU_SWEEP = 240;
+function huPt(r, deg) { const a = deg * Math.PI / 180; return [HU_CX + r * Math.cos(a), HU_CY + r * Math.sin(a)]; }
+function buildHeadUnitGauge() {
+  const [x0, y0] = huPt(HU_R, HU_A0), [x1, y1] = huPt(HU_R, HU_A0 + HU_SWEEP);
+  const d = `M ${x0.toFixed(1)} ${y0.toFixed(1)} A ${HU_R} ${HU_R} 0 1 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`;
+  let s = `<path class="track" d="${d}"/><path class="arc" id="huArc" pathLength="100" stroke-dasharray="0 100" d="${d}"/>`;
+  for (let v = 0; v <= HU_MAX; v += 10) {
+    const ang = HU_A0 + HU_SWEEP * v / HU_MAX, major = v % 20 === 0;
+    const [a, b] = huPt(major ? 90 : 94, ang), [c, e] = huPt(100, ang);
+    s += `<line class="tick${major ? ' major' : ''}" x1="${a.toFixed(1)}" y1="${b.toFixed(1)}" x2="${c.toFixed(1)}" y2="${e.toFixed(1)}"/>`;
+    if (major) { const [lx, ly] = huPt(74, ang); s += `<text class="tlbl" x="${lx.toFixed(1)}" y="${ly.toFixed(1)}">${v}</text>`; }
+  }
+  $('huGauge').insertAdjacentHTML('beforeend', s);
+}
+function renderHeadUnit(now) {
+  const connected = bleConnected && gotFirstData;
+  const p = connected ? hu.power : 'off';
+  const el = $('hu'); if (el.dataset.power !== p) el.dataset.power = p;
+  $('huOverlay').style.display = connected ? 'none' : 'flex';
+  setText('huPowerTag', {off:'OFF', charge:'CHARGING', bulb:'BULB CHECK', on:'ON', manual:'MANUAL'}[p]);
+
+  const bits = dev.megaBits;
+  const bit = (n) => !!((bits >> n) & 1);
+  const showAll = p === 'on' || p === 'bulb' || p === 'manual';
+  const lit = (n) => p === 'bulb' ? true : (showAll && bit(n));
+  setClass('huSeinL', 'lit', lit(BIT_LEFT)); setClass('huSeinR', 'lit', lit(BIT_RIGHT));
+  setClass('huModeEco', 'lit', lit(BIT_SPEED1)); setClass('huModeNormal', 'lit', lit(BIT_SPEED2)); setClass('huModeSport', 'lit', lit(BIT_SPEED3));
+  setClass('huPark', 'lit', lit(BIT_PARK)); setClass('huRev', 'lit', lit(BIT_REVERSE)); setClass('huReady', 'lit', lit(BIT_READY_MEGA));
+
+  const battVisible = p !== 'off';
+  let nLit = 0;
+  for (let i = 0; i < 4; i++) { const on = battVisible && (p === 'bulb' || bit(i)); if (on) nLit++; setClass('huSeg' + i, 'lit', on); }
+  const charging = p === 'charge' && chargeState === 'CHARGING';
+  for (let i = 0; i < 4; i++) setClass('huSeg' + i, 'chg', charging && i === nLit);
+  const batt = $('huBatt');
+  const lvl = batteryPercent < 25 ? 'low' : (batteryPercent < 50 ? 'mid' : 'ok');
+  if (batt.dataset.level !== lvl) batt.dataset.level = lvl;
+  const emptyNow = battVisible && batteryPercent <= 0;
+  setClass('huBatt', 'empty', emptyNow && p !== 'bulb' && bit(BIT_EMPTY));
+  setClass('huBatt', 'charging', charging);
+  setText('huBattTag', emptyNow ? 'EMPTY' : (charging ? 'CHARGING' : 'BATT'));
+  setText('huSoc', battVisible ? String(Math.round(batteryPercent)) : '--');
+
+  const lim = SPEED_MODE_LIMITS[hu.modeKey];
+  let dt = (now - huLastNow) / 1000; if (!(dt > 0) || dt > 0.1) dt = 0.016; huLastNow = now;
+  if (p === 'bulb') {
+    const t = clamp((now - bulbStart) / BULB_MS, 0, 1);
+    huSpeedDisp = HU_MAX * (t < 0.5 ? t * 2 : (1 - t) * 2);
+  } else if (p === 'on' || p === 'manual') {
+    const target = clamp(Math.abs(dev.motor) / lim.maxPwm, 0, 1) * lim.maxDisplay;
+    huSpeedDisp += (target - huSpeedDisp) * Math.min(1, dt * 6);
+  } else {
+    huSpeedDisp += (0 - huSpeedDisp) * Math.min(1, dt * 10);
+  }
+  if (huSpeedDisp < 0.05) huSpeedDisp = 0;
+  setText('huSpeed', String(Math.round(huSpeedDisp)));
+  const arc = $('huArc'), pct = clamp(huSpeedDisp / HU_MAX * 100, 0, 100);
+  arc.setAttribute('stroke-dasharray', pct.toFixed(2) + ' 100');
+  arc.style.strokeOpacity = pct < 0.3 ? 0 : 1;
+
+  setClass('btnSeinL', 'active', seinMode === 'left'); setClass('btnSeinR', 'active', seinMode === 'right'); setClass('btnHazard', 'active', seinMode === 'hazard');
+  setText('huIgn', connected ? (((dev.din >> DIN_BIT_IGN) & 1) ? 'ON' : 'OFF') : '--');
+  setText('huLimit', lim.label + ' (maks ' + lim.maxDisplay + ' km/h)');
+}
+function setSein(mode) {
+  if (!(bleConnected && gotFirstData)) { toast('Hubungkan BLE dulu.', 'warn'); return; }
+  if (!rideAutoMode) { toast('Sein hanya aktif di Mode Otomatis.', 'warn'); return; }
+  if (hu.power !== 'on') { toast('Nyalakan ignition dulu (sein mati saat ignition OFF).', 'warn'); return; }
+  seinMode = (seinMode === mode) ? 'off' : mode;
+}
+
+// ===================== PENGATURAN (DUMMY GAYA VOTOL) =====================
+const VOTOL_TABS = [
+  {id:'info', title:'Info'},
+  {id:'basic', title:'Dasar', fields:[
+    {k:'model', l:'Model Controller', t:'select', o:['EM-50','EM-100','EM-150','EM-200','EM-260'], d:'EM-150'},
+    {k:'ratedV', l:'Tegangan Nominal', t:'select', o:['48 V','60 V','72 V','84 V','96 V'], d:'72 V'},
+    {k:'lineI', l:'Arus Baterai Maks (Line Current)', t:'num', u:'A', min:0, max:300, d:150},
+    {k:'phaseI', l:'Arus Fasa Maks (Phase Current)', t:'num', u:'A', min:0, max:600, d:300},
+    {k:'ctrlMode', l:'Mode Kontrol', t:'select', o:['Hall (FOC)','Sensorless','Hybrid'], d:'Hall (FOC)'},
+    {k:'dir', l:'Arah Putar Motor', t:'select', o:['Normal','Terbalik'], d:'Normal'},
+    {k:'gearCnt', l:'Jumlah Gear', t:'select', o:['1','2','3'], d:'3'},
+    {k:'defGear', l:'Gear Saat Menyala', t:'select', o:['Gear 1','Gear 2','Gear 3'], d:'Gear 1'},
+  ]},
+  {id:'motor', title:'Motor', fields:[
+    {k:'poles', l:'Pasangan Kutub (Pole Pairs)', t:'num', min:1, max:40, d:16},
+    {k:'hallAngle', l:'Sudut Hall', t:'select', o:['60 derajat','120 derajat'], d:'120 derajat'},
+    {k:'phaseSeq', l:'Urutan Fasa (UVW)', t:'select', o:['UVW','UWV','VUW','VWU','WUV','WVU'], d:'UVW'},
+    {k:'ratedW', l:'Daya Motor', t:'num', u:'W', min:100, max:15000, d:2000},
+    {k:'tempSensor', l:'Sensor Suhu Motor', t:'select', o:['Tidak ada','NTC 10K','KTY84','PT1000'], d:'NTC 10K'},
+    {k:'tempLimit', l:'Batas Suhu Motor', t:'num', u:'C', min:60, max:180, d:120},
+    {k:'autoId', l:'Auto Identifikasi Motor', t:'button', label:'Mulai identifikasi'},
+  ]},
+  {id:'throttle', title:'Throttle', fields:[
+    {k:'thMin', l:'Tegangan Throttle Minimum', t:'num', u:'V', min:0, max:5, step:0.05, d:0.8},
+    {k:'thMax', l:'Tegangan Throttle Maksimum', t:'num', u:'V', min:0, max:5, step:0.05, d:4.2},
+    {k:'thDead', l:'Dead Zone', t:'num', u:'%', min:0, max:30, d:3},
+    {k:'thResp', l:'Respon Throttle', t:'select', o:['Lembut','Normal','Agresif'], d:'Normal'},
+    {k:'accel', l:'Waktu Akselerasi (0-100%)', t:'num', u:'s', min:0, max:10, step:0.1, d:1.2},
+    {k:'decel', l:'Waktu Deselerasi (100-0%)', t:'num', u:'s', min:0, max:10, step:0.1, d:0.6},
+    {k:'cruise', l:'Cruise Control', t:'toggle', d:false},
+    {k:'cruiseT', l:'Waktu Aktif Cruise', t:'num', u:'s', min:1, max:30, d:8},
+    {k:'thFail', l:'Fail-safe Throttle Lepas', t:'toggle', d:true},
+  ]},
+  {id:'speed', title:'Kecepatan', fields:[
+    {k:'g1Speed', l:'Gear 1 (ECO): Kecepatan Maks', t:'num', u:'km/h', min:5, max:200, d:40},
+    {k:'g1Cur', l:'Gear 1 (ECO): Arus Maks', t:'num', u:'%', min:10, max:100, d:43},
+    {k:'g2Speed', l:'Gear 2 (NORMAL): Kecepatan Maks', t:'num', u:'km/h', min:5, max:200, d:80},
+    {k:'g2Cur', l:'Gear 2 (NORMAL): Arus Maks', t:'num', u:'%', min:10, max:100, d:70},
+    {k:'g3Speed', l:'Gear 3 (SPORT): Kecepatan Maks', t:'num', u:'km/h', min:5, max:200, d:120},
+    {k:'g3Cur', l:'Gear 3 (SPORT): Arus Maks', t:'num', u:'%', min:10, max:100, d:100},
+    {k:'revLimit', l:'Batas Kecepatan Mundur', t:'num', u:'%', min:5, max:100, d:35},
+    {k:'wheel', l:'Diameter Roda', t:'num', u:'inch', min:8, max:24, d:14},
+    {k:'overspeed', l:'Batas Overspeed', t:'num', u:'km/h', min:20, max:250, d:125},
+  ]},
+  {id:'protect', title:'Proteksi', fields:[
+    {k:'uv', l:'Tegangan Rendah (Under Voltage)', t:'num', u:'V', min:20, max:100, step:0.5, d:54},
+    {k:'uvRec', l:'Pulih dari Tegangan Rendah', t:'num', u:'V', min:20, max:100, step:0.5, d:58},
+    {k:'ov', l:'Tegangan Tinggi (Over Voltage)', t:'num', u:'V', min:40, max:130, step:0.5, d:90},
+    {k:'ocAct', l:'Aksi Over Current', t:'select', o:['Batasi arus','Matikan output','Peringatan'], d:'Batasi arus'},
+    {k:'ctrlTempW', l:'Suhu Controller: Peringatan', t:'num', u:'C', min:40, max:120, d:80},
+    {k:'ctrlTempC', l:'Suhu Controller: Cut-off', t:'num', u:'C', min:50, max:150, d:100},
+    {k:'stall', l:'Proteksi Stall (Motor Macet)', t:'num', u:'s', min:0, max:30, d:5},
+    {k:'limp', l:'Mode Limp Baterai Rendah', t:'num', u:'%', min:0, max:30, d:10},
+    {k:'shortCkt', l:'Proteksi Hubung Singkat', t:'toggle', d:true},
+  ]},
+  {id:'regen', title:'Regeneratif', fields:[
+    {k:'regenOn', l:'Regeneratif Aktif', t:'toggle', d:true},
+    {k:'regenStr', l:'Kekuatan Regen', t:'num', u:'%', min:0, max:100, d:40},
+    {k:'regenBrk', l:'Regen Saat Rem', t:'num', u:'%', min:0, max:100, d:60},
+    {k:'regenRel', l:'Regen Saat Throttle Dilepas', t:'num', u:'%', min:0, max:100, d:25},
+    {k:'regenI', l:'Arus Regen Maks', t:'num', u:'A', min:0, max:150, d:40},
+    {k:'regenMin', l:'Kecepatan Minimum Regen', t:'num', u:'km/h', min:0, max:30, d:8},
+    {k:'eabs', l:'EABS (Rem Elektronik)', t:'toggle', d:false},
+  ]},
+  {id:'other', title:'Lainnya', fields:[
+    {k:'sideCut', l:'Putus Output Saat Standar Samping Turun', t:'toggle', d:true},
+    {k:'brkCut', l:'Putus Output Saat Rem Ditekan', t:'toggle', d:true},
+    {k:'revOn', l:'Fitur Mundur Aktif', t:'toggle', d:true},
+    {k:'anti', l:'Anti Theft / Kunci', t:'toggle', d:false},
+    {k:'autoLock', l:'Auto Lock Setelah', t:'num', u:'min', min:0, max:60, d:10},
+    {k:'canBaud', l:'Baud Rate CAN', t:'select', o:['125 kbps','250 kbps','500 kbps','1 Mbps'], d:'250 kbps'},
+    {k:'bms', l:'Protokol BMS', t:'select', o:['Tidak ada','JBD','Daly','CAN Custom'], d:'CAN Custom'},
+    {k:'lang', l:'Bahasa', t:'select', o:['Indonesia','English','中文'], d:'Indonesia'},
+    {k:'backlight', l:'Kecerahan Head Unit', t:'num', u:'%', min:10, max:100, d:80},
+  ]},
+];
+let setValues = {}, setActive = 'info';
+function setDefaults() { VOTOL_TABS.forEach(t => (t.fields || []).forEach(f => { if (f.t !== 'button') setValues[f.k] = f.d; })); }
+function renderSettingsTabs() {
+  $('setTabs').innerHTML = '';
+  VOTOL_TABS.forEach(t => {
+    const b = document.createElement('button');
+    b.className = 'set-tab' + (t.id === setActive ? ' active' : ''); b.textContent = t.title;
+    b.addEventListener('click', () => { setActive = t.id; renderSettingsTabs(); renderSettingsBody(); });
+    $('setTabs').appendChild(b);
+  });
+}
+function renderSettingsBody() {
+  const body = $('setBody');
+  const tab = VOTOL_TABS.find(t => t.id === setActive);
+  if (tab.id === 'info') {
+    body.innerHTML = `
+      <div class="set-info-grid">
+        <div class="set-info-card"><span>Model</span><b>${setValues.model}</b></div>
+        <div class="set-info-card"><span>Firmware</span><b>V2.3.1</b></div>
+        <div class="set-info-card"><span>Serial</span><b>ISC-0001-DEMO</b></div>
+        <div class="set-info-card"><span>Status</span><b>Tidak terhubung</b></div>
+        <div class="set-info-card"><span>Tegangan Baterai</span><b>72.4 V</b></div>
+        <div class="set-info-card"><span>Arus Baterai</span><b>0.0 A</b></div>
+        <div class="set-info-card"><span>Suhu Controller</span><b>34 C</b></div>
+        <div class="set-info-card"><span>Suhu Motor</span><b>31 C</b></div>
+      </div>
+      <table class="fault"><thead><tr><th>Waktu</th><th>Kode</th><th>Keterangan</th></tr></thead>
+        <tbody>
+          <tr><td>-</td><td>-</td><td>Tidak ada fault aktif (data contoh)</td></tr>
+          <tr><td>2026-09-30 14:02</td><td>F03</td><td>Under voltage (riwayat contoh)</td></tr>
+          <tr><td>2026-09-12 09:41</td><td>F07</td><td>Hall sensor error (riwayat contoh)</td></tr>
+        </tbody></table>`;
+    return;
+  }
+  const grid = document.createElement('div'); grid.className = 'set-grid';
+  tab.fields.forEach(f => {
+    const row = document.createElement('div'); row.className = 'set-row'; row.id = 'srow_' + f.k;
+    const lab = document.createElement('label'); lab.textContent = f.l; row.appendChild(lab);
+    const ctl = document.createElement('div'); ctl.className = 'set-ctl';
+    if (f.t === 'num') {
+      const i = document.createElement('input'); i.type = 'number'; i.min = f.min; i.max = f.max; i.step = f.step || 1; i.value = setValues[f.k];
+      i.addEventListener('input', () => { setValues[f.k] = Number(i.value); row.classList.toggle('mod', setValues[f.k] !== f.d); });
+      ctl.appendChild(i);
+      const u = document.createElement('span'); u.className = 'u'; u.textContent = f.u || ''; ctl.appendChild(u);
+    } else if (f.t === 'select') {
+      const s = document.createElement('select');
+      f.o.forEach(o => { const op = document.createElement('option'); op.textContent = o; if (o === setValues[f.k]) op.selected = true; s.appendChild(op); });
+      s.addEventListener('change', () => { setValues[f.k] = s.value; row.classList.toggle('mod', setValues[f.k] !== f.d); });
+      ctl.appendChild(s);
+    } else if (f.t === 'toggle') {
+      const sw = document.createElement('span'); sw.className = 'switch' + (setValues[f.k] ? ' on' : '');
+      sw.addEventListener('click', () => { setValues[f.k] = !setValues[f.k]; sw.classList.toggle('on', setValues[f.k]); row.classList.toggle('mod', setValues[f.k] !== f.d); });
+      ctl.appendChild(sw);
+    } else if (f.t === 'button') {
+      const b = document.createElement('button'); b.className = 'mini-btn'; b.textContent = f.label;
+      b.addEventListener('click', () => toast('Dummy: ' + f.label + ' belum tersambung ke controller.', 'warn'));
+      ctl.appendChild(b);
+    }
+    row.appendChild(ctl);
+    if (f.t !== 'button' && setValues[f.k] !== f.d) row.classList.add('mod');
+    grid.appendChild(row);
+  });
+  body.innerHTML = ''; body.appendChild(grid);
+}
+function fakeProgress(msg) {
+  const wrap = $('setProgress'), bar = wrap.firstElementChild; wrap.style.display = 'block'; bar.style.width = '0';
+  let p = 0; const iv = setInterval(() => { p += 10; bar.style.width = p + '%'; if (p >= 100) { clearInterval(iv); setTimeout(() => { wrap.style.display = 'none'; toast(msg, 'live'); }, 200); } }, 80);
+}
+
+// ===================== TAB NAV + EVENT BINDING =====================
+function showTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === id));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+  window.scrollTo({ top: 0 });
+}
+function bindEvents() {
+  document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+  document.querySelectorAll('[data-goto]').forEach(b => b.addEventListener('click', () => showTab(b.dataset.goto)));
+  ['connectBtn','homeConnectBtn','simConnectBtn'].forEach(id => $(id).addEventListener('click', toggleConnection));
+
+  $('scTapValid').addEventListener('click', () => onRfidTap(VALID_CARD_HEX, nowMs()));
+  $('scTapBad').addEventListener('click', () => onRfidTap('DEADBEEF', nowMs()));
+  $('scReset').addEventListener('click', resetSimulation);
+  $('btnResetCharge').addEventListener('click', resetSimulation);
+  $('scManualChk').addEventListener('change', (e) => { manualChargeSelect = e.target.checked; });
+  $('scOptFast').addEventListener('click', () => { if (manualChargeSelect && gotFirstData) startChargeMode('fast', nowMs()); });
+  $('scOptSlow').addEventListener('click', () => { if (manualChargeSelect && gotFirstData) startChargeMode('slow', nowMs()); });
+
+  $('rideAutoToggle').addEventListener('click', () => setRideAutoMode(!rideAutoMode));
+  $('motorSlider').addEventListener('input', (e) => {
+    if (rideAutoMode) return;
+    motorManual = parseInt(e.target.value, 10);
+    setText('motorVal', String(motorManual));
+    syncOutputs(nowMs());
+  });
+  $('motorStopBtn').addEventListener('click', () => {
+    if (rideAutoMode) setRideAutoMode(false);
+    motorManual = 0; $('motorSlider').value = 0;
+    syncOutputs(nowMs());
+  });
+  $('btnSeinL').addEventListener('click', () => setSein('left'));
+  $('btnSeinR').addEventListener('click', () => setSein('right'));
+  $('btnHazard').addEventListener('click', () => setSein('hazard'));
+
+  $('setRead').addEventListener('click', () => { setDefaults(); renderSettingsBody(); fakeProgress('Dummy: parameter dibaca dari controller (data contoh).'); });
+  $('setWrite').addEventListener('click', () => fakeProgress('Dummy: parameter ditulis ke controller (tidak ada yang dikirim).'));
+  $('setDefault').addEventListener('click', () => { setDefaults(); renderSettingsBody(); toast('Parameter dikembalikan ke default.', 'live'); });
+  $('setExportBtn').addEventListener('click', () => { const t = $('setExport'); t.style.display = 'block'; t.value = JSON.stringify(setValues, null, 2); });
+}
+
+// ===================== LOOP =====================
+function activeTab() { const p = document.querySelector('.tab-panel.active'); return p ? p.id : ''; }
+function renderFrame() {
+  const now = nowMs(), tab = activeTab();
+  if (tab === 'tab-sim') { renderChargeSim(now); renderHeadUnit(now); }
+  if (tab === 'tab-dashboard') { renderChargeTab3(now); renderAutoLocks(); }
+}
+function startLoops() {
+  setInterval(() => {
+    if (bleConnected && gotFirstData) { const now = nowMs(); stepController(now); syncOutputs(now); }
+  }, 50);
+  if (typeof requestAnimationFrame === 'function') {
+    const frame = () => { renderFrame(); requestAnimationFrame(frame); };
+    requestAnimationFrame(frame);
+  } else setInterval(renderFrame, 50);
+}
+
+// ===================== INISIALISASI (taruh paling akhir) =====================
+buildTelemetryUI();
+buildDigitalInputsUI();
+buildToggleUI('espOutGrid', ESP_OUT_BITS, 'esp');
+buildToggleUI('megaOutGrid', MEGA_OUT_BITS, 'mega');
+buildCvChart();
+buildHeadUnitGauge();
+setDefaults(); renderSettingsTabs(); renderSettingsBody();
+bindEvents();
+setClass('rideAutoToggle', 'on', true);
+setText('rideModeTag', 'AUTO');
+$('motorSlider').disabled = true;
+$('motorAutoNote').style.display = 'block';
+startLoops();
+if (!navigator.bluetooth) {
+  toast('Browser ini tidak mendukung Web Bluetooth. Gunakan Chrome/Edge di Android atau Desktop.', 'alert');
+  ['connectBtn','homeConnectBtn','simConnectBtn'].forEach(id => { $(id).disabled = true; });
+}
+</script>
+
+</body>
+</html>

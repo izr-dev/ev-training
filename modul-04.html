@@ -26,7 +26,7 @@ a{color:var(--w)}
 .out div{padding:10px 12px;border:1px solid var(--line);border-radius:6px}
 .out span{display:block;font-size:12px;color:var(--dim)}
 .out strong{font:700 20px var(--disp)}
-canvas{width:100%;height:200px;display:block;background:var(--ink);border:1px solid var(--line);border-radius:6px}
+main canvas{width:100%;height:200px;display:block;background:var(--ink);border:1px solid var(--line);border-radius:6px}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
 .chip{padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--dim);font:500 13px var(--body);cursor:pointer}
 .chip[aria-pressed=true]{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
@@ -112,6 +112,7 @@ details.hb{margin:8px 0}details.hb p{margin:6px 0;font-size:15px}
 
   <h2>2. Enam bahaya di bengkel EV</h2>
   <div id="hz6"></div>
+  <div class="story" id="hvfig" style="margin-top:14px"></div>
 
   <h2>3. APD dan peralatan</h2>
   <div class="story"><div id="apdfig"></div><div>
@@ -124,6 +125,7 @@ details.hb{margin:8px 0}details.hb p{margin:6px 0;font-size:15px}
       <tr><td><b>Alat berinsulasi dan multimeter berperingkat</b></td><td>Pakai alat yang peringkat tegangannya sesuai. Peringkat itu tertulis di badan alat.</td></tr>
       <tr><td><b>Lepas cincin, jam, dan perhiasan logam</b></td><td>Logam bisa menghubungkan kutub baterai dan menyebabkan luka bakar parah.</td></tr>
     </table>
+    <p><b>Cara membaca kelasnya.</b> Lihat label pada sarung tangan: tertera kelas (00 atau 0), tegangan kerja maksimal, dan tanggal produksi. Tanggal produksi bukan tanggal kedaluwarsa. Selama lolos pemeriksaan visual dan uji tiup, sarung tangan Kelas 0 boleh terus dipakai. Pemasok Warwick Test Supplies menyebut paket baterai kendaraan modern bisa bertegangan 300–900 V, dan sarung tangan yang sesuai adalah Kelas 0.</p>
     <p class="why">Sarung tangan biasa tidak bisa menggantikan sarung tangan isolasi. Simpan sarung tangan tidak terlipat, jauh dari panas, sinar matahari, dan bahan kimia. Perhatikan: sistem R2 sekitar 72–96 V tetap berarus besar. Ikuti prosedur dan peringkat APD sesuai pabrikan.</p>
   </div></div>
 
@@ -135,8 +137,21 @@ details.hb{margin:8px 0}details.hb p{margin:6px 0;font-size:15px}
   <div class="story"><div id="lotofig"></div><div>
     <p><b>Mengapa "tunggu" dan "ukur" penting?</b> Setelah sistem diputus, kapasitor di controller masih bisa menyimpan muatan. Alat ukur diuji di sumber yang diketahui hidup agar bacaan nol bisa dipercaya.</p>
     <p><b>Service disconnect bukan jaminan nol.</b> Melepasnya mengisolasi sistem dari sisa kendaraan, tetapi tegangan tinggi tetap ada di dalam paket baterai. Alat ini dirancang untuk teknisi terlatih di bengkel yang menjalankan LOTO.</p>
-    <p><b>Kabel tegangan tinggi</b> umumnya berwarna oranye, tetapi ada pabrikan yang memakai kuning atau biru. Selalu cerah supaya mudah dikenali.</p>
+    <p><b>Tunggu berapa lama?</b> Ikuti buku servis pabrikan. Sebagai gambaran, panduan keselamatan dari pemerintah negara bagian Massachusetts (AS) menyebut menunggu sekitar 15 menit setelah baterai diputus sebelum bekerja pada kendaraan.</p>
+    <p><b>Kabel tegangan tinggi</b> umumnya berwarna oranye, tetapi sebagian model memakai warna lain seperti biru. UN R100 dan FMVSS 305 mewajibkan kabel tegangan tinggi diberi penutup oranye dan modulnya diberi label peringatan.</p>
+    <div id="packfig" style="margin-top:12px"></div>
   </div></div>
+
+  <h3 style="font:600 19px var(--disp);margin:28px 0 8px">Lima cara mengisolasi sistem tegangan tinggi</h3>
+  <ul class="rec">
+    <li><b>Airbag mengembang</b>: isolasi seharusnya terjadi otomatis setelah tabrakan. Petugas tidak bisa mengukur apakah isolasi benar-benar terjadi.</li>
+    <li><b>Cut loop</b>: kabel tegangan rendah yang dipotong di dua tempat. Dipakai pada semua model Tesla, di bawah bagasi depan.</li>
+    <li><b>Pull plug</b>: konektor hijau bertegangan rendah, biasanya di bawah kap. Setelah dicabut ia terkunci dan hanya bisa dipasang ulang dengan alat khusus pabrikan. Makin umum di banyak merek selain Tesla.</li>
+    <li><b>Pull fuse</b>: sekering bertegangan rendah yang ditarik ke atas, umum pada Hyundai. Ia tidak lepas dari dudukannya, jadi jangan sampai terdorong masuk lagi.</li>
+    <li><b>Manual Service Disconnect (MSD)</b>: konektor bertegangan <b>tinggi</b> yang terhubung langsung ke baterai. Dirancang untuk teknisi terlatih di bengkel yang menjalankan lockout-tagout. EV FireSafe tidak menyarankan petugas darurat memakainya.</li>
+  </ul>
+  <div class="story" id="isofig"></div>
+  <p class="why">Ikuti buku servis atau panduan tanggap darurat pabrikan untuk lokasi dan caranya. Jangan menganggap kendaraan sudah aman hanya karena satu cara sudah dilakukan. Tetap buktikan tegangan nol sebelum bekerja.</p>
 
   <h2>5. Latihan: temukan bahaya di bengkel</h2>
   <p class="lead">Centang semua keadaan yang <b>berbahaya</b>, lalu periksa.</p>
@@ -156,10 +171,13 @@ details.hb{margin:8px 0}details.hb p{margin:6px 0;font-size:15px}
   <p class="why">Ini ringkasan edukasi, bukan nasihat hukum. Rujuk sumber resmi untuk kepastian hukum.</p>
 
   <h2>8. Video pendukung</h2>
-  <p class="lead">Klik gambar untuk menonton di YouTube.</p>
-  <div id="vlist"></div>
-  <p class="why" style="margin-top:18px"><b>Cari video lain.</b> Tautan berikut membuka hasil pencarian YouTube, bukan video tertentu.</p>
+  <h3 style="font:600 18px var(--disp);margin:14px 0 6px">Bahasa Indonesia</h3>
+  <p class="why">Belum ada video berbahasa Indonesia yang bisa saya pastikan benar-benar ada. Gunakan tautan pencarian berikut (hasil pencarian YouTube, bukan video tertentu), lalu tambahkan video pilihan Anda di daftar <code>VIDEOS</code> dengan bahasa <code>Indonesia</code>.</p>
   <ul class="rec" id="vlinks"></ul>
+  <h3 style="font:600 18px var(--disp);margin:22px 0 6px">Bahasa Inggris</h3>
+  <p class="why">Tips subtitle: di YouTube, aktifkan CC, buka Setelan, Subtitel/CC, lalu pilih Terjemahkan otomatis ke Indonesia. Ini hanya tersedia bila pemilik video mengaktifkan subtitel.</p>
+  <div id="vlist"></div>
+  <p class="why">Lebih banyak video: <a href="https://www.youtube.com/@evfiresafe7330/videos" target="_blank" rel="noopener">kanal YouTube EV FireSafe</a> (Inggris, tentang isolasi sistem tegangan tinggi EV untuk petugas darurat).</p>
 
   <details class="dl"><summary>Catatan untuk pengajar</summary>
     <p><b>Alur sekitar 60 menit:</b> tebakan (5), simulasi arus tubuh (10), enam bahaya (10), APD (10), latihan urutan LOTO (15), temukan bahaya (5), kuis (5).</p>
@@ -171,7 +189,7 @@ details.hb{margin:8px 0}details.hb p{margin:6px 0;font-size:15px}
   <h2>9. Kuis</h2>
   <div id="quiz"></div><div class="verdict" id="score" hidden></div>
 
-  <p class="why" style="margin-top:30px">Sumber: ambang arus tubuh dari ringkasan IEC 60479 (Techniques de l'Ingénieur, UMN, isastur, EMF-Portal); kelas sarung tangan dari panduan pemasok (Warwick, Safetyware, Toolsource) yang merujuk IEC 60903 dan ASTM D120; isolasi HV EV dari <a href="https://www.evfiresafe.com/04-9-hv-isolation" target="_blank" rel="noopener">EV FireSafe</a> dan <a href="https://www.bodyshopbusiness.com/ev-safety-basics-on-the-shop-floor/" target="_blank" rel="noopener">Bodyshop Business</a>; regulasi dari <a href="https://peraturan.bpk.go.id/Details/145984/" target="_blank" rel="noopener">BPK (Permenaker 12/2015)</a>. Foto: <a href="https://commons.wikimedia.org/wiki/File:Electrical_safety_gloves.png" target="_blank" rel="noopener">Electrical safety gloves.png</a> (Powerfox, CC BY-SA 4.0) dan <a href="https://commons.wikimedia.org/wiki/File:Lockout_tagout_hasp.svg" target="_blank" rel="noopener">Lockout tagout hasp.svg</a> (Maheshkumar23, CC BY-SA 4.0), Wikimedia Commons. Cek ulang standar terbaru sebelum dipakai sebagai rujukan resmi.</p>
+  <p class="why" style="margin-top:30px">Sumber: ambang arus tubuh dari ringkasan IEC 60479 (Techniques de l'Ingénieur, UMN, isastur, EMF-Portal); kelas dan perawatan sarung tangan dari <a href="https://warwickts.com/5581/Guide-on-EV-Insulated-Gloves" target="_blank" rel="noopener">panduan Warwick Test Supplies</a> yang merujuk IEC 60903; isolasi HV EV dari <a href="https://www.evfiresafe.com/04-9-hv-isolation" target="_blank" rel="noopener">EV FireSafe</a>, <a href="https://www.bodyshopbusiness.com/ev-safety-basics-on-the-shop-floor/" target="_blank" rel="noopener">Bodyshop Business</a>, dan <a href="https://www.mass.gov/info-details/high-voltage-safety-with-hybrids-and-electric-vehicles" target="_blank" rel="noopener">pemerintah Massachusetts</a>; kewajiban kabel oranye dari Linja-aho dkk. (ResearchGate); regulasi dari <a href="https://peraturan.bpk.go.id/Details/145984/" target="_blank" rel="noopener">BPK (Permenaker 12/2015)</a>. Foto: Warwick Test Supplies (sarung tangan merek Sibille/Regeltex, label, kotak, dan rambu), <a href="https://www.evfiresafe.com/04-9-hv-isolation" target="_blank" rel="noopener">EV FireSafe</a> (kabel oranye dan lima cara isolasi, hak cipta EV FireSafe 2021), <a href="https://commons.wikimedia.org/wiki/File:Lithium-Ion_Battery_for_BMW_i3_-_Battery_Pack.JPG" target="_blank" rel="noopener">paket baterai BMW i3</a> (RudolfSimon, CC BY-SA 3.0) dan <a href="https://commons.wikimedia.org/wiki/File:Lockout_tagout_hasp.svg" target="_blank" rel="noopener">Lockout tagout hasp.svg</a> (Maheshkumar23, CC BY-SA 4.0), Wikimedia Commons. Cek ulang standar terbaru sebelum dipakai sebagai rujukan resmi.</p>
 
   <div class="nav">
     <a href="modul-03.html">Sebelumnya: 03</a><a href="index.html#modul">Daftar modul</a>
@@ -229,7 +247,26 @@ $('hz6').innerHTML=HZ.map(h=>`<details class="dl hb"><summary>${h[0]}</summary><
 // ----- foto -----
 const CM='https://commons.wikimedia.org/wiki/',fp=f=>CM+'Special:FilePath/'+f+'?width=520';
 const fig=(f,alt,cap,k,by)=>`<figure style="margin:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)"><img src="${fp(f)}" alt="${alt}" style="width:100%;max-height:260px;object-fit:contain;background:#fff;border-radius:6px;display:block" loading="lazy" onerror="this.closest('figure').style.display='none'"><figcaption style="font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5">${cap}. Sumber: <a href="${CM}File:${f}" target="_blank" rel="noopener">${k}</a>, ${by}, Wikimedia Commons</figcaption></figure>`;
-$('apdfig').innerHTML=fig('Electrical_safety_gloves.png','Sarung tangan keselamatan listrik','Sarung tangan keselamatan listrik','Electrical safety gloves.png','Powerfox, CC BY-SA 4.0');
+const WT='https://warwickts.com/';
+const figU=(src,alt,cap,sumber,link)=>`<figure style="margin:0 0 12px;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)"><img src="${src}" alt="${alt}" style="width:100%;max-height:260px;object-fit:contain;background:#fff;border-radius:6px;display:block" loading="lazy" onerror="this.closest('figure').style.display='none'"><figcaption style="font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5">${cap}. Sumber: <a href="${link}" target="_blank" rel="noopener">${sumber}</a></figcaption></figure>`;
+$('apdfig').innerHTML=
+  figU(WT+'cache/img/261/news|5581&sz500x500&cp&tn&ql&fm&bo&bc&sg5f687dfdc3&ft1616076054&EVHybridGlovesUserGuideBannerJPEG-V2.jpg','Sarung tangan isolasi Kelas 0 untuk EV','Sarung tangan isolasi Kelas 0 (1.000 V AC / 1.500 V DC) untuk diagnosa dan perbaikan EV','Warwick Test Supplies',WT+'5581/Guide-on-EV-Insulated-Gloves')+
+  figU(WT+'_data/site/261/news/5581/SibilleInsulatedGloveLabelExplanation.jpg','Penjelasan label sarung tangan isolasi','Contoh penjelasan label sarung tangan isolasi (kelas, tegangan, dan tanggal produksi), sarung tangan merek Sibille/Regeltex','Warwick Test Supplies',WT+'5581/Guide-on-EV-Insulated-Gloves')+
+  figU(WT+'_data/site/261/news/5581/SibilleRGX-BGTV2.jpg','Kotak penyimpan sarung tangan isolasi','Kotak keras untuk menyimpan sarung tangan isolasi (jangan dilipat, jauhkan dari panas dan sinar matahari)','Warwick Test Supplies',WT+'4804/Protective-Glove-Case-RGX-BGT');
+$('hvfig').innerHTML=figU(WT+'cache/img/261/folder|4840&sz500x500&cp&tn&ql&fm&bo&bc&sg5eef6f9e41&ft1585135950&DangerHVSign-V3.jpg','Rambu bahaya tegangan tinggi','Contoh rambu "Danger High Voltage" untuk area kerja EV','Warwick Test Supplies',WT+'4797/Danger-High-Voltage-Sign');
+$('packfig').innerHTML=fig('Lithium-Ion_Battery_for_BMW_i3_-_Battery_Pack.JPG','Paket baterai tegangan tinggi','Paket baterai lithium-ion kendaraan listrik (BMW i3). Tegangan tinggi tetap ada di dalam paket meski service disconnect dilepas','Lithium-Ion Battery for BMW i3 - Battery Pack.JPG','RudolfSimon, CC BY-SA 3.0');
+
+const EFS='https://static.wixstatic.com/media/',EFL='https://www.evfiresafe.com/';
+const ef=(id,alt,cap,pg)=>figU(EFS+id,alt,cap,'EV FireSafe (evfiresafe.com)',EFL+pg);
+$('hvfig').innerHTML+=
+  ef('8b9ad1_b5ca28184bf54d30a1dc7ae799f28e66~mv2.png/v1/fill/w_503,h_422,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/8b9ad1_b5ca28184bf54d30a1dc7ae799f28e66~mv2.png','Kabel tegangan tinggi oranye pada EV','Kabel tegangan tinggi pada EV diberi penutup oranye','ev-hv-cable-components')+
+  ef('8b9ad1_6785de86e0ef4846adcfb103dd743bd8~mv2.png/v1/crop/x_0,y_211,w_1410,h_752/fill/w_600,h_320,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/EVFS%20WEBSITE%20EVs%20in%20Australia-19.png','Komponen tegangan tinggi pada EV','Gambaran komponen tegangan tinggi pada EV','ev-hv-cable-components');
+$('isofig').innerHTML=
+  ef('8b9ad1_0f4ef4b343f047f48c9ce7061a9979ec~mv2.png/v1/fill/w_278,h_362,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/8b9ad1_0f4ef4b343f047f48c9ce7061a9979ec~mv2.png','Manual Service Disconnect','Ilustrasi Manual Service Disconnect (service plug)','04-9-hv-isolation')+
+  ef('8b9ad1_a0109786e10a481b8e87e14b256ce0e3~mv2.png/v1/fill/w_262,h_346,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/8b9ad1_a0109786e10a481b8e87e14b256ce0e3~mv2.png','Pull plug hijau','Ilustrasi pull plug hijau (tegangan rendah)','04-9-hv-isolation')+
+  ef('8b9ad1_6bd03b9ce389404880492459cdff7efc~mv2.png/v1/fill/w_258,h_341,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/8b9ad1_6bd03b9ce389404880492459cdff7efc~mv2.png','Pull fuse','Ilustrasi pull fuse (sekering tegangan rendah)','04-9-hv-isolation')+
+  ef('8b9ad1_07879e5bbcc2497fbbe71b5c2c54ced2~mv2.png/v1/fill/w_278,h_376,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/8b9ad1_07879e5bbcc2497fbbe71b5c2c54ced2~mv2.png','Cut loop','Ilustrasi cut loop (kabel tegangan rendah yang dipotong)','04-9-hv-isolation')+
+  ef('8b9ad1_7b92b1aef1694158895f831c645160b7~mv2.png/v1/crop/x_0,y_110,w_2880,h_1308/fill/w_676,h_308,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/8b9ad1_7b92b1aef1694158895f831c645160b7~mv2.png','Ringkasan cara isolasi sistem tegangan tinggi','Ringkasan cara mengisolasi sistem tegangan tinggi','04-9-hv-isolation');
 $('lotofig').innerHTML=fig('Lockout_tagout_hasp.svg','Gembok kelompok untuk lockout-tagout','Ilustrasi hasp lockout-tagout yang bisa memuat sampai 6 gembok untuk kerja berkelompok','Lockout tagout hasp.svg','Maheshkumar23, CC BY-SA 4.0');
 
 // ----- urutan LOTO -----

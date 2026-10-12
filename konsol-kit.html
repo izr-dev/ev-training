@@ -513,6 +513,22 @@
   .set-progress{height:5px;border-radius:3px;background:var(--panel-2);overflow:hidden;margin-top:10px;display:none;}
   .set-progress i{display:block;height:100%;width:0;background:var(--data);transition:width .1s linear;}
 
+  /* ---- info BLDC / tegangan / suhu / simbol kerusakan / catatan belajar ---- */
+  .hu-info{position:relative;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px;}
+  .hu-chips,.hu-flags{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  .hu-chip{padding:5px 14px;border-radius:999px;border:1px solid #1d3a46;color:#7fc3d4;font-size:12px;font-weight:600;letter-spacing:1px;background:rgba(0,229,255,.04);}
+  .hu-chip.temp{color:#43D9A3;border-color:rgba(67,217,163,.5);}
+  .hu-chip.temp.hot{color:#FF5C5C;border-color:#FF5C5C;box-shadow:0 0 12px rgba(255,92,92,.5);animation:pulse 1s infinite;}
+  .hu-flag{min-width:44px;height:38px;padding:0 12px;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #1a3541;color:#2a4854;font-weight:700;font-size:16px;letter-spacing:1px;transition:all .15s;}
+  .hu-flag.m.lit,.hu-flag.c.lit{color:#FF5C5C;border-color:#FF5C5C;box-shadow:0 0 14px rgba(255,92,92,.7),inset 0 0 10px rgba(255,92,92,.2);text-shadow:0 0 10px #FF5C5C;}
+  .hu-flag.regen{font-size:12px;}
+  .hu-flag.regen.lit{color:#43D9A3;border-color:#43D9A3;box-shadow:0 0 14px rgba(67,217,163,.6);text-shadow:0 0 8px #43D9A3;}
+  .hu-note{position:relative;margin-top:12px;padding:10px 14px;border-radius:10px;border:1px solid #17313c;background:rgba(0,229,255,.04);font-size:12.5px;line-height:1.55;color:#9fc7d2;min-height:40px;transition:all .25s;}
+  .hu-note.warn{border-color:rgba(242,169,59,.55);background:rgba(242,169,59,.08);color:#F2C47A;}
+  .hu-note.alert{border-color:rgba(255,92,92,.6);background:rgba(255,92,92,.09);color:#FF9A9A;}
+  .hu-note.info{border-color:rgba(67,217,163,.5);background:rgba(67,217,163,.07);color:#8be6c3;}
+  .hu[data-power="off"] .hu-info,.hu[data-power="charge"] .hu-info{opacity:.25;}
+
   .hu-batt.charging .seg.chg{background:rgba(67,217,163,.55);animation:pulse .9s infinite;}
 </style>
 </head>
@@ -525,7 +541,7 @@
     <div class="mark">ISC</div>
     <div>
       <h1>ISC EV Control Console</h1>
-      <p>Mikrokontroller ESP32-S3 &middot; Mega2560 Pro &middot; Bluetooth Low Energy (BLE)</p>
+      <p>EV Trainer Kit &middot; Bluetooth Low Energy (BLE)</p>
     </div>
   </div>
   <div class="conn-area">
@@ -547,7 +563,7 @@
       <div class="home-glow"></div>
       <p class="home-hello">Selamat datang di panel kendali kendaraan listrik Anda.</p>
       <h1 class="home-title">ISC EV Control Console</h1>
-      <p class="home-sub">Pantau dan kendalikan kit ESP32-S3 + Mega2560 lewat Bluetooth. Pilih menu di bawah untuk mulai: simulasi charging dan head unit, dashboard telemetri lengkap, atau pengaturan controller.</p>
+      <p class="home-sub">Pantau dan kendalikan EV Trainer Kit lewat Bluetooth. Pilih menu di bawah untuk mulai: simulasi charging dan head unit, dashboard telemetri lengkap, atau pengaturan controller.</p>
       <div class="home-conn">
         <span class="status-pill"><span class="status-dot"></span><span id="homeStatusText">Belum terhubung</span></span>
         <button class="connect-btn" id="homeConnectBtn">Hubungkan BLE</button>
@@ -558,12 +574,12 @@
       <button class="home-card" data-goto="tab-sim">
         <div class="hc-idx">01</div>
         <h3>Simulasi</h3>
-        <p>Simulasi proses charging lengkap dengan animasi dan penjelasan, serta head unit futuristik yang mengikuti input Mega.</p>
+        <p>Simulasi proses charging lengkap dengan animasi dan penjelasan, serta head unit futuristik yang mengikuti kondisi kit.</p>
       </button>
       <button class="home-card" data-goto="tab-dashboard">
         <div class="hc-idx">02</div>
         <h3>Dashboard</h3>
-        <p>Telemetri analog, input digital, kontrol semua output ESP/Mega, kontrol motor, dan RFID dalam satu layar.</p>
+        <p>Telemetri analog, input digital, kontrol semua output, kontrol motor, dan RFID dalam satu layar.</p>
       </button>
       <button class="home-card" data-goto="tab-settings">
         <div class="hc-idx">03</div>
@@ -600,10 +616,10 @@
           <div>
             <div class="sc-sub">1. Pilihan charging</div>
             <div class="sc-options">
-              <button class="sc-opt" id="scOptFast"><b>Fast Charge</b><span>Arus tinggi. Sekitar 10 detik dari 20% ke 100%.</span></button>
-              <button class="sc-opt" id="scOptSlow"><b>Slow Charge</b><span>Arus rendah. Sekitar 20 detik dari 20% ke 100%.</span></button>
+              <button class="sc-opt" id="scOptFast"><b>Fast Charge</b><span>Arus tinggi. Total sekitar 16 detik dari 0% ke 100%.</span></button>
+              <button class="sc-opt" id="scOptSlow"><b>Slow Charge</b><span>Arus rendah. Total sekitar 40 detik dari 0% ke 100%.</span></button>
             </div>
-            <div class="sc-sensor" id="scSensor">Sensor charger (ADC ESP): --</div>
+            <div class="sc-sensor" id="scSensor">Sensor charger (ADC): --</div>
             <label class="sc-manual"><input type="checkbox" id="scManualChk"> Pilih manual (tanpa sensor charger)</label>
 
             <div class="sc-sub">2. Urutan proses charging</div>
@@ -726,18 +742,33 @@
               <div class="hu-batt-num"><span id="huSoc">--</span><small>%</small></div>
             </div>
           </div>
+          <div class="hu-info">
+            <div class="hu-chips">
+              <span class="hu-chip" id="huBldc">BLDC --</span>
+              <span class="hu-chip" id="huVolt">-- V</span>
+              <span class="hu-chip temp" id="huTemp" style="display:none">SUHU -- C</span>
+            </div>
+            <div class="hu-flags">
+              <span class="hu-flag m" id="huFaultM" title="Masalah BLDC">M</span>
+              <span class="hu-flag c" id="huFaultC" title="Masalah controller">C</span>
+              <span class="hu-flag regen" id="huRegen">REGEN</span>
+            </div>
+          </div>
+          <div class="hu-note" id="huNote"></div>
         </div>
 
         <div class="hu-controls">
           <button class="mini-btn" id="btnSeinL">Sein kiri</button>
           <button class="mini-btn" id="btnHazard">Hazard</button>
           <button class="mini-btn" id="btnSeinR">Sein kanan</button>
-          <span class="hint">Tidak ada input sein di Mega, jadi sein dinyalakan dari tombol ini lalu dikirim ke output Left/Right.</span>
+          <button class="mini-btn" id="btnRepair" disabled>Perbaiki</button>
+          <span class="hint">Kit tidak punya input sein, jadi sein dinyalakan dari tombol ini.</span>
         </div>
         <div class="hu-status">
           <span>Mode kontrol: <b id="huCtrlMode">Otomatis</b></span>
           <span>Ignition: <b id="huIgn">--</b></span>
-          <span>Batas kecepatan mode: <b id="huLimit">--</b></span>
+          <span>Batas kecepatan: <b id="huLimit">--</b></span>
+          <span>Motor kit (seven-segment): <b id="huMotor">--</b></span>
         </div>
       </section>
     </div>
@@ -932,22 +963,61 @@ const TELEMETRY = [
 
 // ===================== PARAMETER SIMULASI =====================
 const VALID_CARD_HEX = '0F15F148';
-// Profil charging. cc = %/detik di tahap CC (0..80%), cvAvg = rata-rata %/detik di tahap CV (80..100%).
-// Dari 20%: Fast = 4 dtk + 6 dtk = 10 dtk, Slow = 8 dtk + 12 dtk = 20 dtk.
+// Waktu charging dihitung dari 0% ke 100%: tahap CC (0..80%) lalu CV (80..100%, melambat).
+// Fast total 16 dtk, Slow total 40 dtk. Dari SOC awal yang lebih tinggi, waktunya proporsional.
 const CHARGE_PROFILE = {
-  fast: { cc: 15,  cvAvg: 20/6,  label: 'Fast' },
-  slow: { cc: 7.5, cvAvg: 20/12, label: 'Slow' },
+  fast: { t1: 7.5,   t2: 8.5,   label: 'Fast' },
+  slow: { t1: 18.75, t2: 21.25, label: 'Slow' },
 };
-// Batas per mode speed: maxPwm = batas PWM motor, maxDisplay = batas angka km/h di head unit,
-// drain = laju pengurangan baterai (%/detik) pada throttle penuh.
-const SPEED_MODE_LIMITS = {
-  eco:    { maxPwm: 110, maxDisplay: 40,  drain: 0.5, label: 'ECO' },
-  normal: { maxPwm: 180, maxDisplay: 80,  drain: 1.0, label: 'NORMAL' },
-  sport:  { maxPwm: 255, maxDisplay: 120, drain: 2.0, label: 'SPORT' },
+const ccRate = (mode) => 80 / CHARGE_PROFILE[mode].t1;   // %/dtk di tahap CC
+
+const MODE_KEYS = ['eco', 'normal', 'sport'];
+const MODE_LABEL = { eco: 'ECO', normal: 'NORMAL', sport: 'SPORT' };
+const REF_MAX_KMH = 140;   // 100% BLDC = 140 km/jam (BLDC 8000W, 96V, mode 3)
+
+// Tabel batas kecepatan (km/jam pada throttle 100%): v = [Eco, Normal, Sport].
+// fail[i] = kerusakan bila throttle >= 90% dipertahankan t detik di mode i:
+//   kind 'M' = BLDC, 'C' = controller.
+const F = (t, kind, text) => ({ t, kind, text });
+const SPEED_TABLE = {
+  '400W': {
+    48: { v:[20,30,40], tag:'Standar', note:'Tegangan sesuai rating BLDC 400W. Aman di semua mode.' },
+    60: { v:[30,45,55], tag:'Overvoltage', note:'60V melebihi rating BLDC 400W. Mode Normal dan Sport pada throttle penuh merusak komponen.',
+          fail:[null, F(10,'C','Controller hangus'), F(5,'M','BLDC terbakar')] },
+    72: { v:[40,60,70], tag:'Extreme Over', note:'Tegangan jauh melebihi rating. Arus dan putaran berlebih memanaskan lilitan hingga rusak.',
+          fail:[F(8,'M','BLDC rusak / lilitan putus'), F(3,'M','BLDC terbakar'), F(1,'M','BLDC instan terbakar')] },
+    96: { v:[50,70,85], tag:'Fatal Over', note:'Tegangan fatal untuk BLDC 400W. Lilitan dan magnet rusak dalam hitungan detik.',
+          fail:[F(3,'M','BLDC terbakar'), F(2,'M','BLDC meleleh instan'), F(1,'M','BLDC meledak')] },
+  },
+  '2000W': {
+    48: { v:[25,35,65], tag:'Undervoltage', note:'Aman, tetapi tenaga dan kecepatan berkurang karena tegangan di bawah rating.' },
+    60: { v:[35,50,72], tag:'Kompatibel', note:'Bekerja normal, sedikit di bawah tegangan ideal. (Nilai Sport 72 km/jam adalah perkiraan.)' },
+    72: { v:[45,60,80], tag:'Standar / Ideal', note:'Tegangan standar dan ideal untuk BLDC 2000W.' },
+    96: { v:[60,85,100], tag:'Overvoltage', note:'Kecepatan tinggi, tetapi Normal dan Sport pada throttle penuh memanaskan controller dan BLDC hingga rusak.',
+          fail:[null, F(8,'C','Controller panas'), F(4,'M','BLDC terbakar')] },
+  },
+  '8000W': {
+    48: { v:[30,45,60], tag:'Underpowered', note:'Tegangan rendah: motor sangat dingin dan tenaga terbatas.' },
+    60: { v:[40,60,85], tag:'Underpowered', note:'Tegangan di bawah ideal: aman, tenaga terbatas.' },
+    72: { v:[50,80,110], tag:'Standar', note:'Tegangan standar untuk BLDC 8000W. Aman.' },
+    96: { v:[65,95,140], tag:'Ideal / Optimal', note:'Ideal. Mode Sport throttle penuh lebih dari 20 dtk menaikkan suhu ke 110 C, proteksi suhu memaksa Mode 1 sampai 90 C.' },
+  },
 };
-const REVERSE_FACTOR = 0.35;                 // kecepatan mundur dibatasi 35% dari batas mode
+const BLDC_FACTOR = { '400W': 0.25, '2000W': 0.5, '8000W': 1.0 };   // pengali konsumsi baterai (8000W = acuan)
+
+// Dinamika kendaraan & motor kit
+const REVERSE_FACTOR = 0.35;                 // kecepatan mundur 35% dari batas
 const THROTTLE_MIN = 0, THROTTLE_MAX = 1023; // kalibrasi throttle (ADC)
-const ACCEL_PWM_S = 260, DECEL_PWM_S = 600, BRAKE_PWM_S = 1500; // inersia motor (PWM per detik)
+const THROTTLE_DEAD_PCT = 3;                 // throttle di bawah 3% = diam
+const START_PWM_PCT = 16;                    // BLDC mulai berputar di 16% (batas hardware)
+const ACC_KMH_S = 30, COAST_KMH_S = 10, BRAKE_KMH_S = 35; // inersia kendaraan
+const REGEN_PCT_S = 1;                       // regeneratif: +1% baterai per detik saat rem
+const DAMAGE_THROTTLE_PCT = 90;              // throttle yang memicu hitung mundur kerusakan
+const T_AMBIENT = 30, T_LIMIT = 110, T_RESUME = 90, HEAT_K = 5, COOL_K = 0.03; // suhu BLDC 8000W
+const BULB_MOTOR_PCT = 15;                   // motor 15% saat bulb check (efek suara)
+const DRAIN_BASE = 2.0;                      // %/dtk di 140 km/jam, BLDC 8000W (acuan)
+const pctToPwm = (pct) => Math.min(255, Math.ceil(pct * 2.55 - 1e-9)); // Mega: persen = pwm*100/255
+
 const BULB_MS = 1600;       // lama bulb check saat ignition ON
 const PAID_MS = 1500;       // lama tampilan "pembayaran diterima"
 const ALM_ON_MS = 250, ALM_OFF_MS = 2200; // bunyi singkat, hening lebih lama
@@ -994,7 +1064,12 @@ let payFailTs = -99999;
 let rfidInit = false, lastRfidHex = '', lastShownUid = '';
 
 // Head unit / kendaraan
-const hu = { power:'off', modeKey:'eco', ready:false, park:false, rev:false, almActive:false };
+const hu = { power:'off', ready:false, park:false, rev:false, almMode:'off' };
+// Model kendaraan (hasil perhitungan controller)
+const vm = { bldc:null, volt:null, entry:null, vmode:0, vcap:0, derate:1, speed:0, motorPct:0, regen:false,
+             temp:30, thermalLimited:false, faultKind:null, faultText:'', bldcErr:false, dmgRemain:null,
+             dmgText:'', effMode:'eco', canDrive:false, throttlePct:0 };
+let dmgTimer = 0, bldcErrSince = null, lastBldc = null, lastVolt = null;
 let modeKey = 'eco';
 let prevIgn = null, bulbStart = 0, bulbUntil = 0;
 let seinMode = 'off';           // off | left | right | hazard
@@ -1042,8 +1117,8 @@ function classifyBattery(battPlus, battMinus) {
   if (battPlus >= 400 && battPlus <= 1000 && battMinus <= 200) return {label:'60V + Precharge', state:'live'};
   if (battPlus >= 550 && battPlus < 700 && battMinus > 200 && battMinus <= 300) return {label:'72V', state:'live'};
   if (battPlus >= 250 && battPlus < 400 && battMinus <= 200) return {label:'72V + Precharge', state:'live'};
-  if (battPlus >= 150 && battPlus < 550 && battMinus > 200 && battMinus <= 300) return {label:'90V (Tegangan tinggi wajib pakai Precharge)', state:'live'};
-  if (battPlus >= 150 && battPlus < 250 && battMinus <= 200) return {label:'90V + Precharge', state:'live'};
+  if (battPlus >= 150 && battPlus < 550 && battMinus > 200 && battMinus <= 300) return {label:'96V (Tegangan tinggi wajib pakai Precharge)', state:'live'};
+  if (battPlus >= 150 && battPlus < 250 && battMinus <= 200) return {label:'96V + Precharge', state:'live'};
   return {label:'BATERAI OFF', state:'neutral'};
 }
 function classifySpeedMode(spd) {
@@ -1101,26 +1176,33 @@ function composeEspBits(now) {
   if (buzzNow(now)) b |= (1<<ESP_BIT_BUZZ);
   return b & 0xFF;
 }
+const socInt = () => Math.round(batteryPercent);
+// Bar kumulatif: 1-25% = 1 bar, 26-50% = 2, 51-75% = 3, 76-100% = 4, 0% = Empty.
 function batteryBitsFromPercent(p) {
-  if (p >= 100) return (1<<BIT_ONE)|(1<<BIT_TWO)|(1<<BIT_THREE)|(1<<BIT_FOUR);
-  if (p >= 75)  return (1<<BIT_ONE)|(1<<BIT_TWO)|(1<<BIT_THREE);
-  if (p >= 50)  return (1<<BIT_ONE)|(1<<BIT_TWO);
-  if (p >= 25)  return (1<<BIT_ONE);
-  return 0; // <25% & >0%: belum capai bar pertama. Empty (kedip) menangani <=0%
+  const s = Math.round(p);
+  if (s >= 76) return (1<<BIT_ONE)|(1<<BIT_TWO)|(1<<BIT_THREE)|(1<<BIT_FOUR);
+  if (s >= 51) return (1<<BIT_ONE)|(1<<BIT_TWO)|(1<<BIT_THREE);
+  if (s >= 26) return (1<<BIT_ONE)|(1<<BIT_TWO);
+  if (s >= 1)  return (1<<BIT_ONE);
+  return 0;
 }
 function seinPhaseOn(now) { return Math.floor(now / SEIN_BLINK_MS) % 2 === 0; }
 function computeKitBits(now) {
   const p = hu.power;
   if (p === 'bulb') return BULB_MASK;
   if (p === 'off') return 0;
+  const s = socInt();
+  const blink = Math.floor(now / EMPTY_BLINK_MS) % 2 === 0;
   let b = batteryBitsFromPercent(batteryPercent);
-  if (batteryPercent <= 0 && Math.floor(now / EMPTY_BLINK_MS) % 2 === 0) b |= (1<<BIT_EMPTY);
-  if (p === 'charge') return b;               // saat charging hanya baterai yang menyala
-  if (hu.almActive && almStartTs !== null && ((now - almStartTs) % (ALM_ON_MS + ALM_OFF_MS)) < ALM_ON_MS) b |= (1<<MEGA_BIT_ALM);
+  if (p === 'charge') { if (s <= 0 && blink) b |= (1<<BIT_EMPTY); return b; }   // saat charging hanya baterai
+  if (s <= 20 && blink) b |= (1<<BIT_EMPTY);                                   // Empty berkedip mulai 20%
+  if (hu.almMode === 'continuous') b |= (1<<MEGA_BIT_ALM);                      // 0%: bunyi terus
+  else if (hu.almMode === 'periodic' && almStartTs !== null &&
+           ((now - almStartTs) % (ALM_ON_MS + ALM_OFF_MS)) < ALM_ON_MS) b |= (1<<MEGA_BIT_ALM); // <=20%: berkala
   if (hu.ready) b |= (1<<BIT_READY_MEGA);
   if (hu.park)  b |= (1<<BIT_PARK);
   if (hu.rev)   b |= (1<<BIT_REVERSE);
-  b |= (1 << (modeKey === 'eco' ? BIT_SPEED1 : (modeKey === 'normal' ? BIT_SPEED2 : BIT_SPEED3)));
+  b |= (1 << (vm.effMode === 'eco' ? BIT_SPEED1 : (vm.effMode === 'normal' ? BIT_SPEED2 : BIT_SPEED3)));
   if (seinMode !== 'off' && seinPhaseOn(now)) {
     if (seinMode === 'left'  || seinMode === 'hazard') b |= (1<<BIT_LEFT);
     if (seinMode === 'right' || seinMode === 'hazard') b |= (1<<BIT_RIGHT);
@@ -1131,7 +1213,11 @@ function composeMegaBits(now) {
   if (!rideAutoMode) return megaManualBits & 0xFFFF;
   return ((megaManualBits & ~CTRL_MASK) | computeKitBits(now)) & 0xFFFF;
 }
-function composeMotor() { return rideAutoMode ? motorAuto : motorManual; }
+function composeMotor() {
+  if (!rideAutoMode) return motorManual;
+  if (hu.power === 'bulb') return pctToPwm(BULB_MOTOR_PCT);   // dengung singkat saat bulb check
+  return motorAuto;
+}
 
 const pendingCmd = {};
 let cmdPumping = false, lastFailToastTs = 0;
@@ -1174,11 +1260,11 @@ function syncOutputs(now) {
 // SOC(t): dari s0 naik ke 80% dengan laju tetap (CC), lalu 80..100% melambat
 // (CV, mengikuti kurva ease-out sehingga arus turun halus).
 function chargeModel(mode, s0, tSec) {
-  const p = CHARGE_PROFILE[mode];
-  const T1 = s0 < 80 ? (80 - s0) / p.cc : 0;
+  const cc = ccRate(mode), cvAvg = 20 / CHARGE_PROFILE[mode].t2;
+  const T1 = s0 < 80 ? (80 - s0) / cc : 0;
   const s2 = Math.max(s0, 80);
-  const T2 = (100 - s2) / p.cvAvg;
-  if (tSec < T1) return { soc: s0 + p.cc * tSec, rate: p.cc, phase: 'cc', done: false, T1, T2 };
+  const T2 = (100 - s2) / cvAvg;
+  if (tSec < T1) return { soc: s0 + cc * tSec, rate: cc, phase: 'cc', done: false, T1, T2 };
   const x = Math.min(1, (tSec - T1) / T2);
   const soc = s2 + (100 - s2) * (1 - (1 - x) * (1 - x));
   const rate = (100 - s2) * 2 * (1 - x) / T2;
@@ -1255,6 +1341,9 @@ function evaluateCharger(now) {
 }
 
 // ===================== CONTROLLER KENDARAAN + HEAD UNIT =====================
+function parseBldc(label) { const m = /(\d+)W/.exec(label); return m ? m[1] + 'W' : null; }
+function parseVolt(label) { const m = /^(\d+)V/.exec(label); return m ? Number(m[1]) : null; }
+
 function stepController(now) {
   if (!gotFirstData) return;
   let dt = (now - lastStepTs) / 1000;
@@ -1266,6 +1355,7 @@ function stepController(now) {
   const std = !!((dev.din >> DIN_BIT_STD) & 1);
   const brk = !!((dev.din >> DIN_BIT_BRK) & 1);
 
+  // ---- charging ----
   evaluateCharger(now);
   if (chargeState === 'PAID' && now >= paidUntil) beginCharging(now);
   if (chargeState === 'CHARGING') {
@@ -1276,14 +1366,13 @@ function stepController(now) {
     if (chargeInfo.done || batteryPercent >= 100) finishCharging(now);
   }
 
-  // Ignition: bulb check saat ON, sein dimatikan saat OFF
+  // ---- ignition, daya head unit ----
   const connected = isChargerConnected();
   if (prevIgn === null) prevIgn = ign;
   if (ign && !prevIgn && !connected && rideAutoMode) { bulbStart = now; bulbUntil = now + BULB_MS; }
   if (!ign && prevIgn) { seinMode = 'off'; bulbUntil = 0; }
   prevIgn = ign;
 
-  // Mode daya head unit / kit
   let power;
   if (!rideAutoMode) power = 'manual';
   else if (connected) power = 'charge';
@@ -1292,47 +1381,99 @@ function stepController(now) {
   else power = 'on';
   hu.power = power;
 
-  // Mode speed (sticky: zona "tidak diketahui" memakai mode terakhir)
+  // ---- pilihan BLDC, tegangan, mode (otomatis dari bacaan dashboard) ----
+  const bl = classifyBldc(dev.u, dev.v, dev.w);
+  const bldcNow = bl.state === 'live' ? parseBldc(bl.label) : null;
+  if (bldcNow) lastBldc = bldcNow;
+  if (bldcNow === null) { if (bldcErrSince === null) bldcErrSince = now; } else bldcErrSince = null;
+  vm.bldcErr = bldcErrSince !== null && (now - bldcErrSince) >= 1000;
+
+  const bc = classifyBattery(dev.battPlus, dev.battMinus);
+  const voltNow = parseVolt(bc.label);
+  if (voltNow) lastVolt = voltNow;
+  const batteryOk = bc.label !== 'Battery Error' && bc.label !== 'BATERAI OFF';
+  vm.bldc = lastBldc; vm.volt = lastVolt;
+  vm.entry = (vm.bldc && vm.volt && SPEED_TABLE[vm.bldc]) ? (SPEED_TABLE[vm.bldc][vm.volt] || null) : null;
+
   const sc = classifySpeedMode(dev.spd);
   if (sc.label.indexOf('ECO') >= 0) modeKey = 'eco';
   else if (sc.label.indexOf('NORMAL') >= 0) modeKey = 'normal';
   else if (sc.label.indexOf('SPORT') >= 0) modeKey = 'sport';
-  hu.modeKey = modeKey;
+  vm.effMode = (vm.thermalLimited && vm.bldc === '8000W') ? 'eco' : modeKey;   // proteksi suhu memaksa Mode 1
+  const modeIdx = MODE_KEYS.indexOf(vm.effMode);
 
-  const bc = classifyBattery(dev.battPlus, dev.battMinus);
-  const batteryOk = bc.label !== 'Battery Error' && bc.label !== 'BATERAI OFF';
-  hu.ready = ign && batteryOk && (power === 'on' || power === 'bulb');
+  // ---- batas kecepatan: tabel x derating baterai ----
+  const s = socInt();
+  vm.derate = s <= 0 ? 0 : (s <= 20 ? 0.15 : (s <= 25 ? 0.25 : 1));
+  vm.vmode = vm.entry ? vm.entry.v[modeIdx] : 0;
+  vm.vcap = vm.vmode * vm.derate;
+
+  hu.ready = ign && batteryOk && !std && !vm.faultKind && !vm.bldcErr && (power === 'on' || power === 'bulb');
   hu.park = std; hu.rev = rev;
+  vm.canDrive = power === 'on' && hu.ready && vm.entry !== null && s > 0;
 
-  // Motor: throttle dibatasi sesuai mode speed, dengan inersia
-  const lim = SPEED_MODE_LIMITS[modeKey];
-  let target = 0;
-  if (power === 'on' && hu.ready && !std && !brk) {
-    const frac = clamp((dev.th - THROTTLE_MIN) / (THROTTLE_MAX - THROTTLE_MIN), 0, 1);
-    let base = Math.round(lim.maxPwm * frac);
-    if (rev) base = Math.round(base * REVERSE_FACTOR);
-    target = rev ? -base : base;
-  }
-  if (power !== 'on') {
-    motorOutF = 0;
-  } else {
-    const speedingUp = Math.abs(target) > Math.abs(motorOutF) && (Math.sign(target) === Math.sign(motorOutF) || motorOutF === 0);
-    const rate = brk ? BRAKE_PWM_S : (speedingUp ? ACCEL_PWM_S : DECEL_PWM_S);
-    const step = rate * dt;
-    motorOutF += clamp(target - motorOutF, -step, step);
-  }
-  motorAuto = Math.round(motorOutF);
+  // ---- throttle -> kecepatan target (km/jam) ----
+  const thr = clamp((dev.th - THROTTLE_MIN) / (THROTTLE_MAX - THROTTLE_MIN), 0, 1) * 100;
+  vm.throttlePct = thr;
+  const throttleActive = vm.canDrive && !brk && thr >= THROTTLE_DEAD_PCT;
+  const capEff = vm.vcap * (rev ? REVERSE_FACTOR : 1);
+  const u = throttleActive ? (thr - THROTTLE_DEAD_PCT) / (100 - THROTTLE_DEAD_PCT) : 0;
+  const target = u * capEff;
 
-  // Baterai berkurang sesuai mode & beban (hanya saat ignition ON dan tidak charging)
+  // ---- inersia kendaraan ----
+  if (brk && vm.speed > 0)        vm.speed = Math.max(0, vm.speed - BRAKE_KMH_S * dt);
+  else if (throttleActive && target > vm.speed) vm.speed = Math.min(target, vm.speed + ACC_KMH_S * dt);
+  else { const goal = throttleActive ? target : 0; vm.speed = Math.max(goal, vm.speed - COAST_KMH_S * dt); }
+  if (vm.speed < 0.05) vm.speed = 0;
+
+  // ---- regeneratif: hanya saat rem ditekan dan kendaraan masih bergerak ----
+  vm.regen = power === 'on' && brk && vm.speed > 0.5 && batteryPercent < 100;
+  if (vm.regen) batteryPercent = Math.min(100, batteryPercent + REGEN_PCT_S * dt);
+
+  // ---- motor kit: 16% di throttle 3%, naik linear ke batas PWM (min 16%) ----
+  let pct = 0;
+  if (vm.canDrive && vm.speed >= 0.5 && capEff > 0) {
+    const capPct = Math.max(START_PWM_PCT, capEff / REF_MAX_KMH * 100);
+    const ueff = clamp(vm.speed / capEff, 0, 1);
+    pct = START_PWM_PCT + ueff * (capPct - START_PWM_PCT);
+  }
+  vm.motorPct = pct;
+  motorAuto = (rev ? -1 : 1) * pctToPwm(pct);
+  motorOutF = motorAuto;
+
+  // ---- konsumsi baterai: ~ (km/jam / 140)^2, dikali faktor BLDC ----
   if (power === 'on') {
-    const f = clamp(Math.abs(motorOutF) / lim.maxPwm, 0, 1);
-    batteryPercent = Math.max(0, batteryPercent - lim.drain * (0.08 + 0.92 * f) * dt);
+    const fac = BLDC_FACTOR[vm.bldc || '8000W'];
+    const rate = DRAIN_BASE * Math.pow(vm.speed / REF_MAX_KMH, 2) * fac + 0.06 * fac;
+    batteryPercent = Math.max(0, batteryPercent - rate * dt);
   }
 
-  // Alarm baterai habis (ALM Mega): bunyi singkat, hening lebih lama
-  hu.almActive = (power === 'on' && batteryPercent <= 0);
-  if (!hu.almActive) almStartTs = null;
-  else if (almStartTs === null) almStartTs = now;
+  // ---- suhu BLDC (hanya 8000W punya sensor suhu) ----
+  const heat = vm.bldc === '8000W' ? HEAT_K * Math.pow(vm.speed / REF_MAX_KMH, 4) : 0;
+  vm.temp += (heat - COOL_K * (vm.temp - T_AMBIENT)) * dt;
+  if (vm.bldc === '8000W') {
+    if (vm.temp >= T_LIMIT && !vm.thermalLimited) { vm.thermalLimited = true; toast('Suhu BLDC 110 C: dipaksa ke Mode 1 sampai 90 C.', 'warn'); }
+    else if (vm.temp <= T_RESUME && vm.thermalLimited) { vm.thermalLimited = false; toast('Suhu turun ke 90 C: kembali ke mode pilihan.', 'live'); }
+  } else vm.thermalLimited = false;
+
+  // ---- kerusakan akibat overvoltage / throttle penuh ----
+  const fail = (vm.entry && vm.entry.fail) ? vm.entry.fail[modeIdx] : null;
+  const stress = fail && vm.canDrive && !std && !brk && vm.derate === 1 && thr >= DAMAGE_THROTTLE_PCT;
+  if (stress) dmgTimer += dt; else dmgTimer = Math.max(0, dmgTimer - 2 * dt);
+  vm.dmgRemain = fail ? Math.max(0, fail.t - dmgTimer) : null;
+  vm.dmgText = fail ? fail.text : '';
+  if (fail && !vm.faultKind && dmgTimer >= fail.t) {
+    vm.faultKind = fail.kind; vm.faultText = fail.text; dmgTimer = 0;
+    toast('KERUSAKAN: ' + fail.text + '. Tekan "Perbaiki" di tab Simulasi.', 'alert');
+  }
+
+  // ---- alarm baterai (buzzer kit): <=20% berkala, 0% terus. Mati saat ignition OFF / charging ----
+  const wantAlm = power === 'on' ? (s <= 0 ? 'continuous' : (s <= 20 ? 'periodic' : 'off')) : 'off';
+  if (wantAlm !== hu.almMode) { hu.almMode = wantAlm; almStartTs = wantAlm === 'periodic' ? now : null; }
+}
+function repairFault() {
+  vm.faultKind = null; vm.faultText = ''; dmgTimer = 0;
+  toast('Perbaikan selesai. Sistem kembali normal.', 'live');
 }
 
 // ===================== KONEKSI BLE =====================
@@ -1351,7 +1492,7 @@ async function toggleConnection() {
     await dataChar.startNotifications();
     dataChar.addEventListener('characteristicvaluechanged', onDataNotify);
     setConnected(true);
-    toast('BLE tersambung ke ' + device.name, 'live');
+    toast('BLE tersambung.', 'live');
   } catch (err) {
     bleConnected = false;
     setSearching(false);
@@ -1365,7 +1506,7 @@ function resetSessionState() {
   motorOutF = 0; motorAuto = 0; prevIgn = null; bulbUntil = 0; seinMode = 'off'; almStartTs = null;
   lastSentEsp = -1; lastSentMega = -1; lastSentMotor = null; lastResendTs = 0;
   rfidInit = false; lastRfidHex = '';
-  hu.power = 'off';
+  hu.power = 'off'; hu.almMode = 'off'; vm.speed = 0; vm.regen = false; vm.motorPct = 0;
   for (const k of Object.keys(pendingCmd)) delete pendingCmd[k];
 }
 function onDisconnected() {
@@ -1563,7 +1704,7 @@ function setStepState(id, s) {
   const el = $(id); if (!el) return;
   el.classList.toggle('done', s === 'done'); el.classList.toggle('active', s === 'active'); el.classList.toggle('error', s === 'error');
 }
-const I80 = 0.4444;   // arus relatif tepat setelah pindah CC -> CV (sama untuk Fast & Slow)
+const I80 = 0.441;   // arus relatif tepat setelah pindah CC -> CV (sama untuk Fast & Slow)
 function currentRel(soc) { return soc < 80 ? 1 : I80 * Math.sqrt(Math.max(0, 1 - (soc - 80) / 20)); }
 const CV_X0 = 30, CV_W = 250, CV_Y0 = 108, CV_H = 88;
 const cvX = (soc) => CV_X0 + CV_W * soc / 100;
@@ -1589,7 +1730,7 @@ function buildCvChart() {
 function renderChargeSim(now) {
   const st = chargeState;
   setText('scStateTag', STATE_LABEL[st]);
-  setText('scSensor', 'Sensor charger (ADC ESP): ' + dev.charger + '  ->  ' + classifyCharging(dev.charger).label + (manualChargeSelect ? '  (diabaikan: mode manual)' : ''));
+  setText('scSensor', 'Sensor charger (ADC): ' + dev.charger + '  ->  ' + classifyCharging(dev.charger).label + (manualChargeSelect ? '  (diabaikan: mode manual)' : ''));
   const clickable = manualChargeSelect && st === 'IDLE';
   setClass('scOptFast', 'clickable', clickable); setClass('scOptSlow', 'clickable', clickable);
   const modeOn = st !== 'IDLE' && st !== 'ERROR';
@@ -1616,7 +1757,7 @@ function renderChargeSim(now) {
 
   const charging = st === 'CHARGING';
   const phase = charging && chargeInfo ? (soc >= 80 ? 'cv' : 'cc') : null;
-  const irel = charging && chargeInfo ? clamp(chargeInfo.rate / CHARGE_PROFILE[chargeMode].cc, 0, 1) : 0;
+  const irel = charging && chargeInfo ? clamp(chargeInfo.rate / ccRate(chargeMode), 0, 1) : 0;
   setText('scPhase', phase ? (phase === 'cc' ? 'CC' : 'CV') : '--');
   setText('scCurrent', charging ? Math.round(irel * 100) + '%' : '--');
   setText('scRemain', charging ? chargeRemain.toFixed(1) + ' dtk' : '--');
@@ -1668,7 +1809,7 @@ function renderChargeTab3(now) {
 }
 
 // ===================== HEAD UNIT =====================
-const HU_MAX = 120, HU_CX = 150, HU_CY = 140, HU_R = 110, HU_A0 = 150, HU_SWEEP = 240;
+const HU_MAX = 140, HU_CX = 150, HU_CY = 140, HU_R = 110, HU_A0 = 150, HU_SWEEP = 240;
 function huPt(r, deg) { const a = deg * Math.PI / 180; return [HU_CX + r * Math.cos(a), HU_CY + r * Math.sin(a)]; }
 function buildHeadUnitGauge() {
   const [x0, y0] = huPt(HU_R, HU_A0), [x1, y1] = huPt(HU_R, HU_A0 + HU_SWEEP);
@@ -1681,6 +1822,21 @@ function buildHeadUnitGauge() {
     if (major) { const [lx, ly] = huPt(74, ang); s += `<text class="tlbl" x="${lx.toFixed(1)}" y="${ly.toFixed(1)}">${v}</text>`; }
   }
   $('huGauge').insertAdjacentHTML('beforeend', s);
+}
+function huNote(p) {
+  if (p === 'off') return { t: 'Ignition OFF: seluruh head unit mati.', c: '' };
+  if (p === 'charge') return { t: 'Sedang terhubung ke charger: hanya indikator baterai yang menyala.', c: '' };
+  if (p === 'bulb') return { t: 'Bulb check: semua indikator menyala sebentar untuk memastikan tidak ada lampu yang mati.', c: '' };
+  if (vm.faultKind) return { t: vm.faultText + '. Motor dinonaktifkan. Tekan "Perbaiki" untuk memulihkan.', c: 'alert' };
+  if (vm.bldcErr) return { t: 'Bacaan fasa BLDC (U/V/W) tidak konsisten: motor dinonaktifkan.', c: 'alert' };
+  if (vm.dmgRemain !== null && dmgTimer > 0.3) return { t: 'BAHAYA: ' + vm.dmgText + ' dalam ' + vm.dmgRemain.toFixed(1) + ' dtk bila throttle penuh dipertahankan.', c: 'alert' };
+  if (vm.thermalLimited) return { t: 'Proteksi suhu aktif (110 C): dipaksa ke Mode 1 sampai suhu turun ke 90 C, lalu kembali ke mode pilihan.', c: 'warn' };
+  if (socInt() <= 0) return { t: 'Baterai habis (0%): throttle dinonaktifkan. Charge baterai untuk melanjutkan.', c: 'alert' };
+  if (vm.derate === 0.15) return { t: 'Baterai 20% atau kurang: kecepatan dibatasi hanya 15% dari batas mode.', c: 'warn' };
+  if (vm.derate === 0.25) return { t: 'Baterai 25% atau kurang: kecepatan dibatasi hanya 25% dari batas mode.', c: 'warn' };
+  if (vm.regen) return { t: 'Regeneratif: saat rem ditekan dan kendaraan masih bergerak, energi gerak mengisi baterai (+1% per detik).', c: 'info' };
+  if (vm.entry) return { t: vm.volt + 'V pada BLDC ' + vm.bldc + ' (' + vm.entry.tag + '): ' + vm.entry.note, c: '' };
+  return { t: 'Membaca jenis BLDC dan tegangan baterai...', c: '' };
 }
 function renderHeadUnit(now) {
   const connected = bleConnected && gotFirstData;
@@ -1703,34 +1859,50 @@ function renderHeadUnit(now) {
   const charging = p === 'charge' && chargeState === 'CHARGING';
   for (let i = 0; i < 4; i++) setClass('huSeg' + i, 'chg', charging && i === nLit);
   const batt = $('huBatt');
-  const lvl = batteryPercent < 25 ? 'low' : (batteryPercent < 50 ? 'mid' : 'ok');
+  const lvl = batteryPercent < 26 ? 'low' : (batteryPercent < 51 ? 'mid' : 'ok');
   if (batt.dataset.level !== lvl) batt.dataset.level = lvl;
-  const emptyNow = battVisible && batteryPercent <= 0;
-  setClass('huBatt', 'empty', emptyNow && p !== 'bulb' && bit(BIT_EMPTY));
+  const lowNow = battVisible && socInt() <= (p === 'charge' ? 0 : 20);
+  setClass('huBatt', 'empty', lowNow && p !== 'bulb' && bit(BIT_EMPTY));
   setClass('huBatt', 'charging', charging);
-  setText('huBattTag', emptyNow ? 'EMPTY' : (charging ? 'CHARGING' : 'BATT'));
-  setText('huSoc', battVisible ? String(Math.round(batteryPercent)) : '--');
+  setText('huBattTag', socInt() <= 0 && battVisible ? 'EMPTY' : (charging ? 'CHARGING' : (lowNow ? 'LOW' : 'BATT')));
+  setText('huSoc', battVisible ? String(socInt()) : '--');
 
-  const lim = SPEED_MODE_LIMITS[hu.modeKey];
+  // kecepatan (km/jam): simulasi kendaraan saat Otomatis; saat Manual dari nilai motor
   let dt = (now - huLastNow) / 1000; if (!(dt > 0) || dt > 0.1) dt = 0.016; huLastNow = now;
+  let shown = null;
   if (p === 'bulb') {
     const t = clamp((now - bulbStart) / BULB_MS, 0, 1);
-    huSpeedDisp = HU_MAX * (t < 0.5 ? t * 2 : (1 - t) * 2);
-  } else if (p === 'on' || p === 'manual') {
-    const target = clamp(Math.abs(dev.motor) / lim.maxPwm, 0, 1) * lim.maxDisplay;
-    huSpeedDisp += (target - huSpeedDisp) * Math.min(1, dt * 6);
+    huSpeedDisp = HU_MAX * (t < 0.5 ? t * 2 : (1 - t) * 2); shown = '888';
   } else {
-    huSpeedDisp += (0 - huSpeedDisp) * Math.min(1, dt * 10);
+    let target = 0;
+    if (p === 'on') target = vm.speed;
+    else if (p === 'manual') target = Math.abs(dev.motor) / 255 * REF_MAX_KMH;
+    huSpeedDisp += (target - huSpeedDisp) * Math.min(1, dt * 14);
+    if (Math.abs(huSpeedDisp - target) < 0.3) huSpeedDisp = target;
   }
-  if (huSpeedDisp < 0.05) huSpeedDisp = 0;
-  setText('huSpeed', String(Math.round(huSpeedDisp)));
+  setText('huSpeed', shown !== null ? shown : String(Math.round(huSpeedDisp)));
   const arc = $('huArc'), pct = clamp(huSpeedDisp / HU_MAX * 100, 0, 100);
   arc.setAttribute('stroke-dasharray', pct.toFixed(2) + ' 100');
   arc.style.strokeOpacity = pct < 0.3 ? 0 : 1;
 
+  // info BLDC, tegangan, suhu, simbol kerusakan, regen
+  setText('huBldc', 'BLDC ' + (showAll && vm.bldc ? vm.bldc : '--'));
+  setText('huVolt', (showAll && vm.volt ? vm.volt : '--') + ' V');
+  const showTemp = showAll && vm.bldc === '8000W';
+  const tEl = $('huTemp'); tEl.style.display = showTemp ? '' : 'none';
+  if (showTemp) { setText('huTemp', 'SUHU ' + Math.round(vm.temp) + ' C'); tEl.classList.toggle('hot', vm.temp >= 100 || vm.thermalLimited); }
+  setClass('huFaultM', 'lit', p === 'bulb' || (showAll && (vm.faultKind === 'M' || vm.bldcErr)));
+  setClass('huFaultC', 'lit', p === 'bulb' || (showAll && vm.faultKind === 'C'));
+  setClass('huRegen', 'lit', p === 'bulb' || (p === 'on' && vm.regen));
+  const n = huNote(p);
+  setText('huNote', n.t);
+  const ne = $('huNote'); const nc = 'hu-note' + (n.c ? ' ' + n.c : ''); if (ne.className !== nc) ne.className = nc;
+
   setClass('btnSeinL', 'active', seinMode === 'left'); setClass('btnSeinR', 'active', seinMode === 'right'); setClass('btnHazard', 'active', seinMode === 'hazard');
+  $('btnRepair').disabled = !vm.faultKind;
   setText('huIgn', connected ? (((dev.din >> DIN_BIT_IGN) & 1) ? 'ON' : 'OFF') : '--');
-  setText('huLimit', lim.label + ' (maks ' + lim.maxDisplay + ' km/h)');
+  setText('huLimit', vm.entry ? (MODE_LABEL[vm.effMode] + ': maks ' + Math.round(vm.vcap) + ' km/jam') : '--');
+  setText('huMotor', 'BLDC ' + Math.round(vm.motorPct) + '%');
 }
 function setSein(mode) {
   if (!(bleConnected && gotFirstData)) { toast('Hubungkan BLE dulu.', 'warn'); return; }
@@ -1773,15 +1945,15 @@ const VOTOL_TABS = [
     {k:'thFail', l:'Fail-safe Throttle Lepas', t:'toggle', d:true},
   ]},
   {id:'speed', title:'Kecepatan', fields:[
-    {k:'g1Speed', l:'Gear 1 (ECO): Kecepatan Maks', t:'num', u:'km/h', min:5, max:200, d:40},
+    {k:'g1Speed', l:'Gear 1 (ECO): Kecepatan Maks', t:'num', u:'km/h', min:5, max:200, d:65},
     {k:'g1Cur', l:'Gear 1 (ECO): Arus Maks', t:'num', u:'%', min:10, max:100, d:43},
-    {k:'g2Speed', l:'Gear 2 (NORMAL): Kecepatan Maks', t:'num', u:'km/h', min:5, max:200, d:80},
+    {k:'g2Speed', l:'Gear 2 (NORMAL): Kecepatan Maks', t:'num', u:'km/h', min:5, max:200, d:95},
     {k:'g2Cur', l:'Gear 2 (NORMAL): Arus Maks', t:'num', u:'%', min:10, max:100, d:70},
-    {k:'g3Speed', l:'Gear 3 (SPORT): Kecepatan Maks', t:'num', u:'km/h', min:5, max:200, d:120},
+    {k:'g3Speed', l:'Gear 3 (SPORT): Kecepatan Maks', t:'num', u:'km/h', min:5, max:200, d:140},
     {k:'g3Cur', l:'Gear 3 (SPORT): Arus Maks', t:'num', u:'%', min:10, max:100, d:100},
     {k:'revLimit', l:'Batas Kecepatan Mundur', t:'num', u:'%', min:5, max:100, d:35},
     {k:'wheel', l:'Diameter Roda', t:'num', u:'inch', min:8, max:24, d:14},
-    {k:'overspeed', l:'Batas Overspeed', t:'num', u:'km/h', min:20, max:250, d:125},
+    {k:'overspeed', l:'Batas Overspeed', t:'num', u:'km/h', min:20, max:250, d:145},
   ]},
   {id:'protect', title:'Proteksi', fields:[
     {k:'uv', l:'Tegangan Rendah (Under Voltage)', t:'num', u:'V', min:20, max:100, step:0.5, d:54},
@@ -1918,6 +2090,7 @@ function bindEvents() {
   $('btnSeinL').addEventListener('click', () => setSein('left'));
   $('btnSeinR').addEventListener('click', () => setSein('right'));
   $('btnHazard').addEventListener('click', () => setSein('hazard'));
+  $('btnRepair').addEventListener('click', repairFault);
 
   $('setRead').addEventListener('click', () => { setDefaults(); renderSettingsBody(); fakeProgress('Dummy: parameter dibaca dari controller (data contoh).'); });
   $('setWrite').addEventListener('click', () => fakeProgress('Dummy: parameter ditulis ke controller (tidak ada yang dikirim).'));

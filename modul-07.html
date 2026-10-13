@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>07 Semikonduktor dan Pengendali Daya | Training EV</title>
+<script src="assets/tema.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#060A12;--panel:#0C1220;--line:#1B2740;--text:#E6ECF5;--dim:#8593AA;--u:#FFC857;--v:#3DDC97;--w:#4DA3FF;--alert:#FF6B8B;--disp:'Chakra Petch',system-ui,sans-serif;--body:'Sora',system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font:400 16px/1.7 var(--body)}
+main{max-width:920px;margin:0 auto;padding:40px clamp(16px,4vw,32px) 0}
+h1{font:700 clamp(28px,4vw,44px)/1.1 var(--disp);margin:0 0 8px}
+h2{font:700 24px var(--disp);margin:52px 0 6px}
+a{color:var(--w)}
+.lead{color:var(--dim);margin:0 0 18px}
+.no{font:700 15px var(--disp);color:var(--v)}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;margin:12px 0}
+.goal{margin:0 0 8px;padding:14px 18px 14px 36px;border:1px solid var(--line);border-left:3px solid var(--v);border-radius:6px;background:var(--panel)}
+.ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 22px;margin:8px 0}
+.ctl label{display:block;font-size:13px;color:var(--dim)}
+.ctl b{color:var(--text);font-family:var(--disp)}
+.ctl input[type=range]{width:100%;accent-color:var(--v)}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0}
+.out div{padding:10px 12px;border:1px solid var(--line);border-radius:6px}
+.out span{display:block;font-size:12px;color:var(--dim)}
+.out strong{font:700 20px var(--disp)}
+main canvas{width:100%;height:200px;display:block;background:var(--ink);border:1px solid var(--line);border-radius:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--dim);font:500 13px var(--body);cursor:pointer}
+.chip[aria-pressed=true]{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 16px;background:var(--ink);border:1px solid var(--line);border-radius:6px;color:var(--text);font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--v)}
+.opt.right{border-color:var(--v);background:color-mix(in srgb,var(--v) 14%,transparent)}
+.opt.wrong{border-color:var(--alert);background:color-mix(in srgb,var(--alert) 12%,transparent)}
+.why{font-size:14px;color:var(--dim);margin:8px 0 0}
+.verdict{padding:10px 14px;border-radius:6px;border:1px solid var(--line);margin-top:12px;font-size:14px}
+.ok{border-color:var(--v);color:var(--v)}.warn{border-color:var(--u);color:var(--u)}.bad{border-color:var(--alert);color:var(--alert)}
+.story{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.story figure{margin:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.story img{width:100%;height:230px;object-fit:contain;background:#fff;border-radius:6px;display:block}
+.story figcaption{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5}
+.story h3{margin:10px 0 4px;font:600 17px var(--disp)}
+.story p{margin:4px 0;font-size:14px}
+table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+.cmp th,.cmp td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.cmp th{color:var(--dim);font-weight:500}
+.vl{display:grid;grid-template-columns:210px 1fr;gap:6px 16px;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.vl a.th{position:relative;display:block;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--ink)}
+.vl img{width:100%;height:100%;object-fit:cover;display:block}
+.vl .pl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);color:#fff;font:700 15px var(--disp)}
+.vl h4{margin:0 0 4px;font:600 16px var(--disp)}
+.vl p{margin:4px 0;font-size:14px}
+.vl .bd{display:inline-block;padding:1px 8px;border:1px solid var(--v);border-radius:999px;color:var(--v);font-size:11px;margin-right:6px}
+@media(max-width:560px){.vl{grid-template-columns:1fr}}
+details.dl{margin-top:20px;border:1px solid var(--line);border-radius:8px;padding:4px 16px}
+details.dl summary{cursor:pointer;padding:12px 0;color:var(--w);font-weight:500}
+.exp li{margin:6px 0}
+.q{margin:18px 0}.q h4{margin:0 0 8px;font:600 16px var(--body)}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:44px;padding-top:20px;border-top:1px solid var(--line)}
+.nav a,.nav button{padding:10px 18px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);font:600 14px var(--disp);text-decoration:none;cursor:pointer}
+.nav button{background:var(--v);border-color:var(--v);color:var(--ink)}
+.nav button[disabled]{background:var(--panel);color:var(--v)}
+
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:12px 0}
+.tools figure{margin:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.tools img{width:100%;height:200px;object-fit:contain;background:#fff;border-radius:6px;display:block}
+.tools figcaption{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5}
+.heat{height:14px;background:var(--ink);border:1px solid var(--line);border-radius:7px;overflow:hidden;margin:6px 0}
+.heat i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--v),var(--u),var(--alert));transition:width .15s}
+.st{font:700 22px var(--disp)}
+.rec li{margin:6px 0}
+</style>
+</head>
+<body data-kode="07">
+<div id="site-header"></div>
+<main>
+  <div class="no">Modul 07 &nbsp;|&nbsp; Fondasi kelistrikan</div>
+  <h1>Semikonduktor dan Pengendali Daya</h1>
+  <p class="lead">Controller motor listrik tidak memakai resistor besar untuk mengatur kecepatan. Ia memakai saklar elektronik yang menyala dan mati ribuan kali per detik. Modul ini membuka rahasianya: dioda, transistor, MOSFET, IGBT, dan PWM.</p>
+  <ul class="goal">
+    <li>Menjelaskan fungsi dioda, transistor, MOSFET, dan IGBT sebagai saklar daya.</li>
+    <li>Menjelaskan PWM dan mengapa mengatur daya dengan saklar jauh lebih hemat daripada resistor.</li>
+    <li>Menjelaskan bagaimana enam saklar menghasilkan tiga fasa untuk motor, dan bagaimana memilih MOSFET atau IGBT.</li>
+  </ul>
+
+  <div class="box" id="hook">
+    <b>Tebak dulu.</b> Controller motor ingin menurunkan kecepatan motor 72 V menjadi setengah. Cara apa yang paling mungkin dipakai?
+    <div id="hopt"></div><p class="why" id="hans" hidden></p>
+  </div>
+
+  <h2>1. Dioda: gerbang satu arah</h2>
+  <p class="lead">Dioda mengalirkan arus ke satu arah saja. Di EV ia menyearahkan listrik, melindungi dari salah polaritas, dan meredam lonjakan dari koil motor atau kontaktor (diode flyback, modul 06).</p>
+  <div class="tools" id="figDio"></div>
+  <div class="box">
+    <div class="chips" id="rm" role="group" aria-label="Jenis penyearah"></div>
+    <canvas id="rect" style="height:190px" aria-label="Gelombang sebelum dan sesudah dioda"></canvas>
+    <p class="why" id="rtx"></p>
+  </div>
+
+  <h2>2. Transistor dan MOSFET: saklar tanpa bagian bergerak</h2>
+  <p class="lead">Transistor memakai arus kecil di kakinya untuk mengatur arus besar. MOSFET memakai <b>tegangan</b> di gate. Keduanya bisa menyala dan mati jauh lebih cepat daripada relay.</p>
+  <div class="tools" id="figTr"></div>
+  <div class="box">
+    <div class="ctl"><label>Tegangan gate (Vgs): <b id="gvT"></b><input type="range" id="gv" min="0" max="12" step=".1" value="10"></label></div>
+    <div class="out"><div><span>Keadaan</span><strong class="st" id="gs"></strong></div><div><span>Hambatan Rds(on)</span><strong id="gr"></strong></div><div><span>Panas pada 30 A</span><strong id="gp"></strong></div></div>
+    <div class="heat"><i id="gh"></i></div>
+    <div class="verdict" id="gvd"></div>
+    <p class="why">Contoh MOSFET dengan ambang sekitar 4 V dan penuh menyala di sekitar 10 V (angka ilustrasi). Aturan emas: saklar harus <b>benar-benar mati atau benar-benar nyala</b>. Di antaranya hambatannya besar dan MOSFET menjadi panas.</p>
+  </div>
+
+  <h2>3. PWM: mengatur daya dengan menyalakan dan mematikan</h2>
+  <p class="lead">PWM (pulse width modulation) menyalakan dan mematikan saklar sangat cepat. Lama nyala dibanding satu siklus disebut <b>duty cycle</b>. Motor, yang berinduktansi, merasakan tegangan rata-ratanya. Bandingkan dengan cara memakai resistor.</p>
+  <div class="box">
+    <div class="ctl">
+      <label>Duty cycle: <b id="dT"></b><input type="range" id="du" min="0" max="100" step="1" value="50"></label>
+      <label>Frekuensi switching: <b id="fT"></b><input type="range" id="fr" min="1" max="40" step="1" value="16"></label>
+      <label>Rds(on) MOSFET: <b id="rT"></b><input type="range" id="rd" min="1" max="50" step="1" value="5"></label>
+      <label>Waktu switching: <b id="tT"></b><input type="range" id="ts" min="20" max="400" step="10" value="100"></label>
+    </div>
+    <canvas id="pwm" style="height:150px" aria-label="Gelombang PWM dan tegangan rata-rata"></canvas>
+    <div class="out">
+      <div><span>Tegangan rata-rata ke motor</span><strong id="pa"></strong></div>
+      <div><span>Daya ke motor</span><strong id="pp"></strong></div>
+      <div><span>Panas bila pakai RESISTOR</span><strong id="ph1" style="color:var(--alert)"></strong></div>
+      <div><span>Panas bila pakai PWM</span><strong id="ph2" style="color:var(--v)"></strong></div>
+      <div><span>Efisiensi resistor</span><strong id="pe1"></strong></div>
+      <div><span>Efisiensi PWM</span><strong id="pe2"></strong></div>
+    </div>
+    <p class="why">Contoh: baterai 72 V dan motor yang setara hambatan 1,7 Ω (sekitar 3 kW pada duty 100%). Panas PWM = rugi konduksi MOSFET (I² × Rds × duty) + dioda freewheel (I × 0,7 V × (1 − duty)) + rugi switching (V × I × waktu × frekuensi). Angka ilustrasi, bukan spesifikasi komponen tertentu.</p>
+  </div>
+
+  <h2>4. Inverter: enam saklar menjadi tiga fasa</h2>
+  <p class="lead">Motor BLDC butuh tiga fasa (modul 03). Controller memakai enam saklar, dua untuk tiap fasa (satu ke positif, satu ke negatif). Bila pulsanya dilebarkan lalu disempitkan mengikuti bentuk sinus, motor merasakan arus yang mendekati sinus. Teknik ini disebut <b>PWM sinus (SPWM)</b>.</p>
+  <div class="tools" id="figIg"></div>
+  <div class="box">
+    <div class="ctl">
+      <label>Indeks modulasi (tegangan): <b id="miT"></b><input type="range" id="mi" min="0.2" max="1" step=".05" value="0.8"></label>
+      <label>Frekuensi keluaran (kecepatan motor): <b id="mfT"></b><input type="range" id="mf" min="0.3" max="3" step=".1" value="1"></label>
+      <label>Pulsa per siklus: <b id="mpT"></b><input type="range" id="mp" min="6" max="30" step="1" value="16"></label>
+    </div>
+    <canvas id="spwm" style="height:260px" aria-label="Pembentukan PWM sinus dari sinus acuan dan gelombang segitiga"></canvas>
+    <p class="why">Atas: sinus acuan (kuning) dibandingkan dengan gelombang segitiga (biru). Bawah: keluaran saklar, nyala bila sinus lebih tinggi dari segitiga. Menaikkan indeks modulasi memperbesar tegangan, dan menaikkan frekuensi mempercepat motor.</p>
+  </div>
+
+  <h2>5. MOSFET atau IGBT?</h2>
+  <table class="cmp">
+    <tr><th></th><th>MOSFET</th><th>IGBT</th></tr>
+    <tr><td><b>Tegangan umum</b></td><td>Puluhan sampai sekitar 200 V untuk controller R2</td><td>Sekitar 600–1.200 V, untuk mobil listrik 400–800 V</td></tr>
+    <tr><td><b>Kecepatan switching</b></td><td>Sangat cepat (SiC MOSFET: sekitar 20–40 kHz di inverter mobil)</td><td>Lebih lambat (IGBT silikon: sekitar 8–15 kHz di inverter mobil)</td></tr>
+    <tr><td><b>Rugi utama</b></td><td>Konduksi: I² × Rds(on), kecil bila Rds(on) kecil</td><td>Jatuh tegangan relatif tetap, unggul pada arus besar dan tegangan tinggi</td></tr>
+    <tr><td><b>Di EV</b></td><td>Controller motor R2 (banyak MOSFET diparalel), charger, DC-DC</td><td>Inverter mobil listrik 400 V; SiC MOSFET makin banyak di 800 V</td></tr>
+  </table>
+  <p class="why">Angka tipikal dan bisa berbeda per desain. Contoh pelajaran: MOSFET IRFZ44N populer di proyek hobi, tetapi tegangan drain-sourcenya hanya 55 V dan arus kontinunya 49 A. MOSFET ini aman untuk 12–24 V, tidak untuk baterai 72 V. Pilih MOSFET dengan tegangan di atas tegangan baterai plus margin lonjakan.</p>
+
+  <h2>6. Panas, dead time, dan cara mengeceknya</h2>
+  <ul class="rec">
+    <li><b>Panas.</b> Setiap saklar memanas saat menghantar dan saat berpindah keadaan. Itu sebabnya controller punya heatsink dan sensor suhu (NTC, modul 06). Kenaikan frekuensi menaikkan rugi switching.</li>
+    <li><b>Dead time.</b> Dua saklar dalam satu fasa tidak boleh menyala bersamaan karena menjadi hubung singkat. Controller memberi jeda singkat sebelum menyalakan saklar pasangannya.</li>
+    <li><b>Dioda freewheel.</b> Saat saklar mati, arus motor tetap mengalir lewat dioda. Dioda ini ada di dalam MOSFET dan IGBT.</li>
+    <li><b>Cek sederhana MOSFET</b> dengan multimeter mode dioda (modul 05): antara source dan drain biasanya terbaca satu arah sekitar 0,4–0,7 V dan terbuka di arah sebaliknya. Terbaca hubung singkat di kedua arah menandakan MOSFET jebol. Lakukan hanya setelah sistem mati dan kapasitor dikosongkan (modul 04), dan ikuti buku servis.</li>
+  </ul>
+
+  <h2>7. Video pendukung</h2>
+  <h3 style="font:600 18px var(--disp);margin:14px 0 6px">Bahasa Indonesia</h3>
+  <div id="vlistid"></div>
+  <p class="why" style="margin-top:14px"><b>Cari video lain.</b> Tautan berikut membuka hasil pencarian YouTube, bukan video tertentu.</p>
+  <ul class="rec" id="vlinks"></ul>
+  <h3 style="font:600 18px var(--disp);margin:22px 0 6px">Bahasa Inggris</h3>
+  <p class="why">Tips subtitle: aktifkan CC, buka Setelan, Subtitel/CC, lalu Terjemahkan otomatis ke Indonesia, bila pemilik video mengaktifkan subtitel.</p>
+  <div id="vlist"></div>
+
+  <details class="dl"><summary>Catatan untuk pengajar</summary>
+    <p><b>Alur sekitar 75 menit:</b> tebakan (5), dioda (10), MOSFET sebagai saklar (10), PWM dan perbandingan resistor (20), inverter dan SPWM (15), MOSFET atau IGBT (5), kuis (10).</p>
+    <p><b>Peragaan:</b> bawa satu controller bekas atau papan MOSFET dan tunjukkan komponen besar di heatsink. Tanyakan: "ada berapa MOSFET, dan mengapa sebanyak itu?" (diparalel untuk arus besar).</p>
+    <p><b>Pesan utama:</b> saklar yang nyala penuh atau mati penuh nyaris tidak panas, dan itulah rahasia efisiensi controller.</p>
+  </details>
+
+  <h2>8. Kuis</h2>
+  <div id="quiz"></div><div class="verdict" id="score" hidden></div>
+
+  <p class="why" style="margin-top:30px">Sumber foto, Wikimedia Commons: <a href="https://commons.wikimedia.org/wiki/File:Diode-photo.JPG" target="_blank" rel="noopener">Diode-photo.JPG</a> (Honina, CC BY-SA 3.0), <a href="https://commons.wikimedia.org/wiki/File:Schottky.jpg" target="_blank" rel="noopener">Schottky.jpg</a> (Steffen Maisch, domain publik), <a href="https://commons.wikimedia.org/wiki/File:Transistor-photo.JPG" target="_blank" rel="noopener">Transistor-photo.JPG</a> (Honina, CC BY-SA 3.0), <a href="https://commons.wikimedia.org/wiki/File:MOSFET_transistors.jpg" target="_blank" rel="noopener">MOSFET transistors.jpg</a> (Mister rf, CC BY-SA 4.0), <a href="https://commons.wikimedia.org/wiki/File:Infineon_IGBT-Modul.jpg" target="_blank" rel="noopener">Infineon IGBT-Modul.jpg</a> (Leonrosenbaum, CC BY-SA 3.0), <a href="https://commons.wikimedia.org/wiki/File:IGBT_2441.JPG" target="_blank" rel="noopener">IGBT 2441.JPG</a> (Daniel*D, CC BY-SA 3.0), dan <a href="https://commons.wikimedia.org/wiki/File:Inversor_igbt.jpg" target="_blank" rel="noopener">Inversor igbt.jpg</a> (Casancg, CC BY-SA 4.0). Informasi frekuensi switching dari <a href="https://auto-tech-news.com/2026/06/02/what-is-a-traction-inverter-engineers-guide/" target="_blank" rel="noopener">Auto Tech News</a>, prinsip SPWM dari <a href="https://scienceinsights.org/what-is-an-igbt-inverter-and-how-does-it-work/" target="_blank" rel="noopener">ScienceInsights</a>, dan data IRFZ44N dari <a href="https://www.pcbasic.com/id/blog/irfz44n_mosfet.html" target="_blank" rel="noopener">PCBasic</a>. Angka simulasi bersifat ilustrasi. Cek ulang sebelum dipakai sebagai rujukan resmi.</p>
+
+  <div class="nav">
+    <a href="modul-06.html">Sebelumnya: 06</a><a href="index.html#modul">Daftar modul</a>
+    <button id="doneBtn">Tandai selesai</button><a href="modul-08.html">Berikutnya: 08</a>
+  </div>
+</main>
+<div id="site-footer"></div>
+<script>
+const $=id=>document.getElementById(id);
+fetch('assets/layout.html').then(r=>{if(!r.ok)throw 0;return r.text()}).then(h=>{
+  const d=new DOMParser().parseFromString(h,'text/html');
+  document.head.append(...d.querySelectorAll('style'));
+  $('site-header').replaceWith(d.querySelector('header'));$('site-footer').replaceWith(d.querySelector('footer'));
+}).catch(()=>{$('site-header').textContent='Training EV'});
+const kode=document.body.dataset.kode, btn=$('doneBtn');
+let done=[]; try{done=JSON.parse(localStorage.getItem('evDone')||'[]')}catch(e){}
+const mark=()=>{btn.textContent='Selesai ✓';btn.disabled=true};
+if(done.includes(kode))mark();
+btn.onclick=()=>{if(!done.includes(kode))done.push(kode);try{localStorage.setItem('evDone',JSON.stringify(done))}catch(e){}mark()};
+const cs=k=>getComputedStyle(document.documentElement).getPropertyValue('--'+k).trim();
+const fx=(n,d=1)=>(+n).toLocaleString('id-ID',{maximumFractionDigits:d});
+function hook(id,aid,opts,ok,html){$(id).innerHTML=opts.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('');$(id).onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;[...$(id).children].forEach((x,i)=>{x.disabled=true;if(i===ok)x.classList.add('right')});if(+b.dataset.i!==ok)b.classList.add('wrong');const a=$(aid);a.hidden=false;a.innerHTML=html}}
+hook('hopt','hans',['Menyambung resistor besar secara seri','Menyalakan dan mematikan saklar elektronik ribuan kali per detik (PWM)','Menurunkan tegangan baterai','Memutar gigi transmisi'],1,'Jawabannya <b>PWM</b>. Resistor seri akan membuang separuh daya sebagai panas, sedangkan saklar yang nyala penuh atau mati penuh nyaris tidak panas. Simulasi di bawah memperlihatkan selisihnya.');
+
+// ----- foto -----
+const CM='https://commons.wikimedia.org/wiki/',fp=f=>CM+'Special:FilePath/'+f+'?width=520';
+const fg=(f,alt,cap,k,by)=>`<figure><img src="${fp(f)}" alt="${alt}" loading="lazy" onerror="this.closest('figure').style.display='none'"><figcaption>${cap}. Sumber: <a href="${CM}File:${f}" target="_blank" rel="noopener">${k}</a>, ${by}, Wikimedia Commons</figcaption></figure>`;
+$('figDio').innerHTML=fg('Diode-photo.JPG','Berbagai dioda','Berbagai jenis dioda','Diode-photo.JPG','Honina, CC BY-SA 3.0')+fg('Schottky.jpg','Dioda Schottky','Berbagai dioda Schottky (jatuh tegangan kecil)','Schottky.jpg','Steffen Maisch, domain publik');
+$('figTr').innerHTML=fg('Transistor-photo.JPG','Berbagai transistor','Berbagai jenis transistor (garis skala dalam sentimeter)','Transistor-photo.JPG','Honina, CC BY-SA 3.0')+fg('MOSFET_transistors.jpg','Berbagai MOSFET daya','Berbagai MOSFET daya dalam kemasan TO-247, TO-220, D2PAK, dan lainnya','MOSFET transistors.jpg','Mister rf, CC BY-SA 4.0');
+$('figIg').innerHTML=fg('Infineon_IGBT-Modul.jpg','Modul IGBT','Modul IGBT Infineon 450 A / 1.200 V','Infineon IGBT-Modul.jpg','Leonrosenbaum, CC BY-SA 3.0')+fg('IGBT_2441.JPG','Bagian dalam modul IGBT','Bagian dalam modul IGBT 400 A / 600 V: satu lengan jembatan (setengah H-bridge) dengan IGBT dan dioda paralel','IGBT 2441.JPG','Daniel*D, CC BY-SA 3.0')+fg('Inversor_igbt.jpg','Skema inverter jembatan IGBT','Skema inverter jembatan IGBT','Inversor igbt.jpg','Casancg, CC BY-SA 4.0');
+
+// ----- penyearah -----
+let rmode='half';const RM=[['none','Tanpa dioda'],['half','Satu dioda'],['full','Dioda jembatan']];
+function rmDraw(){$('rm').innerHTML=RM.map(([k,n])=>`<button class="chip" data-k="${k}" aria-pressed="${k===rmode}">${n}</button>`).join('');
+ $('rtx').textContent={none:'Tanpa dioda: tegangan bolak-balik naik turun dan berbalik arah (AC).',half:'Satu dioda: hanya setengah siklus yang lolos. Arus mengalir satu arah tetapi berdenyut.',full:'Dioda jembatan: kedua setengah siklus dibalik ke arah yang sama. Dengan kapasitor di belakangnya hasilnya menjadi DC yang rata. Inilah dasar charger.'}[rmode]}
+$('rm').onclick=e=>{const b=e.target.closest('button');if(b){rmode=b.dataset.k;rmDraw()}};rmDraw();
+const rc=$('rect'),rx=rc.getContext('2d');let tt=0;
+function drawRect(){const W=rc.clientWidth,H=rc.clientHeight;tt+=.012;rx.clearRect(0,0,W,H);const mid=H/2,am=H*.38;
+ rx.strokeStyle=cs('line');rx.lineWidth=1;rx.beginPath();rx.moveTo(0,mid);rx.lineTo(W,mid);rx.stroke();
+ rx.beginPath();for(let x=0;x<=W;x+=3){const s=Math.sin(x*.03-tt*6.283);const v=rmode==='none'?s:rmode==='half'?Math.max(0,s):Math.abs(s);const y=mid-am*v;x?rx.lineTo(x,y):rx.moveTo(x,y)}
+ rx.strokeStyle=cs('v');rx.lineWidth=2.4;rx.stroke();
+ rx.fillStyle=cs('dim');rx.font='12px sans-serif';rx.fillText('tegangan keluaran',8,14)}
+
+// ----- MOSFET sebagai saklar -----
+function gate(){const V=+$('gv').value;$('gvT').textContent=fx(V,1)+' V';
+ let st,R,cls,msg;
+ if(V<4){st='MATI';R=null;cls='ok';msg='Gate di bawah ambang: saklar terbuka, tidak ada arus dan tidak ada panas.'}
+ else if(V<9.5){st='SETENGAH';R=.005+.12*Math.pow((10-V)/6,2);cls=V<7?'bad':'warn';msg='Gate di antara ambang dan penuh: hambatannya besar sehingga MOSFET panas. Inilah sebabnya driver gate harus menyala atau mati dengan tegas.'}
+ else{st='NYALA';R=.005;cls='ok';msg='Gate penuh: hambatan kecil, panasnya kecil. Saklar yang baik.'}
+ const P=R===null?0:900*R;
+ $('gs').textContent=st;$('gr').textContent=R===null?'tak terhingga':fx(R*1000,0)+' mΩ';$('gp').textContent=fx(P,1)+' W';
+ $('gh').style.width=Math.min(100,P/120*100)+'%';const v=$('gvd');v.className='verdict '+cls;v.textContent=msg}
+$('gv').addEventListener('input',gate);gate();
+
+// ----- PWM vs resistor -----
+const pc=$('pwm'),px=pc.getContext('2d');
+function pwm(){
+ const D=+$('du').value/100,f=+$('fr').value,Rds=+$('rd').value/1000,tsw=+$('ts').value*1e-9,Vb=72,RL=1.7;
+ const Va=D*Vb,I=Va/RL,Pm=Va*I;
+ const Hres=(Vb-Va)*I,Pc=I*I*Rds*D,Pd=I*.7*(1-D),Ps=Vb*I*tsw*f*1000,Hp=Pc+Pd+Ps;
+ const e1=Pm>0?Pm/(Pm+Hres)*100:0,e2=Pm>0?Pm/(Pm+Hp)*100:0;
+ $('dT').textContent=Math.round(D*100)+'%';$('fT').textContent=f+' kHz';$('rT').textContent=fx(Rds*1000,0)+' mΩ';$('tT').textContent=fx(tsw*1e9,0)+' ns';
+ $('pa').textContent=fx(Va,1)+' V';$('pp').textContent=fx(Pm,0)+' W';$('ph1').textContent=fx(Hres,0)+' W';$('ph2').textContent=fx(Hp,1)+' W';
+ $('pe1').textContent=fx(e1,0)+'%';$('pe2').textContent=fx(e2,1)+'%';
+ const W=pc.clientWidth,H=pc.clientHeight;px.clearRect(0,0,W,H);
+ const top=18,bot=H-22,n=6,T=W/n;
+ px.strokeStyle=cs('line');px.lineWidth=1;px.beginPath();px.moveTo(0,bot);px.lineTo(W,bot);px.stroke();
+ px.beginPath();for(let k=0;k<n;k++){const x0=k*T,x1=x0+T*D;px.moveTo(x0,bot);px.lineTo(x0,top);px.lineTo(x1,top);px.lineTo(x1,bot);px.lineTo(x0+T,bot)}
+ px.strokeStyle=cs('u');px.lineWidth=2.4;px.stroke();
+ const ya=bot-(bot-top)*D;px.setLineDash([6,5]);px.strokeStyle=cs('v');px.lineWidth=2;px.beginPath();px.moveTo(0,ya);px.lineTo(W,ya);px.stroke();px.setLineDash([]);
+ px.fillStyle=cs('dim');px.font='12px sans-serif';px.fillText('72 V',4,top-4);px.fillText('rata-rata '+fx(Va,0)+' V (garis putus-putus)',W-190,Math.max(top+12,ya-6));
+}
+['du','fr','rd','ts'].forEach(i=>$(i).addEventListener('input',pwm));
+addEventListener('resize',()=>{sizeAll();pwm()});
+
+// ----- SPWM -----
+const sc2=$('spwm'),sx=sc2.getContext('2d');let st0=0;
+function drawSp(){
+ const W=sc2.clientWidth,H=sc2.clientHeight,mi=+$('mi').value,f=+$('mf').value,N=+$('mp').value;
+ $('miT').textContent=fx(mi,2);$('mfT').textContent=fx(f,1)+' Hz';$('mpT').textContent=N;
+ st0+=.006*f;sx.clearRect(0,0,W,H);
+ const h1=H*.5,mid1=h1/2+6,am1=h1*.36,base=H-18,hi=base-H*.34;
+ sx.strokeStyle=cs('line');sx.lineWidth=1;sx.beginPath();sx.moveTo(0,mid1);sx.lineTo(W,mid1);sx.stroke();
+ const cyc=W/2;// dua siklus per lebar
+ const sinv=x=>mi*Math.sin((x/cyc-st0)*6.283),tri=x=>{const p=((x/cyc-st0)*N)%1;const q=p<0?p+1:p;return q<.5?(4*q-1):(3-4*q)};
+ sx.beginPath();for(let x=0;x<=W;x+=2){const y=mid1-am1*tri(x);x?sx.lineTo(x,y):sx.moveTo(x,y)}sx.strokeStyle=cs('w');sx.lineWidth=1.4;sx.stroke();
+ sx.beginPath();for(let x=0;x<=W;x+=2){const y=mid1-am1*sinv(x);x?sx.lineTo(x,y):sx.moveTo(x,y)}sx.strokeStyle=cs('u');sx.lineWidth=2.4;sx.stroke();
+ sx.beginPath();let prev=null;for(let x=0;x<=W;x+=1){const on=sinv(x)>tri(x);const y=on?hi:base;if(prev===null)sx.moveTo(x,y);else{if(on!==prev){sx.lineTo(x,prev?hi:base)}sx.lineTo(x,y)}prev=on}
+ sx.strokeStyle=cs('v');sx.lineWidth=1.8;sx.stroke();
+ sx.fillStyle=cs('dim');sx.font='12px sans-serif';sx.fillText('sinus acuan dan gelombang segitiga',8,14);sx.fillText('keluaran saklar satu fasa (nyala bila sinus lebih tinggi)',8,hi-6);
+}
+function sizeAll(){[rc,pc,sc2].forEach(c=>{const d=Math.min(2,devicePixelRatio||1);c.width=c.clientWidth*d;c.height=c.clientHeight*d;c.getContext('2d').setTransform(d,0,0,d,0,0)})}
+['mi','mf','mp'].forEach(i=>$(i).addEventListener('input',()=>{}));
+sizeAll();pwm();
+(function loop(){drawRect();drawSp();requestAnimationFrame(loop)})();
+
+// ----- video -----
+const CARD=v=>`<div class="vl"><a class="th" href="${v.link}" target="_blank" rel="noopener" aria-label="Tonton: ${v.judul}"><img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="Pratinjau ${v.judul}" loading="lazy"><span class="pl">▶ Tonton di YouTube</span></a><div><h4><a href="${v.link}" target="_blank" rel="noopener">${v.judul}</a></h4><p><span class="bd">${v.bahasa}</span><span style="color:var(--dim);font-size:12px">${v.kanal||''}</span></p><p>${v.desk}</p></div></div>`;
+$('vlistid').innerHTML=CARD({ id:'Ro_ac7LIO0Y', judul:'PENGATUR KECEPATAN MOTOR DC DENGAN MOSFET IRFZ44N', bahasa:'Indonesia', kanal:'oneon channel', link:'https://www.youtube.com/watch?v=Ro_ac7LIO0Y', desk:'Cara mengatur kecepatan dinamo DC 12 V memakai MOSFET IRFZ44N. Contoh nyata PWM dan MOSFET sebagai saklar daya, versi kecil dari controller motor.' })+
+ `<div class="vl" style="grid-template-columns:1fr"><div><h4><a href="https://www.youtube.com/playlist?list=PL3s0vmGBUyjXCM4X9aa59TT7fVkxb78vf" target="_blank" rel="noopener">Playlist: Inverter VFD Motor Listrik</a></h4><p><span class="bd">Indonesia</span></p><p>Rangkaian video tentang inverter VFD untuk motor 1 fasa dan 3 fasa: instalasi dan cara mengoperasikan. Kaitannya dengan modul ini adalah prinsip inverter yang sama dengan controller motor listrik.</p></div></div>`;
+$('vlist').innerHTML=CARD({ id:'UL4hEw8GvS8', judul:'How to speed control of dc motor by MOSFET Irz44n for beginners?', bahasa:'Inggris', kanal:'', link:'https://www.youtube.com/watch?v=UL4hEw8GvS8', desk:'Pengatur kecepatan motor DC dengan MOSFET IRFZ44N untuk pemula, termasuk pengaturan lewat potensiometer.' });
+const YT='https://www.youtube.com/results?search_query=';
+const VL=[['id','cara kerja MOSFET sebagai saklar PWM motor'],['id','cara kerja inverter motor listrik 3 fasa'],['id','cara kerja IGBT inverter mobil listrik'],['en','how an EV traction inverter works IGBT PWM']];
+$('vlinks').innerHTML=VL.map(x=>`<li><a href="${YT+encodeURIComponent(x[1])}" target="_blank" rel="noopener">${x[1]}</a> (${x[0]==='id'?'Bahasa Indonesia':'Bahasa Inggris'})</li>`).join('');
+
+// ----- kuis -----
+const Q=[
+['Controller menurunkan kecepatan motor dengan cara...',['Memasang resistor seri','Mengubah duty cycle PWM','Mengganti baterai'],1,'PWM mengubah lama nyala saklar dalam satu siklus, sehingga tegangan rata-rata ke motor berubah.'],
+['Mengapa PWM jauh lebih hemat daripada resistor seri?',['Saklar yang nyala penuh atau mati penuh nyaris tidak panas','Resistor lebih mahal','Motor bekerja lebih pelan'],0,'Resistor seri membuang selisih tegangan sebagai panas. Saklar penuh nyala memiliki hambatan sangat kecil, jadi panasnya kecil.'],
+['MOSFET paling panas ketika tegangan gate...',['Nol','Di antara ambang dan penuh','Penuh'],1,'Di antara ambang dan penuh, hambatannya besar. Maka driver gate dibuat tegas: nyala penuh atau mati penuh.'],
+['Dioda freewheel pada controller berguna untuk...',['Menaikkan tegangan','Mengalirkan arus motor saat saklar mati','Mengukur suhu'],1,'Motor berinduktansi, sehingga arusnya terus mengalir saat saklar mati. Dioda memberi jalannya.'],
+['IGBT umumnya dipilih untuk...',['Rangkaian 5 V di mikrokontroler','Inverter mobil listrik bertegangan 400–800 V','Lampu LED kecil'],1,'IGBT unggul pada tegangan dan arus tinggi, sehingga umum di inverter mobil listrik 400 V.'],
+['MOSFET IRFZ44N memiliki tegangan drain-source 55 V. Apakah cocok untuk baterai 72 V?',['Cocok','Tidak, tegangannya terlalu rendah','Cocok bila dipasang terbalik'],1,'Tegangan kerja komponen harus di atas tegangan baterai plus margin lonjakan.'],
+['Dua saklar dalam satu fasa tidak boleh menyala bersamaan karena...',['Boros listrik sedikit','Menjadi hubung singkat','Motor jadi bising'],1,'Menyalakan saklar atas dan bawah bersamaan menghubungkan positif ke negatif. Controller memberi dead time.']
+];
+let sc=0,ans=0;
+$('quiz').innerHTML=Q.map((q,i)=>`<div class="q" data-i="${i}"><h4>${i+1}. ${q[0]}</h4>${q[1].map((o,j)=>`<button class="opt" data-j="${j}">${o}</button>`).join('')}<p class="why" hidden></p></div>`).join('');
+$('quiz').onclick=e=>{
+  const b=e.target.closest('button');if(!b||b.disabled)return;
+  const box=b.closest('.q'),q=Q[+box.dataset.i],ok=+b.dataset.j===q[2];
+  box.querySelectorAll('button').forEach((x,j)=>{x.disabled=true;if(j===q[2])x.classList.add('right')});
+  if(!ok)b.classList.add('wrong');else sc++;
+  const w=box.querySelector('.why');w.hidden=false;w.textContent=(ok?'Benar. ':'Belum tepat. ')+q[3];
+  if(++ans===Q.length){const s=$('score');s.hidden=false;s.className='verdict '+(sc>=6?'ok':sc>=5?'warn':'bad');s.textContent=`Skor Anda ${sc} dari ${Q.length}. `+(sc>=6?'Siap lanjut ke modul berikutnya.':'Ulangi simulasi PWM dan MOSFET, lalu coba kuis lagi.')}
+};
+</script>
+</body>
+</html>

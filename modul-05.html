@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>05 Pengenalan Alat Ukur | Training EV</title>
+<script src="assets/tema.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#060A12;--panel:#0C1220;--line:#1B2740;--text:#E6ECF5;--dim:#8593AA;--u:#FFC857;--v:#3DDC97;--w:#4DA3FF;--alert:#FF6B8B;--disp:'Chakra Petch',system-ui,sans-serif;--body:'Sora',system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font:400 16px/1.7 var(--body)}
+main{max-width:920px;margin:0 auto;padding:40px clamp(16px,4vw,32px) 0}
+h1{font:700 clamp(28px,4vw,44px)/1.1 var(--disp);margin:0 0 8px}
+h2{font:700 24px var(--disp);margin:52px 0 6px}
+a{color:var(--w)}
+.lead{color:var(--dim);margin:0 0 18px}
+.no{font:700 15px var(--disp);color:var(--v)}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;margin:12px 0}
+.goal{margin:0 0 8px;padding:14px 18px 14px 36px;border:1px solid var(--line);border-left:3px solid var(--v);border-radius:6px;background:var(--panel)}
+.ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 22px;margin:8px 0}
+.ctl label{display:block;font-size:13px;color:var(--dim)}
+.ctl b{color:var(--text);font-family:var(--disp)}
+.ctl input[type=range]{width:100%;accent-color:var(--v)}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0}
+.out div{padding:10px 12px;border:1px solid var(--line);border-radius:6px}
+.out span{display:block;font-size:12px;color:var(--dim)}
+.out strong{font:700 20px var(--disp)}
+main canvas{width:100%;height:200px;display:block;background:var(--ink);border:1px solid var(--line);border-radius:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--dim);font:500 13px var(--body);cursor:pointer}
+.chip[aria-pressed=true]{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 16px;background:var(--ink);border:1px solid var(--line);border-radius:6px;color:var(--text);font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--v)}
+.opt.right{border-color:var(--v);background:color-mix(in srgb,var(--v) 14%,transparent)}
+.opt.wrong{border-color:var(--alert);background:color-mix(in srgb,var(--alert) 12%,transparent)}
+.why{font-size:14px;color:var(--dim);margin:8px 0 0}
+.verdict{padding:10px 14px;border-radius:6px;border:1px solid var(--line);margin-top:12px;font-size:14px}
+.ok{border-color:var(--v);color:var(--v)}.warn{border-color:var(--u);color:var(--u)}.bad{border-color:var(--alert);color:var(--alert)}
+.story{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.story figure{margin:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.story img{width:100%;height:230px;object-fit:contain;background:#fff;border-radius:6px;display:block}
+.story figcaption{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5}
+.story h3{margin:10px 0 4px;font:600 17px var(--disp)}
+.story p{margin:4px 0;font-size:14px}
+table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+.cmp th,.cmp td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.cmp th{color:var(--dim);font-weight:500}
+.vl{display:grid;grid-template-columns:210px 1fr;gap:6px 16px;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.vl a.th{position:relative;display:block;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--ink)}
+.vl img{width:100%;height:100%;object-fit:cover;display:block}
+.vl .pl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);color:#fff;font:700 15px var(--disp)}
+.vl h4{margin:0 0 4px;font:600 16px var(--disp)}
+.vl p{margin:4px 0;font-size:14px}
+.vl .bd{display:inline-block;padding:1px 8px;border:1px solid var(--v);border-radius:999px;color:var(--v);font-size:11px;margin-right:6px}
+@media(max-width:560px){.vl{grid-template-columns:1fr}}
+details.dl{margin-top:20px;border:1px solid var(--line);border-radius:8px;padding:4px 16px}
+details.dl summary{cursor:pointer;padding:12px 0;color:var(--w);font-weight:500}
+.exp li{margin:6px 0}
+.q{margin:18px 0}.q h4{margin:0 0 8px;font:600 16px var(--body)}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:44px;padding-top:20px;border-top:1px solid var(--line)}
+.nav a,.nav button{padding:10px 18px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);font:600 14px var(--disp);text-decoration:none;cursor:pointer}
+.nav button{background:var(--v);border-color:var(--v);color:var(--ink)}
+.nav button[disabled]{background:var(--panel);color:var(--v)}
+
+.lcd{font:700 38px var(--disp);background:#0b1a12;color:#3DDC97;padding:14px 18px;border-radius:8px;border:2px solid var(--line);text-align:right;letter-spacing:.04em;min-height:70px;margin:10px 0}
+.lcd small{display:block;font:500 13px var(--body);color:#8fd9b6;letter-spacing:0}
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.tools figure{margin:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.tools img{width:100%;height:210px;object-fit:contain;background:#fff;border-radius:6px;display:block}
+.tools figcaption{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5}
+.tools h3{margin:10px 0 4px;font:600 18px var(--disp)}
+.tools p{margin:4px 0;font-size:14px}
+.pick{display:grid;grid-template-columns:1fr 210px;gap:10px;align-items:center;margin:8px 0;padding:10px 12px;background:var(--ink);border:1px solid var(--line);border-radius:6px}
+.pick.good{border-color:var(--v)}.pick.bad{border-color:var(--alert)}
+.pick select{padding:6px;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:6px}
+@media(max-width:560px){.pick{grid-template-columns:1fr}}
+.btn2{padding:9px 18px;border:1px solid var(--v);border-radius:6px;background:var(--v);color:var(--ink);font:600 14px var(--disp);cursor:pointer}
+
+/* Simulasi multimeter bergambar dan interaktif */
+.sim-layout{display:grid;grid-template-columns:minmax(260px, .9fr) minmax(300px,1.1fr);gap:18px;align-items:start}
+.meter{background:#242b35;border:3px solid #566170;border-radius:20px;padding:16px;box-shadow:0 10px 24px #0008;max-width:420px;margin:auto;color:#f5f7fa}
+.meter-brand{display:flex;justify-content:space-between;align-items:center;font:700 13px var(--disp);letter-spacing:.08em;margin:0 4px 10px}
+.meter-screen{background:#b8d0a4;color:#17251a;border:5px solid #111820;border-radius:7px;padding:8px 12px;text-align:right;font:700 clamp(26px,4vw,38px) var(--disp);min-height:62px}
+.meter-screen small{display:block;font:500 10px var(--body);text-align:left;color:#334632}
+.dial-area{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:center;margin:14px 0}
+.dial-knob{width:132px;height:132px;border-radius:50%;border:5px solid #10151b;background:repeating-conic-gradient(from -12deg,#4b5562 0deg 2deg,#202832 2deg 12deg);position:relative;margin:auto;box-shadow:inset 0 0 0 8px #343d49;display:grid;place-items:center}
+.dial-knob:before{content:'';position:absolute;width:82px;height:82px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#596573,#202832 65%);border:3px solid #10151b}
+.dial-pointer{position:absolute;width:7px;height:42px;background:#f6f7f8;border-radius:4px;top:17px;left:calc(50% - 3.5px);transform-origin:50% 49px;z-index:2;box-shadow:0 0 2px #000}
+.dial-labels{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.dial-labels button,.jack button{cursor:pointer;color:#f5f7fa;background:#151b23;border:1px solid #657080;border-radius:5px;padding:7px 5px;font:600 11px var(--body)}
+.dial-labels button.active{border:2px solid #ffc857;background:#39404a;color:#fff}
+.jack-area{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.jack{border:1px solid #657080;border-radius:8px;padding:8px 4px;text-align:center;background:#303945;font-size:11px}
+.jack button{width:100%;margin-top:6px;min-height:38px;font-weight:700}
+.jack button.selected{outline:3px solid #ffc857;outline-offset:1px}
+.hole{display:block;width:20px;height:20px;border-radius:50%;background:#080b10;border:3px solid #7e8997;margin:0 auto 5px;box-shadow:inset 0 0 5px #000}
+.jack.red .hole{border-color:#e34d54}.jack.black .hole{border-color:#111}
+.lead-note{font-size:12px;color:#b8c4d5;text-align:center;margin:9px 0 0}
+.target-panel{background:#0a101a;border:1px solid var(--line);border-radius:10px;padding:14px;min-height:390px}
+.target-panel h3{margin:0 0 8px;font:600 18px var(--disp)}
+.target-svg{width:100%;height:auto;max-height:310px;display:block;background:#111a27;border-radius:8px}
+.target-caption{font-size:13px;color:var(--dim);margin:9px 0 0}
+.sim-settings{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:16px}
+.sim-settings label{font-size:13px;color:var(--dim);display:block}
+.sim-settings select{width:100%;padding:8px;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:6px;margin-top:4px}
+.sim-help{font-size:13px;color:var(--dim);margin:10px 0 0}
+@media(max-width:720px){.sim-layout{grid-template-columns:1fr}.meter{max-width:360px}.target-panel{min-height:0}}
+
+</style>
+</head>
+<body data-kode="05">
+<div id="site-header"></div>
+<main>
+  <div class="no">Modul 05 &nbsp;|&nbsp; Fondasi kelistrikan</div>
+  <h1>Pengenalan Alat Ukur</h1>
+  <p class="lead">Teknisi EV membaca masalah lewat angka. Modul ini mengenalkan alat ukur yang paling sering dipakai, kapan memilih yang mana, dan cara memakainya tanpa merusak alat atau diri sendiri.</p>
+  <ul class="goal">
+    <li>Mengenali multimeter, clamp meter, insulation tester, termometer, dan osiloskop beserta kegunaannya di EV.</li>
+    <li>Memakai multimeter dengan benar: dial, colokan, dan cara sambung untuk tegangan, hambatan, kontinuitas, dioda, dan arus.</li>
+    <li>Memilih alat yang tepat untuk satu situasi dan menghitung tegangan jatuh pada konektor.</li>
+  </ul>
+  <div class="verdict warn">Alat ukur yang salah pilih atau salah pasang bisa berbahaya. Pelajari lebih dulu modul 04 (K3), dan pakai alat dengan peringkat tegangan yang sesuai.</div>
+
+  <div class="box" id="hook">
+    <b>Tebak dulu.</b> Anda mengukur baterai 72 V. Dial multimeter masih di posisi ampere dan probe merah di colokan 10 A, lalu probe langsung ditempelkan ke kutub baterai. Apa yang terjadi?
+    <div id="hopt"></div><p class="why" id="hans" hidden></p>
+  </div>
+
+  <h2>1. Kenali alatnya</h2>
+  <p class="lead">Lima alat yang akan Anda temui. Dua yang pertama dipakai hampir setiap hari.</p>
+  <div class="tools" id="tools"></div>
+
+  <h2>2. Simulasi multimeter: pilih, sambungkan, lalu ukur</h2>
+  <p class="lead">Coba multimeter digital seperti yang biasa dipakai di bengkel. Sentuh pilihan pada selektor untuk mengganti fungsi, lalu sentuh lubang konektor untuk memindahkan kabel merah. Perhatikan juga bentuk benda yang sedang diukur dan posisi kedua probe. Simulasi ini aman untuk latihan; bukan pengganti praktik dengan alat sungguhan.</p>
+  <div class="box">
+    <div class="sim-settings">
+      <label>Benda yang akan diukur<select id="mc"><option value="bat">Baterai EV 72 V (DC, aktif)</option><option value="ac">Stopkontak 220 V AC (aktif)</option><option value="res">Resistor 1 kΩ (terlepas)</option><option value="wok">Kabel utuh (terlepas)</option><option value="wbr">Kabel putus (terlepas)</option><option value="led">LED (terlepas)</option><option value="small">Rangkaian 3 V + resistor 100 Ω (aktif)</option><option value="motor">Motor EV 72 V, arus 30 A (aktif)</option></select></label>
+      <label>Posisi probe pada benda<select id="mw"><option value="p">Paralel — ukur tegangan / komponen</option><option value="s">Seri — alat disisipkan ke jalur arus</option></select></label>
+    </div>
+    <div class="sim-layout">
+      <div class="meter" aria-label="Ilustrasi multimeter digital interaktif">
+        <div class="meter-brand"><span>DIGITAL MULTIMETER</span><span>CAT III*</span></div>
+        <div class="meter-screen" id="lcd"><small>HASIL PENGUKURAN</small>72,3 V</div>
+        <div class="dial-area">
+          <div class="dial-knob"><div class="dial-pointer" id="dialPointer"></div></div>
+          <div class="dial-labels" id="dialChoices">
+            <button data-dial="off">OFF</button><button data-dial="vdc" class="active">V⎓ DC</button><button data-dial="vac">V~ AC</button><button data-dial="ohm">Ω</button><button data-dial="cont">🔔 Kontinuitas</button><button data-dial="dio">▷| Dioda</button><button data-dial="amp">A / mA</button>
+          </div>
+        </div>
+        <div style="font-size:11px;text-align:center;color:#c8d0da">MASUKAN PROBE — SENTUH LUBANG UNTUK MEMILIH</div>
+        <div class="jack-area">
+          <div class="jack black"><span class="hole"></span><b>COM</b><button data-jack="com">Probe hitam</button></div>
+          <div class="jack red"><span class="hole"></span><b>VΩmA</b><button data-jack="v">Probe merah</button></div>
+          <div class="jack red"><span class="hole"></span><b>10A</b><button data-jack="a">Probe merah</button></div>
+        </div>
+        <p class="lead-note">*Peringkat CAT pada gambar hanya ilustrasi. Selalu cek peringkat pada alat yang digunakan.</p>
+      </div>
+      <div class="target-panel"><h3 id="targetTitle">Baterai EV 72 V</h3><div id="targetDraw"></div><p class="target-caption" id="targetCaption">Tempelkan probe merah ke kutub positif (+) dan hitam ke kutub negatif (−).</p></div>
+    </div>
+    <div class="verdict" id="mvd"></div>
+    <p class="sim-help"><b>Ingat aturan bengkel:</b> tegangan diukur paralel, arus diukur seri, sedangkan hambatan, kontinuitas, dan dioda diperiksa saat rangkaian mati. Probe hitam masuk COM. Probe merah masuk VΩmA untuk tegangan/hambatan/arus kecil, atau 10A hanya untuk arus yang sesuai batas alat.</p>
+  </div>
+
+  <h3 style="font:600 19px var(--disp);margin:26px 0 8px">Probe, colokan, dan sekering di dalam multimeter</h3>
+  <div class="tools" id="mmfig"></div>
+  <ul class="rec">
+    <li><b>Sekering internal.</b> Colokan arus dilindungi sekering di dalam alat. Bila putus, mode arus berhenti bekerja walau tegangan masih terbaca. Ganti dengan sekering yang sama jenis dan peringkatnya.</li>
+    <li><b>Cabut probe merah dari colokan arus setelah selesai</b> mengukur arus, lalu simpan probe di COM dan VΩ. Ini mencegah kecelakaan saat Anda kemudian mengukur tegangan.</li>
+    <li><b>Periksa probe.</b> Buang probe yang retak, kabelnya terkelupas, atau ujung logamnya terbuka terlalu panjang.</li>
+  </ul>
+
+  <h2>3. Pilih alat yang tepat</h2>
+  <p class="lead">Pasangkan tiap situasi dengan alatnya, lalu periksa.</p>
+  <div class="box"><div id="pick"></div><button class="btn2" id="pickChk">Periksa</button><div class="verdict" id="pickV" hidden></div></div>
+
+  <h2>4. Uji tegangan jatuh pada konektor</h2>
+  <p class="lead">Konektor yang longgar atau berkarat punya hambatan tambahan (modul 06). Ukur tegangan di <b>kedua ujung konektor saat beban berjalan</b>. Selisihnya adalah tegangan jatuh.</p>
+  <div class="box">
+    <div class="ctl">
+      <label>Arus beban: <b id="ciT"></b><input type="range" id="ci" min="5" max="200" step="5" value="50"></label>
+      <label>Hambatan konektor: <b id="crT"></b><input type="range" id="cr" min="0.1" max="50" step="0.1" value="5"></label>
+    </div>
+    <div class="out"><div><span>Tegangan jatuh (dibaca multimeter)</span><strong id="cd"></strong></div><div><span>Panas di konektor (I² × R)</span><strong id="ch"></strong></div></div>
+    <div class="verdict" id="cv"></div>
+    <p class="why">Rumus: V = I × R dan panas = I² × R. Ambang peringatan di sini hanya ilustrasi. Bandingkan dengan nilai acuan pabrikan untuk kendaraan Anda.</p>
+  </div>
+
+  <h2>5. Aturan pakai alat ukur</h2>
+  <ul class="rec">
+    <li><b>Peringkat alat.</b> Pilih alat yang peringkat kategori (CAT) dan tegangannya melebihi tegangan kerja. Alat yang tidak berperingkat cukup bisa membahayakan saat ada lonjakan. Ikuti rekomendasi pabrikan kendaraan.</li>
+    <li><b>Uji alat ukur.</b> Periksa probe dan kabel dari retak, lalu uji pada sumber yang diketahui hidup sebelum dan sesudah mengukur nol (modul 04).</li>
+    <li><b>Mulai dari rentang tinggi.</b> Bila alat tidak otomatis, pilih rentang di atas perkiraan lalu turunkan.</li>
+    <li><b>Insulation tester</b> memberi tegangan uji DC yang tinggi (umumnya 250 sampai 10.000 V). Pakai hanya pada rangkaian yang sudah mati dan terpisah. Aturan lazim dari produsen Megger: sekitar 1 MΩ per 1.000 V tegangan kerja sebagai batas bawah.</li>
+    <li><b>Satu tangan</b> untuk memegang probe bila memungkinkan, dan jangan menyentuh bagian logam probe.</li>
+  </ul>
+
+  <h2>6. Fitur dan alat lain di bengkel EV</h2>
+  <table class="cmp">
+    <tr><th>Fitur atau alat</th><th>Gunanya di EV</th></tr>
+    <tr><td><b>True RMS</b></td><td>Membaca tegangan atau arus AC yang bukan gelombang sinus dengan lebih tepat, misalnya keluaran controller atau inverter. Multimeter biasa bisa meleset.</td></tr>
+    <tr><td><b>Min/Max dan Hold</b></td><td>Menangkap lonjakan tegangan saat motor dipacu, atau menahan angka saat probe sulit diawasi.</td></tr>
+    <tr><td><b>Relatif (zero)</b></td><td>Mengurangi hambatan kabel probe saat mengukur hambatan yang sangat kecil.</td></tr>
+    <tr><td><b>Kapasitansi, frekuensi, duty cycle</b></td><td>Memeriksa kapasitor dan melihat sinyal PWM secara kasar.</td></tr>
+    <tr><td><b>Milliohm meter</b></td><td>Mengukur hambatan konektor dan sambungan yang sangat kecil (modul 06 dan 20).</td></tr>
+    <tr><td><b>Kamera termal</b></td><td>Melihat titik panas di paket baterai, kabel, dan konektor dari jarak aman.</td></tr>
+    <tr><td><b>Scan tool, pembaca CAN, atau aplikasi Bluetooth</b></td><td>Membaca kode gangguan dan data BMS atau controller (modul 19, 22, dan 24).</td></tr>
+    <tr><td><b>Penguji sel dan hambatan dalam baterai</b></td><td>Membandingkan tegangan tiap sel dan kesehatan baterai (modul 15).</td></tr>
+  </table>
+  <h3 style="font:600 19px var(--disp);margin:22px 0 8px">Jebakan yang sering terjadi</h3>
+  <ul class="rec">
+    <li><b>Menjepit dua kabel sekaligus.</b> Clamp meter yang menjepit kabel positif dan negatif bersamaan membaca nol, karena arus yang pergi dan pulang saling meniadakan. Jepit satu kabel saja.</li>
+    <li><b>Clamp meter DC harus di-zero dulu</b> sebelum mengukur: tunggu layar stabil lalu tekan tombol Zero. Jaga jari tetap di belakang pelindung jari dan posisikan kabel di tengah rahang.</li>
+    <li><b>Mengukur keluaran controller dengan multimeter biasa.</b> Keluaran tiga fasa controller berbentuk pulsa PWM, bukan sinus. Angkanya bisa menyesatkan. Gunakan osiloskop atau meter dengan true RMS.</li>
+    <li><b>Megger pada rangkaian elektronik.</b> Tegangan ujinya tinggi. Lepaskan atau pisahkan elektronik sensitif sesuai prosedur pabrikan sebelum menguji isolasi.</li>
+    <li><b>Kategori CAT.</b> Menurut IEC 61010, kategori ukur menunjukkan seberapa dekat titik ukur dengan sumber energi besar: CAT II (stopkontak), CAT III (panel distribusi dan motor), CAT IV (sumber instalasi). Kategori lebih tinggi menahan lonjakan lebih besar. Peringkat tegangan (misalnya 600 V atau 1.000 V) harus melebihi tegangan kerja.</li>
+  </ul>
+
+  <h2>7. Video pendukung</h2>
+  <h3 style="font:600 18px var(--disp);margin:14px 0 6px">Bahasa Indonesia</h3>
+  <div id="vlistid"></div>
+  <p class="why" style="margin-top:14px"><b>Cari video lain.</b> Tautan berikut membuka hasil pencarian YouTube, bukan video tertentu.</p>
+  <ul class="rec" id="vlinks"></ul>
+  <h3 style="font:600 18px var(--disp);margin:22px 0 6px">Bahasa Inggris</h3>
+  <p class="why">Tips subtitle: aktifkan CC, buka Setelan, Subtitel/CC, lalu Terjemahkan otomatis ke Indonesia, bila pemilik video mengaktifkan subtitel.</p>
+  <div id="vlist"></div>
+
+  <details class="dl"><summary>Catatan untuk pengajar</summary>
+    <p><b>Alur sekitar 60 menit:</b> tebakan (5), kenali alat (10), multimeter virtual (15), pilih alat (10), tegangan jatuh (10), kuis (5), ditambah praktik nyata bila alat tersedia.</p>
+    <p><b>Peragaan:</b> tunjukkan tiga colokan pada multimeter sungguhan dan minta peserta menunjuk colokan untuk tegangan dan untuk arus. Lalu lakukan percobaan 3 resistor di modul 06 dengan multimeter yang sama.</p>
+    <p><b>Pesan utama:</b> hampir semua kerusakan alat ukur berasal dari satu hal, yaitu salah colokan atau salah cara sambung. Tegangan paralel, arus seri.</p>
+  </details>
+
+  <h2>8. Kuis</h2>
+  <div id="quiz"></div><div class="verdict" id="score" hidden></div>
+
+  <p class="why" style="margin-top:30px">Sumber: panduan multimeter dari <a href="https://uno.id/cara-menggunakan-multimeter-digital-untuk-pemula-teknisi/" target="_blank" rel="noopener">UNO Indonesia</a> dan <a href="https://www.edukasielektronika.com/2025/04/cara-membaca-dan-menggunakan-multimeter-digital-untuk-pemula.html" target="_blank" rel="noopener">Edukasi Elektronika</a>; insulation tester dari <a href="https://forum.digikey.com/t/introduction-to-megger-insulation-resistance-tester-for-motor-and-cable-testing/53902" target="_blank" rel="noopener">DigiKey</a> dan <a href="https://www.instrumart.com/assets/Megger-Guide-to-Insulation-Testing.pdf" target="_blank" rel="noopener">Megger</a>. Foto, semuanya dari Wikimedia Commons: <a href="https://commons.wikimedia.org/wiki/File:Digital_Multimeter_(To_measure_Voltage,_Current_and_Resistance).jpg" target="_blank" rel="noopener">Digital Multimeter</a> (K.Venkataramana, CC0), <a href="https://commons.wikimedia.org/wiki/File:Clampmeter_Fluke_337.jpg" target="_blank" rel="noopener">Clampmeter Fluke 337</a> (Harke, domain publik), <a href="https://commons.wikimedia.org/wiki/File:Insulation_testers_by_Megger.jpg" target="_blank" rel="noopener">Insulation testers by Megger</a> (Megger Ltd., CC BY 3.0), <a href="https://commons.wikimedia.org/wiki/File:Megger.jpeg" target="_blank" rel="noopener">Megger.jpeg</a> (Tambo, domain publik), <a href="https://commons.wikimedia.org/wiki/File:My_friend_oscilloscope.jpg" target="_blank" rel="noopener">My friend oscilloscope</a> (Wild Pancake, CC BY 4.0), <a href="https://commons.wikimedia.org/wiki/File:Industrial_infrared_thermometer_with_additional_temperature_probe.jpg" target="_blank" rel="noopener">termometer inframerah Fluke 561</a> (KalWadin, CC BY-SA 4.0), <a href="https://commons.wikimedia.org/wiki/File:Multimeter_test_leads.JPG" target="_blank" rel="noopener">Multimeter test leads</a> (Kszapsza, CC BY-SA 4.0), dan <a href="https://commons.wikimedia.org/wiki/File:Digital_multimeter_inside.JPG" target="_blank" rel="noopener">Digital multimeter inside</a> (Jstapko, CC BY-SA 3.0). Panduan clamp meter DC (tombol Zero) dari <a href="https://mitra-one.id/en/news/cara-menggunakan-tang-ampere-atau-clamp-meter-untuk-mengukur-arus-listrik" target="_blank" rel="noopener">Mitra One</a>, prinsip clamp dari Wikipedia (Current clamp), dan anatomi colokan dari <a href="https://simpleelectronics.ca/how-to-use-a-multimeter/" target="_blank" rel="noopener">Simple Electronics</a>. Cek ulang sebelum dipakai sebagai rujukan resmi.</p>
+
+  <div class="nav">
+    <a href="modul-04.html">Sebelumnya: 04</a><a href="index.html#modul">Daftar modul</a>
+    <button id="doneBtn">Tandai selesai</button><a href="modul-06.html">Berikutnya: 06</a>
+  </div>
+</main>
+<div id="site-footer"></div>
+<script>
+const $=id=>document.getElementById(id);
+fetch('assets/layout.html').then(r=>{if(!r.ok)throw 0;return r.text()}).then(h=>{
+  const d=new DOMParser().parseFromString(h,'text/html');
+  document.head.append(...d.querySelectorAll('style'));
+  $('site-header').replaceWith(d.querySelector('header'));$('site-footer').replaceWith(d.querySelector('footer'));
+}).catch(()=>{$('site-header').textContent='Training EV'});
+const kode=document.body.dataset.kode, btn=$('doneBtn');
+let done=[]; try{done=JSON.parse(localStorage.getItem('evDone')||'[]')}catch(e){}
+const mark=()=>{btn.textContent='Selesai ✓';btn.disabled=true};
+if(done.includes(kode))mark();
+btn.onclick=()=>{if(!done.includes(kode))done.push(kode);try{localStorage.setItem('evDone',JSON.stringify(done))}catch(e){}mark()};
+const fx=(n,d=2)=>(+n).toLocaleString('id-ID',{maximumFractionDigits:d});
+function hook(id,aid,opts,ok,html){$(id).innerHTML=opts.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('');$(id).onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;[...$(id).children].forEach((x,i)=>{x.disabled=true;if(i===ok)x.classList.add('right')});if(+b.dataset.i!==ok)b.classList.add('wrong');const a=$(aid);a.hidden=false;a.innerHTML=html}}
+hook('hopt','hans',['Terbaca 72 V','Hubung singkat: sekering alat putus atau lebih buruk','Tidak terjadi apa-apa','Terbaca 72 A'],1,'Jawabannya <b>hubung singkat</b>. Dial ampere dan colokan 10 A membuat alat berperilaku hampir seperti kawat. Di antara dua kutub baterai berarus besar, itu berbahaya. Itulah alasan modul ini: salah colokan adalah kesalahan paling mahal.');
+
+// ----- alat -----
+const CM='https://commons.wikimedia.org/wiki/',fp=f=>CM+'Special:FilePath/'+f+'?width=520';
+const T=[
+ {h:'Multimeter',f:'Digital_Multimeter_(To_measure_Voltage,_Current_and_Resistance).jpg',k:'Digital Multimeter',by:'K.Venkataramana, CC0',t:'Mengukur tegangan, hambatan, kontinuitas, dioda, dan arus kecil.',ev:'Cek tegangan baterai, kontinuitas sekering dan kabel, serta tegangan sinyal throttle.'},
+ {h:'Clamp meter',f:'Clampmeter_Fluke_337.jpg',k:'Clampmeter Fluke 337',by:'Harke, domain publik',t:'Mengukur arus tanpa memutus kabel, cukup menjepit satu kabel. Contoh ini jenis AC/DC sampai 999,9 A.',ev:'Arus motor puluhan sampai ratusan ampere. Untuk EV pilih yang bisa membaca DC.'},
+ {h:'Insulation tester (megger)',f:'Insulation_testers_by_Megger.jpg',k:'Insulation testers by Megger',by:'Megger Ltd., CC BY 3.0',t:'Memberi tegangan uji DC tinggi untuk mengukur hambatan isolasi dalam megohm. Pakai hanya pada rangkaian mati.',ev:'Memeriksa isolasi lilitan motor dan kabel tegangan tinggi terhadap bodi.'},
+ {h:'Osiloskop',f:'My_friend_oscilloscope.jpg',k:'My friend oscilloscope',by:'Wild Pancake, CC BY 4.0',t:'Menampilkan bentuk sinyal terhadap waktu, bukan hanya satu angka.',ev:'Melihat sinyal sensor Hall, throttle, PWM, dan tiga fasa dari controller ke motor.'},
+ {h:'Termometer inframerah atau probe suhu',f:'Industrial_infrared_thermometer_with_additional_temperature_probe.jpg',k:'Industrial infrared thermometer with additional temperature probe',by:'KalWadin, CC BY-SA 4.0',t:'Mengukur suhu permukaan tanpa menyentuh, atau suhu lewat probe tambahan. Contoh ini termometer inframerah Fluke 561 dengan probe suhu.',ev:'Mencari konektor, kabel, atau baterai yang panas berlebihan.'}
+];
+$('tools').innerHTML=T.map(x=>`<figure>${x.f?`<img src="${fp(x.f)}" alt="${x.h}" loading="lazy" onerror="this.style.display='none'">`:''}<h3>${x.h}</h3><p>${x.t}</p><p><b>Di EV:</b> ${x.ev}</p>${x.f?`<figcaption>Sumber: <a href="${CM}File:${x.f}" target="_blank" rel="noopener">${x.k}</a>, ${x.by}, Wikimedia Commons</figcaption>`:''}</figure>`).join('');
+
+const MMF=[
+ {f:'Multimeter_test_leads.JPG',k:'Multimeter test leads',by:'Kszapsza, CC BY-SA 4.0',cap:'Sepasang probe multimeter: merah (positif) dan hitam (COM)'},
+ {f:'Digital_multimeter_inside.JPG',k:'Digital multimeter inside',by:'Jstapko, CC BY-SA 3.0',cap:'Bagian dalam multimeter digital: terlihat sekering, colokan probe, dan piringan saklar'}
+];
+$('mmfig').innerHTML=MMF.map(x=>`<figure><img src="${fp(x.f)}" alt="${x.cap}" loading="lazy" onerror="this.closest('figure').style.display='none'"><figcaption>${x.cap}. Sumber: <a href="${CM}File:${x.f}" target="_blank" rel="noopener">${x.k}</a>, ${x.by}, Wikimedia Commons</figcaption></figure>`).join('');
+
+// ----- multimeter virtual bergambar -----
+const C={bat:{live:'dc',V:72.3,title:'Baterai EV 72 V',kind:'battery',caption:'Ukur tegangan: probe merah ke (+), probe hitam ke (−). Pilih V⎓ DC dan pasang probe secara paralel.'},ac:{live:'ac',V:221,title:'Stopkontak 220 V AC',kind:'socket',caption:'Ilustrasi stopkontak. Pengukuran stopkontak sungguhan hanya untuk orang terlatih dengan alat dan probe berperingkat sesuai.'},res:{title:'Resistor 1 kΩ',kind:'resistor',caption:'Resistor dilepas dari rangkaian. Sentuhkan satu probe ke tiap kaki resistor.'},wok:{title:'Kabel utuh',kind:'wire',caption:'Untuk cek sambungan kabel, pilih Ω atau kontinuitas lalu sentuhkan probe ke kedua ujung kabel.'},wbr:{title:'Kabel putus',kind:'broken',caption:'Kabel putus tidak memiliki jalur penghantar utuh. Mode kontinuitas tidak akan berbunyi.'},led:{title:'LED',kind:'led',caption:'Mode dioda dapat menunjukkan tegangan maju LED. Arah probe menentukan hasil.'},small:{live:'dc',V:3,I:.03,title:'Rangkaian 3 V + 100 Ω',kind:'circuit',caption:'Untuk mengukur arus, rangkaian harus dibuka lalu multimeter disisipkan secara seri.'},motor:{live:'dc',V:72.3,I:30,title:'Motor EV 72 V',kind:'motor',caption:'Arus motor besar jangan diukur dengan multimeter 10 A. Gunakan clamp meter DC yang sesuai.'}};
+let redJack='v',blackJack='com',dial='vdc';
+const dialAngles={off:0,vdc:48,vac:96,ohm:144,cont:192,dio:240,amp:288};
+function targetSVG(kind){
+ const cable=(x1,y1,x2,y2,color)=>`<path d="M${x1} ${y1} Q${(x1+x2)/2} ${(y1+y2)/2-28} ${x2} ${y2}" fill="none" stroke="${color}" stroke-width="5" stroke-linecap="round"/>`;
+ let body='';
+ if(kind==='battery') body=`<rect x="90" y="58" width="220" height="140" rx="12" fill="#2b3543" stroke="#aeb8c6" stroke-width="3"/><rect x="125" y="43" width="40" height="17" rx="3" fill="#d9e0e8"/><rect x="235" y="43" width="40" height="17" rx="3" fill="#d94d55"/><text x="145" y="34" fill="#fff" font-size="18" text-anchor="middle">−</text><text x="255" y="34" fill="#ff727a" font-size="18" text-anchor="middle">+</text><text x="200" y="115" fill="#fff" font-size="19" text-anchor="middle" font-weight="bold">BATERAI EV</text><text x="200" y="145" fill="#aee7c6" font-size="24" text-anchor="middle">72 V DC</text><circle cx="145" cy="53" r="7" fill="#111"/><circle cx="255" cy="53" r="7" fill="#f04c54"/>`;
+ else if(kind==='socket') body=`<rect x="110" y="35" width="180" height="205" rx="20" fill="#e8e9e7" stroke="#9aa4ae" stroke-width="4"/><circle cx="200" cy="135" r="57" fill="#cbd0d2"/><rect x="167" y="102" width="13" height="37" rx="6" fill="#252b31"/><rect x="220" y="102" width="13" height="37" rx="6" fill="#252b31"/><circle cx="200" cy="161" r="9" fill="#252b31"/><text x="200" y="218" font-size="16" text-anchor="middle" fill="#333">220 V AC</text>`;
+ else if(kind==='resistor') body=`<path d="M55 125 H130 M270 125 H345" stroke="#cbd5e1" stroke-width="5"/><rect x="130" y="100" width="140" height="50" rx="15" fill="#d9bd8c" stroke="#fff0c8" stroke-width="2"/><path d="M155 101 V149 M180 101 V149 M205 101 V149 M230 101 V149" stroke="#9d583b" stroke-width="7"/><text x="200" y="82" fill="#fff" font-size="18" text-anchor="middle">1 kΩ</text>`;
+ else if(kind==='wire'||kind==='broken') body=`<path d="M40 120 H${kind==='wire'?360:165}" stroke="#e34d54" stroke-width="14" stroke-linecap="round"/><path d="M${kind==='wire'?40:235} 120 H360" stroke="#e34d54" stroke-width="14" stroke-linecap="round"/><rect x="25" y="103" width="24" height="34" rx="4" fill="#cbd5e1"/><rect x="351" y="103" width="24" height="34" rx="4" fill="#cbd5e1"/>${kind==='broken'?'<path d="M170 105 l15 10 -8 10 18 10 M228 105 l-15 10 8 10 -18 10" stroke="#ffc857" stroke-width="4" fill="none"/><text x="200" y="175" fill="#ffc857" font-size="17" text-anchor="middle">KABEL PUTUS</text>':'<text x="200" y="175" fill="#aee7c6" font-size="17" text-anchor="middle">KABEL UTUH</text>'}`;
+ else if(kind==='led') body=`<path d="M35 130 H160 M240 130 H365" stroke="#cbd5e1" stroke-width="5"/><path d="M160 95 L160 165 L225 130 Z" fill="#ed555d" stroke="#ffb4b8" stroke-width="3"/><path d="M230 95 V165" stroke="#ffb4b8" stroke-width="5"/><path d="M185 85 l20 -20 M205 95 l20 -20" stroke="#ffc857" stroke-width="4"/><text x="200" y="200" fill="#fff" font-size="16" text-anchor="middle">LED</text>`;
+ else if(kind==='circuit') body=`<rect x="25" y="65" width="350" height="130" rx="10" fill="#202b38" stroke="#708095" stroke-width="2"/><rect x="45" y="95" width="65" height="70" rx="6" fill="#d94d55"/><text x="78" y="135" fill="#fff" text-anchor="middle" font-size="18">3 V</text><path d="M110 110 H155 M155 110 l10 -15 15 30 15 -30 15 30 15 -15 H280 V155 H78 V165" stroke="#d7e0ea" stroke-width="4" fill="none"/><text x="195" y="82" fill="#fff" text-anchor="middle" font-size="15">R = 100 Ω</text><circle cx="280" cy="110" r="6" fill="#ffc857"/><text x="200" y="220" fill="#aee7c6" text-anchor="middle" font-size="15">Arus contoh: 30 mA</text>`;
+ else body=`<circle cx="200" cy="125" r="82" fill="#344354" stroke="#aeb8c6" stroke-width="4"/><circle cx="200" cy="125" r="57" fill="#1b2634" stroke="#7e8b9b" stroke-width="3"/><circle cx="200" cy="125" r="18" fill="#aeb8c6"/><text x="200" y="230" fill="#fff" font-size="18" text-anchor="middle">MOTOR EV</text><text x="200" y="253" fill="#aee7c6" font-size="15" text-anchor="middle">72 V • beban besar</text>`;
+ // Probe cords are illustrative; they terminate at the component measurement points.
+ let cords='';
+ if(kind==='battery') cords=cable(75,275,145,53,'#20242a')+cable(325,275,255,53,'#e34d54');
+ else if(kind==='socket') cords=cable(75,275,167,120,'#20242a')+cable(325,275,233,120,'#e34d54');
+ else cords=cable(75,275,kind==='resistor'?130:kind==='led'?160:40,kind==='resistor'?125:kind==='led'?130:120,'#20242a')+cable(325,275,kind==='resistor'?270:kind==='led'?240:360,kind==='resistor'?125:kind==='led'?130:120,'#e34d54');
+ return `<svg class="target-svg" viewBox="0 0 400 300" role="img" aria-label="Ilustrasi ${C[$('mc').value].title} dan sambungan probe"><defs><linearGradient id="metal" x1="0" x2="1"><stop stop-color="#e8edf2"/><stop offset="1" stop-color="#737f8c"/></linearGradient></defs>${body}${cords}<path d="M65 260 l10 15 10 -15 Z" fill="#151a20" stroke="#dbe3ec" stroke-width="2"/><path d="M315 260 l10 15 10 -15 Z" fill="#e34d54" stroke="#ffd2d4" stroke-width="2"/><text x="75" y="294" fill="#cbd5e1" font-size="11" text-anchor="middle">HITAM / COM</text><text x="325" y="294" fill="#ff8d93" font-size="11" text-anchor="middle">MERAH</text></svg>`;
+}
+function R(txt,cls,msg,sub){return {txt,cls,msg,sub:sub||''}}
+function meas(){
+ const d=dial,j=redJack,c=$('mc').value,w=$('mw').value,o=C[c],live=!!o.live;
+ const badJack='Probe merah masih di lubang 10A. Jangan ukur tegangan dari lubang ini: pada sumber aktif dapat terjadi hubung singkat. Pindahkan probe merah ke VΩmA.';
+ if(blackJack!=='com')return R('ERR','bad','Probe hitam harus terpasang pada COM. Pilih lubang COM untuk kabel hitam.');
+ if(d==='off')return R('—','warn','Multimeter mati (OFF). Pilih fungsi pada selektor.');
+ if(d==='vdc'||d==='vac'){
+  if(j==='a')return live?R('ERR','bad',badJack):R('—','warn','Untuk mengukur tegangan, pindahkan probe merah ke VΩmA.');
+  if(!live)return R('0.00 V','warn','Komponen ini terlepas dari sumber listrik, jadi tidak ada tegangan sumber yang terbaca.');
+  if(w==='s')return R('0.0 V','warn','Tegangan diukur secara paralel: kedua probe menyentuh dua titik yang ingin dibandingkan.');
+  if(o.live===(d==='vdc'?'dc':'ac'))return R(fx(o.V,1)+' V','ok','Benar. Fungsi selektor cocok dan probe dipasang paralel. '+(d==='vdc'?'Untuk DC, perhatikan kutub + dan −.':'Pilih V~ untuk tegangan AC.'));
+  return R('OL / tidak sesuai','warn',d==='vdc'?'Sumber ini AC. Pilih V~ AC.':'Sumber ini DC. Pilih V⎓ DC.');
+ }
+ if(d==='ohm'||d==='cont'||d==='dio'){
+  if(live)return R('ERR','bad','Matikan sumber dan lepaskan komponen dari rangkaian sebelum mengukur hambatan, kontinuitas, atau dioda.');
+  if(j==='a')return R('—','warn','Mode Ω, kontinuitas, dan dioda menggunakan lubang VΩmA, bukan 10A.');
+  if(d==='ohm'){if(c==='res')return R('1,00 kΩ','ok','Benar. Hambatan resistor terbaca sekitar 1 kΩ.');if(c==='wok')return R('0,2 Ω','ok','Kabel utuh memiliki hambatan sangat kecil.');if(c==='wbr')return R('OL','warn','OL berarti jalur terbuka; kabel kemungkinan putus.');return R('OL','warn','Nilai ini tidak mewakili hambatan resistor. Coba mode yang sesuai dengan komponennya.');}
+  if(d==='cont'){if(c==='wok')return R('0,2 Ω','ok','Kabel tersambung; multimeter biasanya berbunyi bip.','🔔 BIP');if(c==='wbr')return R('OL','warn','Tidak ada sambungan; multimeter tidak berbunyi.');return R('OL','warn','Tidak terdeteksi sambungan berhambatan rendah.');}
+  if(c==='led')return R('1,85 V','ok','LED menunjukkan tegangan maju. Pada beberapa multimeter, LED juga tampak menyala redup.');
+  return R('OL','warn','Mode dioda paling sesuai untuk memeriksa arah hantar dioda atau LED.');
+ }
+ if(d==='amp'){
+  if(!live)return R('0,00 A','warn','Tidak ada arus mengalir karena komponen tidak terhubung ke sumber dan beban.');
+  if(w==='p')return R('ERR','bad','Arus harus diukur secara seri. Jalur rangkaian perlu dibuka, lalu multimeter disisipkan ke jalur itu. Jangan menempelkan ampere meter langsung ke kutub baterai.');
+  if(j==='v'&&o.I>.2)return R('FUSE?','bad','Arus melebihi batas masukan arus kecil pada VΩmA. Sekering alat dapat putus.');
+  if(j==='a'&&o.I>10)return R('OVER','bad','Arus 30 A melebihi batas 10 A pada multimeter contoh. Gunakan clamp meter DC yang sesuai, bukan masukan 10A.');
+  if(!o.I)return R('0,00 A','warn','Tidak ada beban yang menarik arus.');
+  return R(j==='v'?'30,0 mA':'0,03 A','ok','Secara prinsip arus diukur seri. Pastikan arus dan lama pengukuran tidak melebihi rating alat.');
+ }
+}
+function mm(){const r=meas(),l=$('lcd');l.innerHTML=`<small>HASIL PENGUKURAN</small>${r.txt||'—'}${r.sub?`<small>${r.sub}</small>`:''}`;const v=$('mvd');v.className='verdict '+r.cls;v.textContent=r.msg;
+ const o=C[$('mc').value];$('targetTitle').textContent=o.title;$('targetCaption').textContent=o.caption;$('targetDraw').innerHTML=targetSVG(o.kind);
+ document.querySelectorAll('[data-dial]').forEach(b=>b.classList.toggle('active',b.dataset.dial===dial));
+ document.querySelectorAll('[data-jack]').forEach(b=>b.classList.toggle('selected',b.dataset.jack===(b.dataset.jack==='com'?blackJack:redJack)));
+ $('dialPointer').style.transform=`rotate(${dialAngles[dial]||0}deg)`;
+}
+$('dialChoices').addEventListener('click',e=>{const b=e.target.closest('[data-dial]');if(!b)return;dial=b.dataset.dial;mm()});
+document.querySelector('.jack-area').addEventListener('click',e=>{const b=e.target.closest('[data-jack]');if(!b)return;if(b.dataset.jack==='com')blackJack='com';else redJack=b.dataset.jack;mm()});
+['mc','mw'].forEach(i=>$(i).addEventListener('change',mm));mm();
+
+// ----- pilih alat -----
+const P=[['Mengukur arus motor 120 A DC tanpa memutus kabel','clamp'],['Memeriksa kebocoran isolasi kabel tegangan tinggi ke bodi','ins'],['Mencari konektor yang panas berlebihan','thermo'],['Melihat bentuk sinyal PWM atau sinyal Hall','osc'],['Mengecek tegangan baterai dan kontinuitas sekering','mm'],['Melihat tiga fasa dari controller ke motor','osc']];
+const PN={clamp:'Clamp meter',ins:'Insulation tester',thermo:'Termometer inframerah',osc:'Osiloskop',mm:'Multimeter'};
+$('pick').innerHTML=P.map((p,i)=>`<div class="pick" data-i="${i}"><span>${p[0]}</span><select><option value="">Pilih alat...</option>${Object.entries(PN).map(([k,n])=>`<option value="${k}">${n}</option>`).join('')}</select></div>`).join('');
+$('pickChk').onclick=()=>{
+  let ok=0;
+  [...$('pick').children].forEach((r,i)=>{const v=r.querySelector('select').value,g=v===P[i][1];r.className='pick '+(g?'good':'bad');if(g)ok++});
+  const v=$('pickV');v.hidden=false;v.className='verdict '+(ok===P.length?'ok':'warn');
+  v.textContent=ok===P.length?'Semua tepat.':`Benar ${ok} dari ${P.length}. Yang merah belum tepat: ingat, clamp untuk arus tanpa memutus, megger untuk isolasi, osiloskop untuk bentuk sinyal.`;
+};
+
+// ----- tegangan jatuh -----
+function vd(){
+  const I=+$('ci').value,R=+$('cr').value,V=I*R/1000,H=I*I*R/1000;
+  $('ciT').textContent=I+' A';$('crT').textContent=fx(R,1)+' mΩ';
+  $('cd').textContent=fx(V,2)+' V';$('ch').textContent=fx(H,1)+' W';
+  const v=$('cv');
+  if(H>20){v.className='verdict bad';v.textContent='Konektor akan sangat panas. Segera cari penyebab: kendur, kotor, atau berkarat.'}
+  else if(H>5){v.className='verdict warn';v.textContent='Konektor akan hangat. Periksa kekencangan dan kebersihan.'}
+  else{v.className='verdict ok';v.textContent='Panas kecil. Bandingkan juga dengan acuan pabrikan.'}
+}
+['ci','cr'].forEach(i=>$(i).addEventListener('input',vd));vd();
+
+// ----- video -----
+const VIDEOS=[
+ { id:'TdUK6RPdIrA', judul:'How to Use a Multimeter for Beginners - How to Measure Voltage, Resistance, Continuity and Amps', bahasa:'Inggris', kanal:'', link:'https://www.youtube.com/watch?v=TdUK6RPdIrA', desk:'Fungsi dasar multimeter murah: mengukur tegangan AC dan DC, hambatan, kontinuitas, dan arus.' },
+ { id:'zr4Ow1JT9jU', judul:'How to Use a Multimeter - With Examples and Demonstrations', bahasa:'Inggris', kanal:'', link:'https://www.youtube.com/watch?v=zr4Ow1JT9jU', desk:'Tutorial rinci langkah demi langkah untuk pemula, dengan contoh dan peragaan.' },
+ { id:'SyCS8vc0gkg', judul:'How to Use a Digital Multimeter - Complete Guide For Beginners', bahasa:'Inggris', kanal:'', link:'https://www.youtube.com/watch?v=SyCS8vc0gkg', desk:'Panduan lengkap multimeter digital untuk elektronika, perbaikan, dan pemecahan masalah rangkaian.' },
+ { id:'la0rr9jvH4M', judul:'How to use a Digital Multimeter - Best Multimeter for Beginners', bahasa:'Inggris', kanal:'', link:'https://www.youtube.com/watch?v=la0rr9jvH4M', desk:'Menguji tegangan, arus DC, hambatan, serta memeriksa dioda, LED, dan transistor.' }
+];
+$('vlist').innerHTML=VIDEOS.map(v=>`<div class="vl"><a class="th" href="${v.link}" target="_blank" rel="noopener" aria-label="Tonton: ${v.judul}"><img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="Pratinjau ${v.judul}" loading="lazy"><span class="pl">▶ Tonton di YouTube</span></a><div><h4><a href="${v.link}" target="_blank" rel="noopener">${v.judul}</a></h4><p>${v.bahasa?`<span class="bd">${v.bahasa}</span>`:''}<span style="color:var(--dim);font-size:12px">${v.kanal}</span></p><p>${v.desk}</p></div></div>`).join('');
+const VIDEOS_ID=[
+ { id:'Crpg8D9Jkp0', judul:'Paling Mudah & Gampang Di Pahami Untuk Pemula Cara Menggunakan MULTIMETER DIGITAL', link:'https://www.youtube.com/watch?v=Crpg8D9Jkp0', desk:'Tutorial multitester digital untuk pemula, bagian ketiga dari sebuah seri.' },
+ { id:'8HPYDiZS__c', judul:'CARA PAKAI MULTIMETER DIGITAL SANWA | DARI NOL SAMPAI BISA', link:'https://www.youtube.com/watch?v=8HPYDiZS__c', desk:'Cara memakai multimeter, multitester, atau AVOmeter dari nol sampai bisa.' },
+ { id:'jiKz1gjo2wU', judul:'Review & Cara Menggunakan Multimeter Digital DT-830B', link:'https://www.youtube.com/watch?v=jiKz1gjo2wU', desk:'Ulasan dan cara pakai multimeter DT-830B. Bagian cara pakai mulai sekitar menit 3:04.' },
+ { id:'RLsOhgNUu5E', judul:'Cara Menggunakan Tang Ampere atau Clamp Meter', link:'https://www.youtube.com/watch?v=RLsOhgNUu5E', desk:'Cara memakai digital clamp meter. Disebut tang ampere karena bentuknya seperti tang.' },
+ { id:'dxjtup6oamU', judul:'CARA MENGGUNAKAN TANG AMPERE ATAU DIGITAL CLAMP METER BAGI PEMULA', link:'https://www.youtube.com/watch?v=dxjtup6oamU', desk:'Penjelasan tang ampere untuk pemula, termasuk fungsi voltmeter dan ampere meter.' },
+ { id:'Ses-9k20ID8', judul:'Cara Menggunakan Tang Ampere/clamp meter', link:'https://www.youtube.com/watch?v=Ses-9k20ID8', desk:'Memakai clamp meter digital VIP 3902 untuk mengukur arus AC/DC dan ampere.' },
+ { id:'n4-nZ6qwbMU', judul:'Cara menggunakan megger insulation tester untuk mengukur tahanan isolasi', link:'https://www.youtube.com/watch?v=n4-nZ6qwbMU', desk:'Mengukur tahanan isolasi kabel dan lilitan (spul) motor listrik dengan megger.' },
+ { id:'O3fXeU6qNmc', judul:'Panduan Praktis: Fungsi Tombol & Kalibrasi Digital Oscilloscope', link:'https://www.youtube.com/watch?v=O3fXeU6qNmc', desk:'Fungsi tombol dan kalibrasi osiloskop digital.' }
+];
+$('vlistid').innerHTML=VIDEOS_ID.map(v=>`<div class="vl"><a class="th" href="${v.link}" target="_blank" rel="noopener" aria-label="Tonton: ${v.judul}"><img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="Pratinjau ${v.judul}" loading="lazy"><span class="pl">▶ Tonton di YouTube</span></a><div><h4><a href="${v.link}" target="_blank" rel="noopener">${v.judul}</a></h4><p><span class="bd">Indonesia</span></p><p>${v.desk}</p></div></div>`).join('');
+const YT='https://www.youtube.com/results?search_query=';
+const VL=[['id','cara menggunakan multimeter digital'],['id','cara mengukur arus dengan clamp meter tang ampere'],['id','cara menggunakan insulation tester megger'],['id','cara menggunakan osiloskop untuk pemula'],['en','clamp meter DC current EV technician']];
+$('vlinks').innerHTML=VL.map(x=>`<li><a href="${YT+encodeURIComponent(x[1])}" target="_blank" rel="noopener">${x[1]}</a> (${x[0]==='id'?'Bahasa Indonesia':'Bahasa Inggris'})</li>`).join('');
+
+// ----- kuis -----
+const Q=[
+['Untuk mengukur arus dengan multimeter, alat dipasang...',['Paralel di dua kutub sumber','Seri, jalur diputus lalu alat disisipkan','Cukup ditempel di kabel'],1,'Arus diukur seri. Paralel pada sumber adalah hubung singkat.'],
+['Hambatan sebaiknya diukur saat rangkaian...',['Hidup penuh','Mati dan komponen lepas','Sedang dicas'],1,'Sumber tegangan mengacaukan pengukuran hambatan dan bisa merusak alat.'],
+['Mengukur arus motor 120 A DC tanpa memutus kabel paling cocok dengan...',['Multimeter di colokan 10 A','Clamp meter yang bisa membaca DC','Insulation tester'],1,'Multimeter dibatasi sekitar 10 A. Clamp meter AC/DC membaca arus besar dengan menjepit kabel.'],
+['Layar menampilkan OL saat mengukur kabel. Artinya...',['Kabel sangat baik','Hambatan tak terhingga (terbuka)','Baterai alat habis'],1,'OL berarti over limit atau terbuka. Pada kabel yang seharusnya tersambung, ini tanda kabel putus.'],
+['Insulation tester bekerja dengan...',['Memberi tegangan uji DC tinggi dan menghitung hambatan isolasi','Menjepit kabel dan membaca medan magnet','Membaca suhu permukaan'],0,'Tegangan uji tinggi dan arus bocor yang kecil dipakai untuk menghitung hambatan isolasi dalam megohm.'],
+['Clamp meter menjepit kabel positif DAN negatif sekaligus. Bacaannya...',['Dua kali lipat','Mendekati nol','Sama dengan salah satu kabel'],1,'Arus yang pergi dan pulang saling meniadakan, jadi jepit satu kabel saja.'],
+['Mengapa probe merah di colokan 10 A tidak boleh dipakai untuk mengukur tegangan baterai?',['Karena hasilnya kurang akurat','Karena hampir seperti kawat sehingga terjadi hubung singkat','Karena baterai alat cepat habis'],1,'Colokan arus besar memiliki hambatan sangat kecil, jadi di antara dua kutub sumber ia menjadi hubung singkat.']
+];
+let sc=0,ans=0;
+$('quiz').innerHTML=Q.map((q,i)=>`<div class="q" data-i="${i}"><h4>${i+1}. ${q[0]}</h4>${q[1].map((o,j)=>`<button class="opt" data-j="${j}">${o}</button>`).join('')}<p class="why" hidden></p></div>`).join('');
+$('quiz').onclick=e=>{
+  const b=e.target.closest('button');if(!b||b.disabled)return;
+  const box=b.closest('.q'),q=Q[+box.dataset.i],ok=+b.dataset.j===q[2];
+  box.querySelectorAll('button').forEach((x,j)=>{x.disabled=true;if(j===q[2])x.classList.add('right')});
+  if(!ok)b.classList.add('wrong');else sc++;
+  const w=box.querySelector('.why');w.hidden=false;w.textContent=(ok?'Benar. ':'Belum tepat. ')+q[3];
+  if(++ans===Q.length){const s=$('score');s.hidden=false;s.className='verdict '+(sc>=5?'ok':sc>=4?'warn':'bad');s.textContent=`Skor Anda ${sc} dari ${Q.length}. `+(sc>=5?'Siap lanjut ke modul berikutnya.':'Ulangi multimeter virtual, lalu coba kuis lagi.')}
+};
+</script>
+</body>
+</html>

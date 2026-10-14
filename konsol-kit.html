@@ -529,6 +529,25 @@
   .hu-note.info{border-color:rgba(67,217,163,.5);background:rgba(67,217,163,.07);color:#8be6c3;}
   .hu[data-power="off"] .hu-info,.hu[data-power="charge"] .hu-info{opacity:.25;}
 
+  /* ---- popup kerusakan di head unit ---- */
+  .hu-modal{position:absolute;inset:0;z-index:5;display:none;align-items:center;justify-content:center;padding:18px;
+    background:rgba(3,7,10,.78);backdrop-filter:blur(3px);}
+  .hu-modal.show{display:flex;animation:tabin .25s ease;}
+  .hu-modal-card{width:min(100%,440px);padding:22px;border-radius:16px;text-align:center;
+    border:1px solid #FF5C5C;background:linear-gradient(180deg,#1a0d10,#0c0709);
+    box-shadow:0 0 34px rgba(255,92,92,.45),inset 0 0 24px rgba(255,92,92,.1);}
+  .hu-modal-ico{width:58px;height:58px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;border-radius:14px;
+    border:2px solid #FF5C5C;color:#FF5C5C;font-size:30px;font-weight:700;text-shadow:0 0 12px #FF5C5C;animation:pulse 1.1s infinite;}
+  .hu-modal-card h3{margin:0 0 8px;font-size:18px;color:#FF9A9A;}
+  .hu-modal-card p{margin:0 0 10px;font-size:13.5px;line-height:1.5;color:#E9EDF1;}
+  .hu-modal-learn{margin:0 0 14px;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,92,92,.35);background:rgba(255,92,92,.07);
+    font-size:12px;line-height:1.55;color:#F2B6B6;text-align:left;}
+  .hu-modal-prog{display:none;height:6px;border-radius:3px;background:#2a1519;overflow:hidden;margin-bottom:14px;}
+  .hu-modal-prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#F2A93B,#43D9A3);transition:width .1s linear;}
+  .hu-modal-actions{display:flex;gap:10px;justify-content:center;}
+  .hu-modal-actions .mini-btn{padding:9px 22px;font-size:13px;}
+  #huModalRepair{border-color:#43D9A3;color:#43D9A3;background:rgba(67,217,163,.1);}
+
   .hu-batt.charging .seg.chg{background:rgba(67,217,163,.55);animation:pulse .9s infinite;}
 </style>
 </head>
@@ -707,6 +726,19 @@
         <h2>B. Head Unit <span class="tag" id="huPowerTag">OFF</span></h2>
         <div class="hu" id="hu" data-power="off">
           <div class="hu-overlay" id="huOverlay">MENUNGGU KONEKSI BLE</div>
+          <div class="hu-modal" id="huModal">
+            <div class="hu-modal-card">
+              <div class="hu-modal-ico" id="huModalIco">M</div>
+              <h3 id="huModalTitle">Kerusakan</h3>
+              <p id="huModalText"></p>
+              <div class="hu-modal-learn" id="huModalLearn"></div>
+              <div class="hu-modal-prog" id="huModalProg"><i></i></div>
+              <div class="hu-modal-actions">
+                <button class="mini-btn" id="huModalRepair">Perbaiki</button>
+                <button class="mini-btn" id="huModalClose">Tutup</button>
+              </div>
+            </div>
+          </div>
           <div class="hu-top">
             <div class="hu-sein" id="huSeinL"><svg viewBox="0 0 66 46"><polygon points="2,23 28,2 28,15 64,15 64,31 28,31 28,44"/></svg></div>
             <div class="hu-modes">
@@ -963,6 +995,10 @@ const TELEMETRY = [
 
 // ===================== PARAMETER SIMULASI =====================
 const VALID_CARD_HEX = '0F15F148';
+// Seven-segment kit (TM1637) diatur dashboard lewat target BLE 3.
+// Set false jika firmware Mega/ESP belum diupdate (frame 6 byte tidak dikenali Mega lama).
+const USE_SEVEN_SEG_CMD = true;
+const DISP_OFF = 0xFFFF, DISP_ALL = 0xFFFE;   // padam / semua segmen menyala
 // Waktu charging dihitung dari 0% ke 100%: tahap CC (0..80%) lalu CV (80..100%, melambat).
 // Fast total 16 dtk, Slow total 40 dtk. Dari SOC awal yang lebih tinggi, waktunya proporsional.
 const CHARGE_PROFILE = {
@@ -1018,9 +1054,11 @@ const BULB_MOTOR_PCT = 15;                   // motor 15% saat bulb check (efek 
 const DRAIN_BASE = 2.0;                      // %/dtk di 140 km/jam, BLDC 8000W (acuan)
 const pctToPwm = (pct) => Math.min(255, Math.ceil(pct * 2.55 - 1e-9)); // Mega: persen = pwm*100/255
 
+const REPAIR_MS = 1500;     // lama proses perbaikan setelah tombol Perbaiki
 const BULB_MS = 1600;       // lama bulb check saat ignition ON
 const PAID_MS = 1500;       // lama tampilan "pembayaran diterima"
-const ALM_ON_MS = 250, ALM_OFF_MS = 2200; // bunyi singkat, hening lebih lama
+// Alarm baterai: bunyi singkat berkala. 0% = jeda 2,2 dtk; 1-20% = jeda lebih lama (5 dtk).
+const ALM_ON_MS = 250, ALM_OFF_MS = 2200, ALM_LOW_OFF_MS = 5000;
 const EMPTY_BLINK_MS = 400, SEIN_BLINK_MS = 350;
 const CHG_DEBOUNCE_MS = 500; // pembacaan charger harus stabil dulu sebelum dianggap berubah
 
@@ -1068,8 +1106,9 @@ const hu = { power:'off', ready:false, park:false, rev:false, almMode:'off' };
 // Model kendaraan (hasil perhitungan controller)
 const vm = { bldc:null, volt:null, entry:null, vmode:0, vcap:0, derate:1, speed:0, motorPct:0, regen:false,
              temp:30, thermalLimited:false, faultKind:null, faultText:'', bldcErr:false, dmgRemain:null,
-             dmgText:'', effMode:'eco', canDrive:false, throttlePct:0 };
+             dmgText:'', effMode:'eco', canDrive:false, throttlePct:0, faultCtx:null };
 let dmgTimer = 0, bldcErrSince = null, lastBldc = null, lastVolt = null;
+let faultDismissed = false, repairUntil = 0;   // popup kerusakan ditutup / proses perbaikan
 let modeKey = 'eco';
 let prevIgn = null, bulbStart = 0, bulbUntil = 0;
 let seinMode = 'off';           // off | left | right | hazard
@@ -1081,7 +1120,7 @@ let huSpeedDisp = 0, huLastNow = 0;
 let buzzSeq = null;
 
 // Pelacak perintah terakhir yang DIKIRIM (dedup + resend berkala)
-let lastSentEsp = -1, lastSentMega = -1, lastSentMotor = null, lastResendTs = 0;
+let lastSentEsp = -1, lastSentMega = -1, lastSentMotor = null, lastSentDisp = null, lastResendTs = 0;
 
 // Hook uji: jam bisa dioverride
 let clockOverride = null;
@@ -1196,9 +1235,10 @@ function computeKitBits(now) {
   let b = batteryBitsFromPercent(batteryPercent);
   if (p === 'charge') { if (s <= 0 && blink) b |= (1<<BIT_EMPTY); return b; }   // saat charging hanya baterai
   if (s <= 20 && blink) b |= (1<<BIT_EMPTY);                                   // Empty berkedip mulai 20%
-  if (hu.almMode === 'continuous') b |= (1<<MEGA_BIT_ALM);                      // 0%: bunyi terus
-  else if (hu.almMode === 'periodic' && almStartTs !== null &&
-           ((now - almStartTs) % (ALM_ON_MS + ALM_OFF_MS)) < ALM_ON_MS) b |= (1<<MEGA_BIT_ALM); // <=20%: berkala
+  if (hu.almMode !== 'off' && almStartTs !== null) {                           // 0% berkala; 1-20% berkala lebih jarang
+    const off = hu.almMode === 'low' ? ALM_LOW_OFF_MS : ALM_OFF_MS;
+    if (((now - almStartTs) % (ALM_ON_MS + off)) < ALM_ON_MS) b |= (1<<MEGA_BIT_ALM);
+  }
   if (hu.ready) b |= (1<<BIT_READY_MEGA);
   if (hu.park)  b |= (1<<BIT_PARK);
   if (hu.rev)   b |= (1<<BIT_REVERSE);
@@ -1212,6 +1252,14 @@ function computeKitBits(now) {
 function composeMegaBits(now) {
   if (!rideAutoMode) return megaManualBits & 0xFFFF;
   return ((megaManualBits & ~CTRL_MASK) | computeKitBits(now)) & 0xFFFF;
+}
+// Nilai seven-segment: km/jam saat jalan, 8.8.8.8. saat bulb check, padam saat ignition OFF / charging.
+function composeDisplay() {
+  const p = hu.power;
+  if (p === 'bulb') return DISP_ALL;
+  if (p === 'on') return Math.round(clamp(vm.speed, 0, 8888));
+  if (p === 'manual') return Math.round(Math.abs(motorManual) / 255 * REF_MAX_KMH);
+  return DISP_OFF;
 }
 function composeMotor() {
   if (!rideAutoMode) return motorManual;
@@ -1253,6 +1301,7 @@ function syncOutputs(now) {
   if (force || e !== lastSentEsp)   { lastSentEsp = e;   sendCmd(0, e); }
   if (force || m !== lastSentMega)  { lastSentMega = m;  sendCmd(1, m); }
   if (force || mo !== lastSentMotor){ lastSentMotor = mo; sendCmd(2, mo); }
+  if (USE_SEVEN_SEG_CMD) { const d = composeDisplay(); if (force || d !== lastSentDisp) { lastSentDisp = d; sendCmd(3, d); } }
   if (force) lastResendTs = now;
 }
 
@@ -1463,16 +1512,25 @@ function stepController(now) {
   vm.dmgRemain = fail ? Math.max(0, fail.t - dmgTimer) : null;
   vm.dmgText = fail ? fail.text : '';
   if (fail && !vm.faultKind && dmgTimer >= fail.t) {
-    vm.faultKind = fail.kind; vm.faultText = fail.text; dmgTimer = 0;
-    toast('KERUSAKAN: ' + fail.text + '. Tekan "Perbaiki" di tab Simulasi.', 'alert');
+    vm.faultKind = fail.kind; vm.faultText = fail.text; dmgTimer = 0; faultDismissed = false;
+    vm.faultCtx = { bldc: vm.bldc, volt: vm.volt, mode: vm.effMode, tag: vm.entry.tag, note: vm.entry.note };
+    toast('KERUSAKAN: ' + fail.text + '. Lihat popup di head unit.', 'alert');
   }
+  if (repairUntil && now >= repairUntil) { repairUntil = 0; repairFault(); }
 
-  // ---- alarm baterai (buzzer kit): <=20% berkala, 0% terus. Mati saat ignition OFF / charging ----
-  const wantAlm = power === 'on' ? (s <= 0 ? 'continuous' : (s <= 20 ? 'periodic' : 'off')) : 'off';
-  if (wantAlm !== hu.almMode) { hu.almMode = wantAlm; almStartTs = wantAlm === 'periodic' ? now : null; }
+  // ---- alarm baterai (buzzer kit), mati saat ignition OFF / charging ----
+  //   0%    : 'empty' = bunyi singkat tiap ~2,5 dtk
+  //   1-20% : 'low'   = bunyi singkat tiap ~5,3 dtk (lebih jarang)
+  const wantAlm = power === 'on' ? (s <= 0 ? 'empty' : (s <= 20 ? 'low' : 'off')) : 'off';
+  if (wantAlm !== hu.almMode) { hu.almMode = wantAlm; almStartTs = wantAlm !== 'off' ? now : null; }
+}
+function startRepair(now) {
+  if (!vm.faultKind || repairUntil) return;
+  repairUntil = now + REPAIR_MS;
 }
 function repairFault() {
-  vm.faultKind = null; vm.faultText = ''; dmgTimer = 0;
+  vm.faultKind = null; vm.faultText = ''; vm.faultCtx = null; dmgTimer = 0;
+  repairUntil = 0; faultDismissed = false;
   toast('Perbaikan selesai. Sistem kembali normal.', 'live');
 }
 
@@ -1504,7 +1562,7 @@ function resetSessionState() {
   chargeState = 'IDLE'; chargeMode = null; chargeInfo = null; paidUntil = 0;
   chargerAlarmActive = false; buzzSeq = null; chgCand = null; chgStable = {label:'Ready', state:'neutral'};
   motorOutF = 0; motorAuto = 0; prevIgn = null; bulbUntil = 0; seinMode = 'off'; almStartTs = null;
-  lastSentEsp = -1; lastSentMega = -1; lastSentMotor = null; lastResendTs = 0;
+  lastSentEsp = -1; lastSentMega = -1; lastSentMotor = null; lastSentDisp = null; lastResendTs = 0;
   rfidInit = false; lastRfidHex = '';
   hu.power = 'off'; hu.almMode = 'off'; vm.speed = 0; vm.regen = false; vm.motorPct = 0;
   for (const k of Object.keys(pendingCmd)) delete pendingCmd[k];
@@ -1560,7 +1618,7 @@ function onDataNotify(event) {
   syncOutputs(now);
 }
 // Tap kartu = UID berubah dari yang terakhir terbaca. Data pertama hanya jadi baseline.
-// Catatan: firmware menyimpan UID terakhir, jadi kartu YANG SAMA tidak bisa terdeteksi dua kali berturut-turut.
+// Firmware ESP mengosongkan UID 1,5 dtk setelah dibaca, jadi kartu yang sama bisa di-tap berulang.
 function detectRfid(now) {
   const hex = dev.rfidHex;
   if (hex) lastShownUid = dev.rfidBytes.map(hex2).join(' ');
@@ -1899,10 +1957,28 @@ function renderHeadUnit(now) {
   const ne = $('huNote'); const nc = 'hu-note' + (n.c ? ' ' + n.c : ''); if (ne.className !== nc) ne.className = nc;
 
   setClass('btnSeinL', 'active', seinMode === 'left'); setClass('btnSeinR', 'active', seinMode === 'right'); setClass('btnHazard', 'active', seinMode === 'hazard');
-  $('btnRepair').disabled = !vm.faultKind;
+  $('btnRepair').disabled = !vm.faultKind || !!repairUntil;
+  renderFaultModal(p, now);
   setText('huIgn', connected ? (((dev.din >> DIN_BIT_IGN) & 1) ? 'ON' : 'OFF') : '--');
   setText('huLimit', vm.entry ? (MODE_LABEL[vm.effMode] + ': maks ' + Math.round(vm.vcap) + ' km/jam') : '--');
   setText('huMotor', 'BLDC ' + Math.round(vm.motorPct) + '%');
+}
+// Popup kerusakan di head unit: penjelasan + pilihan Perbaiki / Tutup.
+function renderFaultModal(p, now) {
+  if (p === 'off') faultDismissed = false;               // muncul lagi setelah ignition dinyalakan ulang
+  const show = !!vm.faultKind && !faultDismissed && (p === 'on' || p === 'bulb');
+  setClass('huModal', 'show', show);
+  if (!show) return;
+  const isM = vm.faultKind === 'M', c = vm.faultCtx || {};
+  setText('huModalIco', isM ? 'M' : 'C');
+  setText('huModalTitle', isM ? 'Kerusakan BLDC' : 'Kerusakan Controller');
+  setText('huModalText', vm.faultText + (c.bldc ? ' pada BLDC ' + c.bldc + ', baterai ' + c.volt + 'V, Mode ' + MODE_LABEL[c.mode] + '.' : '.') + ' Motor dinonaktifkan.');
+  setText('huModalLearn', (c.tag ? c.tag + ': ' : '') + (c.note || '') + ' Hindari throttle penuh di kombinasi ini, atau pakai tegangan yang sesuai rating BLDC.');
+  const repairing = !!repairUntil;
+  $('huModalRepair').disabled = repairing; $('huModalClose').disabled = repairing;
+  setText('huModalRepair', repairing ? 'Memperbaiki...' : 'Perbaiki');
+  $('huModalProg').style.display = repairing ? 'block' : 'none';
+  if (repairing) $('huModalProg').firstElementChild.style.width = clamp(100 * (1 - (repairUntil - now) / REPAIR_MS), 0, 100) + '%';
 }
 function setSein(mode) {
   if (!(bleConnected && gotFirstData)) { toast('Hubungkan BLE dulu.', 'warn'); return; }
@@ -2090,7 +2166,9 @@ function bindEvents() {
   $('btnSeinL').addEventListener('click', () => setSein('left'));
   $('btnSeinR').addEventListener('click', () => setSein('right'));
   $('btnHazard').addEventListener('click', () => setSein('hazard'));
-  $('btnRepair').addEventListener('click', repairFault);
+  $('btnRepair').addEventListener('click', () => startRepair(nowMs()));
+  $('huModalRepair').addEventListener('click', () => startRepair(nowMs()));
+  $('huModalClose').addEventListener('click', () => { faultDismissed = true; });
 
   $('setRead').addEventListener('click', () => { setDefaults(); renderSettingsBody(); fakeProgress('Dummy: parameter dibaca dari controller (data contoh).'); });
   $('setWrite').addEventListener('click', () => fakeProgress('Dummy: parameter ditulis ke controller (tidak ada yang dikirim).'));

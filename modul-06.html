@@ -31,6 +31,14 @@ table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin:12px 0}
 .cmp th,.cmp td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left}
 .cmp th{color:var(--dim);font-weight:500}
 .vc{font-size:12px;color:var(--dim);margin:8px 0 0}
+.vl{display:grid;grid-template-columns:210px 1fr;gap:6px 16px;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.vl a.th{position:relative;display:block;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--ink)}
+.vl img{width:100%;height:100%;object-fit:cover;display:block}
+.vl .pl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);color:#fff;font:700 15px var(--disp)}
+.vl h4{margin:0 0 4px;font:600 16px var(--disp)}
+.vl p{margin:4px 0;font-size:14px}
+.vl .bd{display:inline-block;padding:1px 8px;border:1px solid var(--v);border-radius:999px;color:var(--v);font-size:11px;margin-right:6px}
+@media(max-width:560px){.vl{grid-template-columns:1fr}}
 .xin,.ctl input[type=number]{width:100%;padding:6px 8px;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:6px;font:inherit}
 details.dl{margin-top:26px;border:1px solid var(--line);border-radius:8px;padding:4px 16px}
 details.dl summary{cursor:pointer;padding:12px 0;color:var(--w);font-weight:500}
@@ -56,7 +64,7 @@ details.dl summary{cursor:pointer;padding:12px 0;color:var(--w);font-weight:500}
 .bar u{position:absolute;top:0;bottom:0;width:2px;background:var(--u)}
 .verdict{padding:10px 14px;border-radius:6px;border:1px solid var(--line);margin-top:10px;font-size:14px}
 .ok{border-color:var(--v);color:var(--v)}.warn{border-color:var(--u);color:var(--u)}.bad{border-color:var(--alert);color:var(--alert)}
-canvas{width:100%;height:220px;display:block;background:var(--ink);border:1px solid var(--line);border-radius:6px}
+main canvas{width:100%;height:220px;display:block;background:var(--ink);border:1px solid var(--line);border-radius:6px}
 .vid{aspect-ratio:16/9;display:grid;place-items:center;border:1px dashed var(--dim);border-radius:8px;color:var(--dim);text-align:center;padding:16px}
 .vid iframe{width:100%;height:100%;border:0;border-radius:8px}
 .rec li{margin:6px 0}
@@ -197,8 +205,13 @@ canvas{width:100%;height:220px;display:block;background:var(--ink);border:1px so
   </div>
 
   <h2>5. Video pendukung</h2>
-  <div class="vid" id="vid">Video belum dipilih. Isi VIDEO di bagian skrip halaman ini.</div>
-  <p class="vc" id="vcr">Sumber video: belum diisi.</p>
+  <h3 style="font:600 18px var(--disp);margin:14px 0 6px">Bahasa Indonesia</h3>
+  <div id="vlistid"></div>
+  <p class="why" style="margin-top:14px"><b>Cari video lain.</b> Tautan berikut membuka hasil pencarian YouTube, bukan video tertentu.</p>
+  <ul class="rec" id="vlinks"></ul>
+  <h3 style="font:600 18px var(--disp);margin:22px 0 6px">Bahasa Inggris</h3>
+  <p class="why">Tips subtitle: aktifkan CC, buka Setelan, Subtitel/CC, lalu Terjemahkan otomatis ke Indonesia, bila pemilik video mengaktifkan subtitel.</p>
+  <div id="vlist"></div>
 
   <h2>6. Yang perlu diingat</h2>
   <ul class="rec">
@@ -231,8 +244,7 @@ canvas{width:100%;height:220px;display:block;background:var(--ink);border:1px so
 <div id="site-footer"></div>
 
 <script>
-// Isi id (hanya ID video YouTube, bukan alamat lengkap), judul, dan sumber (nama kanal) untuk menampilkan video dan kreditnya.
-const VIDEO = { id:'', judul:'', sumber:'', link:'' };
+// Video diatur di bagian VIDEOS_ID dan VIDEOS_EN di bawah.
 
 // ----- layout bersama dan progres -----
 fetch('assets/layout.html').then(r=>{if(!r.ok)throw 0;return r.text()}).then(h=>{
@@ -246,10 +258,20 @@ let done=[]; try{done=JSON.parse(localStorage.getItem('evDone')||'[]')}catch(e){
 const mark=()=>{btn.textContent='Selesai ✓';btn.disabled=true};
 if(done.includes(kode))mark();
 btn.onclick=()=>{if(!done.includes(kode))done.push(kode);try{localStorage.setItem('evDone',JSON.stringify(done))}catch(e){}mark()};
-if(VIDEO.id){
-  document.getElementById('vid').innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${VIDEO.id}" title="${VIDEO.judul||'Video pendukung'}" allowfullscreen loading="lazy"></iframe>`;
-  document.getElementById('vcr').innerHTML=`Sumber video: ${VIDEO.link?`<a href="${VIDEO.link}" target="_blank" rel="noopener">${VIDEO.judul}</a>`:VIDEO.judul}, kanal ${VIDEO.sumber}.`;
-}
+const CARD=v=>`<div class="vl"><a class="th" href="${v.link}" target="_blank" rel="noopener" aria-label="Tonton: ${v.judul}"><img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="Pratinjau ${v.judul}" loading="lazy"><span class="pl">▶ Tonton di YouTube</span></a><div><h4><a href="${v.link}" target="_blank" rel="noopener">${v.judul}</a></h4><p><span class="bd">${v.bahasa}</span><span style="color:var(--dim);font-size:12px">${v.kanal||''}</span></p><p>${v.desk}</p></div></div>`;
+const VIDEOS_ID=[
+ { id:'_lipy4Fx8dE', judul:'Cara Mudah dan Cepat Membaca Kode Warna Pada Resistor', bahasa:'Indonesia', kanal:'Shafa Electric', link:'https://www.youtube.com/watch?v=_lipy4Fx8dE', desk:'Cara membaca kode warna (gelang warna) pada resistor untuk mengetahui nilai hambatannya.' }
+];
+const VIDEOS_EN=[
+ { id:'Xeq40Dbkm3w', judul:'Resistor, Capacitor, Diode, Transistor: Electronics Basics for Beginners', bahasa:'Inggris', kanal:'', link:'https://www.youtube.com/watch?v=Xeq40Dbkm3w', desk:'Empat komponen dasar yang ada di hampir semua perangkat, dijelaskan sederhana dengan demo dan contoh nyata.' },
+ { id:'vkJIf2t18c8', judul:'ALL OF Electronic Components Explained Simply', bahasa:'Inggris', kanal:'', link:'https://www.youtube.com/watch?v=vkJIf2t18c8', desk:'Dari resistor dan kapasitor sampai transistor, dioda, relay, sensor, dan IC.' },
+ { id:'N8_1wb0r0DQ', judul:'Electronic Components Guide', bahasa:'Inggris', kanal:'Galco', link:'https://www.youtube.com/watch?v=N8_1wb0r0DQ', desk:'Penjelasan ringkas dan sederhana tentang resistor, kapasitor, dioda, dan transistor.' }
+];
+document.getElementById('vlistid').innerHTML=VIDEOS_ID.map(CARD).join('');
+document.getElementById('vlist').innerHTML=VIDEOS_EN.map(CARD).join('');
+const YT='https://www.youtube.com/results?search_query=';
+const VL=[['id','cara kerja kapasitor dan fungsinya'],['id','cara kerja relay dan kontaktor'],['id','cara mengetes dioda dengan multimeter'],['id','fungsi MCB dan sekering DC'],['id','cara kerja sensor Hall motor listrik'],['id','cara membaca kode warna resistor']];
+document.getElementById('vlinks').innerHTML=VL.map(x=>`<li><a href="${YT+encodeURIComponent(x[1])}" target="_blank" rel="noopener">${x[1]}</a> (Bahasa Indonesia)</li>`).join('');
 
 // ----- peta komponen -----
 const S={ // simbol
@@ -280,7 +302,12 @@ const commons=(f,by,lic)=>({src:CM+'Special:FilePath/'+f+'?width=500',sumber:'Wi
 const FOTO={
  'Resistor':[commons('6_different_resistors.jpg','Afrank99','CC BY-SA 2.0')],
  'Kapasitor':[commons('Nippon_Chemi-Con_Aluminum_Electrolytic_Capacitors.jpg'),commons('Damaged_Electrolytic_capacitor_02x02x2023.jpg')],
- 'Kontaktor':[commons('Contactor200AmpSealed.jpg'),commons('Burned_Contactor-01ASD.jpg')]
+ 'Kontaktor':[commons('Contactor200AmpSealed.jpg'),commons('Burned_Contactor-01ASD.jpg')],
+ 'Dioda':[commons('Diode-photo.JPG','Honina','CC BY-SA 3.0'),commons('Schottky.jpg','Steffen Maisch','domain publik')],
+ 'Saklar dan relay':[commons('AutomotiveRelay.jpg','Leonard G.','CC SA 1.0 (relay otomotif 12 V, kontak 30 A)')],
+ 'Sekering dan MCB':[commons('Car_fuses.jpg','M.Minderhoud','CC BY-SA 3.0 (sekering mobil jenis pipih)'),commons('RCCB_and_Miniature_Circuit_Breaker..jpg','Balurbala','CC BY-SA 3.0 (MCB rumah AC, bukan untuk baterai DC)')],
+ 'Shunt':[commons('Shuntresistor50A.jpg','pengunggah Redecke/Smial','domain publik (shunt 50 A dengan sambungan empat kawat)'),commons('SMD_Shunt_Resistors.jpg','wdwd','CC BY-SA 4.0 (dua shunt SMD 0,2 mΩ)')],
+ 'Sensor Hall dan NTC':[commons('Micro_Seiki_DD30_-_Hall_Sensor_(8057351427).jpg','Jacques dari Cape Town','CC BY 2.0 (sensor Hall pada motor direct-drive)'),commons('NTC_bead.jpg','Ansgar Hellwig','CC BY-SA 2.0 DE (NTC jenis manik berkabel isolasi)')]
  // contoh foto sendiri: 'Shunt':{src:'assets/foto/shunt-r2.jpg',sumber:'Foto sendiri, motor R2',link:''}
 };
 const fig=(f,n)=>`<figure><img src="${f.src}" alt="Foto ${n}" loading="lazy" onerror="this.closest('figure').style.display='none'"><figcaption>Sumber: ${f.link?`<a href="${f.link}" target="_blank" rel="noopener">${f.sumber}</a>`:f.sumber}</figcaption></figure>`;

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>09 Mobil Listrik: Jenis dan Anatomi | Training EV</title>
+<script src="assets/tema.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#060A12;--panel:#0C1220;--line:#1B2740;--text:#E6ECF5;--dim:#8593AA;--u:#FFC857;--v:#3DDC97;--w:#4DA3FF;--alert:#FF6B8B;--disp:'Chakra Petch',system-ui,sans-serif;--body:'Sora',system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font:400 16px/1.7 var(--body)}
+main{max-width:920px;margin:0 auto;padding:40px clamp(16px,4vw,32px) 0}
+h1{font:700 clamp(28px,4vw,44px)/1.1 var(--disp);margin:0 0 8px}
+h2{font:700 24px var(--disp);margin:52px 0 6px}
+a{color:var(--w)}
+.lead{color:var(--dim);margin:0 0 18px}
+.no{font:700 15px var(--disp);color:var(--v)}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;margin:12px 0}
+.goal{margin:0 0 8px;padding:14px 18px 14px 36px;border:1px solid var(--line);border-left:3px solid var(--v);border-radius:6px;background:var(--panel)}
+.ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 22px;margin:8px 0}
+.ctl label{display:block;font-size:13px;color:var(--dim)}
+.ctl b{color:var(--text);font-family:var(--disp)}
+.ctl input[type=range]{width:100%;accent-color:var(--v)}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0}
+.out div{padding:10px 12px;border:1px solid var(--line);border-radius:6px}
+.out span{display:block;font-size:12px;color:var(--dim)}
+.out strong{font:700 20px var(--disp)}
+main canvas{width:100%;height:200px;display:block;background:var(--ink);border:1px solid var(--line);border-radius:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--dim);font:500 13px var(--body);cursor:pointer}
+.chip[aria-pressed=true]{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 16px;background:var(--ink);border:1px solid var(--line);border-radius:6px;color:var(--text);font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--v)}
+.opt.right{border-color:var(--v);background:color-mix(in srgb,var(--v) 14%,transparent)}
+.opt.wrong{border-color:var(--alert);background:color-mix(in srgb,var(--alert) 12%,transparent)}
+.why{font-size:14px;color:var(--dim);margin:8px 0 0}
+.verdict{padding:10px 14px;border-radius:6px;border:1px solid var(--line);margin-top:12px;font-size:14px}
+.ok{border-color:var(--v);color:var(--v)}.warn{border-color:var(--u);color:var(--u)}.bad{border-color:var(--alert);color:var(--alert)}
+.story{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.story figure{margin:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.story img{width:100%;height:230px;object-fit:contain;background:#fff;border-radius:6px;display:block}
+.story figcaption{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5}
+.story h3{margin:10px 0 4px;font:600 17px var(--disp)}
+.story p{margin:4px 0;font-size:14px}
+table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+.cmp th,.cmp td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.cmp th{color:var(--dim);font-weight:500}
+.vl{display:grid;grid-template-columns:210px 1fr;gap:6px 16px;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.vl a.th{position:relative;display:block;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--ink)}
+.vl img{width:100%;height:100%;object-fit:cover;display:block}
+.vl .pl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);color:#fff;font:700 15px var(--disp)}
+.vl h4{margin:0 0 4px;font:600 16px var(--disp)}
+.vl p{margin:4px 0;font-size:14px}
+.vl .bd{display:inline-block;padding:1px 8px;border:1px solid var(--v);border-radius:999px;color:var(--v);font-size:11px;margin-right:6px}
+@media(max-width:560px){.vl{grid-template-columns:1fr}}
+details.dl{margin-top:20px;border:1px solid var(--line);border-radius:8px;padding:4px 16px}
+details.dl summary{cursor:pointer;padding:12px 0;color:var(--w);font-weight:500}
+.exp li{margin:6px 0}
+.q{margin:18px 0}.q h4{margin:0 0 8px;font:600 16px var(--body)}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:44px;padding-top:20px;border-top:1px solid var(--line)}
+.nav a,.nav button{padding:10px 18px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);font:600 14px var(--disp);text-decoration:none;cursor:pointer}
+.nav button{background:var(--v);border-color:var(--v);color:var(--ink)}
+.nav button[disabled]{background:var(--panel);color:var(--v)}
+
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:12px 0}
+.tools figure{margin:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.tools img{width:100%;height:200px;object-fit:contain;background:#fff;border-radius:6px;display:block}
+.tools figcaption{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5}
+.fm{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:12px 0}
+.fm div{padding:12px;border:1px solid var(--line);border-left:3px solid var(--v);border-radius:6px;background:var(--panel)}
+.fm b{display:block;font:700 18px var(--disp);color:var(--u)}
+.fm span{font-size:13px;color:var(--dim)}
+.stack{display:flex;height:30px;border-radius:6px;overflow:hidden;border:1px solid var(--line);margin:10px 0}
+.stack i{display:flex;align-items:center;justify-content:center;font:600 12px var(--disp);color:var(--ink);min-width:0;white-space:nowrap;transition:width .2s}
+.lg{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--dim)}
+.lg b{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}
+.vl{display:grid;grid-template-columns:210px 1fr;gap:6px 16px;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.vl a.th{position:relative;display:block;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--ink)}
+.vl img{width:100%;height:100%;object-fit:cover;display:block}
+.vl .pl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);color:#fff;font:700 15px var(--disp)}
+.vl h4{margin:0 0 4px;font:600 16px var(--disp)}
+.vl p{margin:4px 0;font-size:14px}
+.vl .bd{display:inline-block;padding:1px 8px;border:1px solid var(--v);border-radius:999px;color:var(--v);font-size:11px;margin-right:6px}
+@media(max-width:560px){.vl{grid-template-columns:1fr}}
+.cp rect,.cp circle{fill:var(--panel);stroke:var(--dim);stroke-width:1.6;transition:fill .15s,stroke .15s}
+.cp:hover rect,.cp:hover circle,.cp:focus rect,.cp:focus circle{stroke:var(--v)}
+.cp.sel rect,.cp.sel circle{fill:color-mix(in srgb,var(--v) 22%,var(--panel));stroke:var(--v);stroke-width:2.4}
+.cp text{fill:var(--text);font:600 10px var(--body);pointer-events:none}
+.cp{cursor:pointer;outline:none}
+.anat{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;align-items:start}
+@media(max-width:760px){.anat{grid-template-columns:1fr}}
+.info h3{font:700 20px var(--disp);margin:0 0 6px;color:var(--v)}
+.info p{margin:6px 0;font-size:15px}
+.info .k{color:var(--u);font:600 12px var(--disp)}
+.mx{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:12px 0}
+.mx div{padding:8px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;color:var(--dim);transition:all .2s}
+.mx div.on{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
+.mx div b{display:block;font:600 11px var(--disp);color:var(--dim)}
+.mx div.on b{color:var(--v)}
+.flow line,.flow path{stroke:var(--line);stroke-width:3;fill:none}
+.flow .on{stroke:var(--u);stroke-width:4;stroke-dasharray:8 7;animation:fl 0.9s linear infinite}
+.flow .on.rev{animation-direction:reverse;stroke:var(--v)}
+.flow .on.thin{stroke-width:2.6}
+@keyframes fl{to{stroke-dashoffset:-30}}
+.flow .nd rect{fill:var(--panel);stroke:var(--dim);stroke-width:1.6}
+.flow .nd text{fill:var(--text);font:600 11px var(--body);text-anchor:middle}
+@media(prefers-reduced-motion:reduce){.flow .on{animation:none}}
+</style>
+</head>
+<body data-kode="09">
+<div id="site-header"></div>
+<main>
+  <div class="no">Modul 09 &nbsp;|&nbsp; Jenis kendaraan</div>
+  <h1>Mobil Listrik: Jenis dan Anatomi</h1>
+  <p class="lead">Tidak semua "mobil listrik" sama. Modul ini membedakan BEV, HEV, PHEV, dan FCEV, lalu membongkar isi mobil listrik murni: baterai, inverter, motor, pengisi daya, konverter, dan sistem pendinginnya.</p>
+  <ul class="goal">
+    <li>Membedakan BEV, HEV, PHEV, dan FCEV dari sumber energi dan cara pengisiannya.</li>
+    <li>Menyebut komponen utama mobil listrik, fungsinya, dan letaknya.</li>
+    <li>Menjelaskan aliran daya saat jalan, mengerem, dan mengisi, serta mengapa sebagian mobil memakai 800 V.</li>
+  </ul>
+  <div class="box" id="hook">
+    <b>Tebak dulu.</b> Komponen mana yang <b>tidak</b> ada pada mobil listrik murni (BEV)?
+    <div id="hopt"></div><p class="why" id="hans" hidden></p>
+  </div>
+
+  <h2>1. Empat jenis kendaraan berlistrik</h2>
+  <p class="lead">Pilih jenisnya. Komponen yang menyala adalah yang dimiliki jenis itu.</p>
+  <div class="chips" id="tp" role="group" aria-label="Jenis kendaraan"></div>
+  <div class="anat">
+    <div><div class="mx" id="mx"></div><div class="info" id="tinfo"></div></div>
+    <div id="tfig"></div>
+  </div>
+
+  <h2>2. Anatomi mobil listrik murni (klik komponen)</h2>
+  <p class="lead">Tampak atas, bagian depan di kiri. Garis kuning menandai jalur kabel tegangan tinggi (di kendaraan umumnya berwarna oranye).</p>
+  <div class="anat">
+    <div class="box"><svg id="car" viewBox="0 0 460 240" role="group" aria-label="Diagram komponen mobil listrik" style="width:100%;height:auto"></svg></div>
+    <div><div class="info" id="cinfo"></div><div id="cfig"></div></div>
+  </div>
+
+  <h2>3. Ke mana listrik mengalir?</h2>
+  <div class="chips" id="fm" role="group" aria-label="Mode"></div>
+  <div class="box"><svg class="flow" id="flow" viewBox="0 0 640 220" role="img" aria-label="Aliran daya antar komponen" style="width:100%;height:auto"></svg><p class="why" id="ftx"></p></div>
+
+  <h2>4. Mengapa ada mobil 400 V dan 800 V?</h2>
+  <div class="box">
+    <div class="ctl">
+      <label>Daya pengisian atau penggerak: <b id="vpT"></b><input type="range" id="vp" min="50" max="350" step="10" value="150"></label>
+      <label>Tegangan sistem<select id="vv" style="width:100%;padding:6px;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:6px"><option value="400" selected>400 V</option><option value="800">800 V</option></select></label>
+      <label>Hambatan total kabel dan sambungan: <b id="vrT"></b><input type="range" id="vr" min="1" max="30" step="1" value="10"></label>
+    </div>
+    <div class="out"><div><span>Arus</span><strong id="vi"></strong></div><div><span>Panas di kabel (I² × R)</span><strong id="vh"></strong></div><div><span>Panas bila 400 V</span><strong id="v4"></strong></div><div><span>Panas bila 800 V</span><strong id="v8"></strong></div></div>
+    <p class="why">Daya = tegangan × arus. Pada daya sama, tegangan dua kali lipat berarti arus separuhnya, dan panas di kabel menjadi seperempatnya. Itu sebabnya sistem 800 V memungkinkan pengisian cepat dengan kabel lebih ramping (modul 03). Hambatan di contoh ini hanyalah ilustrasi.</p>
+  </div>
+
+  <h2>5. Keselamatan</h2>
+  <p>Semua komponen tegangan tinggi (kabel oranye, baterai, inverter, OBC, kompresor AC) berbahaya. Ingat lima langkah modul 04: putus, kunci, tunggu, ukur nol, baru kerja. Service disconnect tidak menjamin paket baterai bebas tegangan.</p>
+
+  <h2>6. Video pendukung</h2>
+  <h3 style="font:600 18px var(--disp);margin:14px 0 6px">Bahasa Indonesia</h3>
+  <p class="why">Belum ada video berbahasa Indonesia yang bisa saya pastikan benar-benar ada. Gunakan tautan pencarian (hasil pencarian YouTube, bukan video tertentu) dan bacaan Indonesia berikut. Video pilihan Anda bisa ditambahkan di daftar <code>VIDEOS_ID</code> dalam skrip.</p>
+  <ul class="rec" id="vlinks"></ul>
+  <p class="why"><b>Bacaan bahasa Indonesia:</b> <a href="https://otomotif.bisnis.com/read/20251008/46/1918412/ini-perbedaan-mobil-listrik-bev-hev-phev-fcev" target="_blank" rel="noopener">Bisnis.com: perbedaan BEV, HEV, PHEV, FCEV</a>, <a href="https://www.jba.co.id/id/news/perbedaan-bev-phev-hev-dan-fcev" target="_blank" rel="noopener">JBA: cara kerja dan kelebihan tiap jenis</a>, <a href="https://vinfastauto.id/id/bev-phev-hev-mana-yang-benar-benar-mobil-listrik" target="_blank" rel="noopener">VinFast Indonesia: mana yang benar-benar mobil listrik</a>, dan <a href="https://otomotif.kompas.com/read/2022/11/28/151200215/ini-perbedaan-teknologi-phev-hev-dan-bev" target="_blank" rel="noopener">Kompas: penjelasan Toyota Astra Motor</a>.</p>
+  <div id="vlistid"></div>
+  <h3 style="font:600 18px var(--disp);margin:22px 0 6px">Bahasa Inggris</h3>
+  <p class="why">Tips subtitle: aktifkan CC, buka Setelan, Subtitel/CC, lalu Terjemahkan otomatis ke Indonesia, bila pemilik video mengaktifkan subtitel.</p>
+  <div id="vlist"></div>
+
+  <details class="dl"><summary>Catatan untuk pengajar</summary>
+    <p><b>Alur sekitar 75 menit:</b> tebakan (5), empat jenis (15), anatomi klik komponen (20), aliran daya (15), 400 V lawan 800 V (10), kuis (10).</p>
+    <p><b>Peragaan:</b> bila ada, bawa foto atau komponen bekas (konektor, sekering, kabel oranye). Minta peserta menunjukkan di diagram: "Di mana kabel tegangan tinggi lewat?"</p>
+    <p><b>Pesan utama:</b> BEV tidak punya mesin dan tangki, tetapi punya tiga komponen baru: baterai tegangan tinggi, inverter, dan motor, ditambah pengisi daya dan konverter DC-DC.</p>
+  </details>
+
+  <h2>7. Kuis</h2>
+  <div id="quiz"></div><div class="verdict" id="score" hidden></div>
+
+  <p class="why" style="margin-top:30px">Sumber foto, Wikimedia Commons: <a href="https://commons.wikimedia.org/wiki/File:Hyundai_Ioniq_5.jpg" target="_blank" rel="noopener">Hyundai Ioniq 5</a> (TTTNIS, CC0), <a href="https://commons.wikimedia.org/wiki/File:Toyota_Hybrid_Synergy_Drive_(1).jpg" target="_blank" rel="noopener">Toyota Hybrid Synergy Drive (1)</a> (Thomas Reincke, CC BY-SA 2.0), <a href="https://commons.wikimedia.org/wiki/File:Toyota_Prius_(XW60)_Plug-in_Hybrid_IMG_9905.jpg" target="_blank" rel="noopener">Toyota Prius (XW60) Plug-in Hybrid</a> (Alexander Migl, CC BY-SA 4.0), <a href="https://commons.wikimedia.org/wiki/File:Toyota_Mirai_fuel_cell_stack_and_hydrogen_tank_SAO_2016_9032.jpg" target="_blank" rel="noopener">Toyota Mirai fuel cell stack and hydrogen tank</a> (Mariordo, CC BY-SA 4.0), <a href="https://commons.wikimedia.org/wiki/File:Lithium-Ion_Battery_for_BMW_i3_-_Battery_Pack.JPG" target="_blank" rel="noopener">paket baterai BMW i3</a> (RudolfSimon, CC BY-SA 3.0), <a href="https://commons.wikimedia.org/wiki/File:Electric_Motor_-_BMW_i3.jpg" target="_blank" rel="noopener">motor BMW i3</a> (LunchboxLarry, CC BY 2.0), <a href="https://commons.wikimedia.org/wiki/File:Type2_CCS_Bmw_i3.jpg" target="_blank" rel="noopener">port Type 2 CCS BMW i3</a> (Teknisk Kompetanse, CC BY-SA 4.0), dan <a href="https://commons.wikimedia.org/wiki/File:Infineon_IGBT-Modul.jpg" target="_blank" rel="noopener">modul IGBT Infineon</a> (Leonrosenbaum, CC BY-SA 3.0). Penjelasan jenis dari Bisnis.com, JBA, dan VinFast Indonesia; komponen dari U.S. Department of Energy dan DriveAuthority. Cek ulang sebelum dipakai sebagai rujukan resmi.</p>
+
+  <div class="nav">
+    <a href="modul-08.html">Sebelumnya: 08</a><a href="index.html#modul">Daftar modul</a>
+    <button id="doneBtn">Tandai selesai</button><a href="modul-10.html">Berikutnya: 10</a>
+  </div>
+</main>
+<div id="site-footer"></div>
+<script>
+const $=id=>document.getElementById(id);
+fetch('assets/layout.html').then(r=>{if(!r.ok)throw 0;return r.text()}).then(h=>{
+  const d=new DOMParser().parseFromString(h,'text/html');
+  document.head.append(...d.querySelectorAll('style'));
+  $('site-header').replaceWith(d.querySelector('header'));$('site-footer').replaceWith(d.querySelector('footer'));
+}).catch(()=>{$('site-header').textContent='Training EV'});
+const kode=document.body.dataset.kode, btn=$('doneBtn');
+let done=[]; try{done=JSON.parse(localStorage.getItem('evDone')||'[]')}catch(e){}
+const mark=()=>{btn.textContent='Selesai ✓';btn.disabled=true};
+if(done.includes(kode))mark();
+btn.onclick=()=>{if(!done.includes(kode))done.push(kode);try{localStorage.setItem('evDone',JSON.stringify(done))}catch(e){}mark()};
+const fx=(n,d=1)=>(+n).toLocaleString('id-ID',{maximumFractionDigits:d});
+function hook(id,aid,opts,ok,html){$(id).innerHTML=opts.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('');$(id).onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;[...$(id).children].forEach((x,i)=>{x.disabled=true;if(i===ok)x.classList.add('right')});if(+b.dataset.i!==ok)b.classList.add('wrong');const a=$(aid);a.hidden=false;a.innerHTML=html}}
+hook('hopt','hans',['Baterai tegangan tinggi','Inverter','Mesin pembakaran dan tangki bensin','Motor traksi'],2,'Jawabannya <b>mesin pembakaran dan tangki bensin</b>. BEV memakai baterai tegangan tinggi, inverter, dan motor traksi sebagai penggantinya, sehingga mekanisnya jauh lebih sederhana.');
+
+// ----- foto -----
+const CM='https://commons.wikimedia.org/wiki/',fp=f=>CM+'Special:FilePath/'+encodeURIComponent(f)+'?width=520';
+const fg=(f,alt,cap,by)=>`<figure style="margin:0 0 12px;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)"><img src="${fp(f)}" alt="${alt}" style="width:100%;max-height:250px;object-fit:contain;background:#fff;border-radius:6px;display:block" loading="lazy" onerror="this.closest('figure').style.display='none'"><figcaption style="font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5">${cap}. Sumber: <a href="${CM}File:${encodeURIComponent(f)}" target="_blank" rel="noopener">${f.replace(/_/g,' ')}</a>, ${by}, Wikimedia Commons</figcaption></figure>`;
+
+// ----- jenis -----
+const COMP=['Mesin pembakaran','Tangki bensin','Baterai tegangan tinggi','Motor traksi','Inverter','Colokan pengisian','Tangki hidrogen','Fuel cell stack','Rem regeneratif'];
+const TYPES={
+ BEV:{n:'BEV',full:'Battery Electric Vehicle',on:[0,0,'besar',1,1,1,0,0,1],t:'Hanya baterai dan motor listrik. Diisi dari colokan atau pengisi cepat, tanpa mesin dan tanpa knalpot.',ex:'Hyundai Ioniq 5, BYD Atto 1, Wuling Air EV, Nissan Leaf',f:['Hyundai_Ioniq_5.jpg','Hyundai Ioniq 5, contoh BEV','TTTNIS, CC0']},
+ HEV:{n:'HEV',full:'Hybrid Electric Vehicle',on:[1,1,'kecil',1,1,0,0,0,1],t:'Mesin bensin dan motor listrik bekerja bersama. Baterai kecil diisi oleh mesin dan oleh pengereman. Tidak bisa dicolok.',ex:'Toyota Prius, Innova Zenix Hybrid, Suzuki Ertiga Hybrid',f:['Toyota_Hybrid_Synergy_Drive_(1).jpg','Replika penggerak hibrida Toyota Prius generasi ke-4: mesin 72 kW, motor-generator MG2 53 kW, dan MG1 23 kW sebagai generator','Thomas Reincke, CC BY-SA 2.0']},
+ PHEV:{n:'PHEV',full:'Plug-in Hybrid Electric Vehicle',on:[1,1,'sedang',1,1,1,0,0,1],t:'Seperti HEV tetapi baterainya lebih besar dan bisa diisi dari colokan. Bisa jalan listrik murni untuk jarak tertentu.',ex:'Toyota Prius Plug-in, Mitsubishi Outlander PHEV',f:['Toyota_Prius_(XW60)_Plug-in_Hybrid_IMG_9905.jpg','Toyota Prius Plug-in Hybrid','Alexander Migl, CC BY-SA 4.0']},
+ FCEV:{n:'FCEV',full:'Fuel Cell Electric Vehicle',on:[0,0,'kecil',1,1,0,1,1,1],t:'Hidrogen diubah menjadi listrik oleh fuel cell. Listriknya menggerakkan motor, dengan baterai kecil sebagai penyangga. Hanya uap air yang keluar dari knalpot.',ex:'Toyota Mirai',f:['Toyota_Mirai_fuel_cell_stack_and_hydrogen_tank_SAO_2016_9032.jpg','Potongan Toyota Mirai: fuel cell stack (kiri) dan tangki hidrogen bertekanan tinggi (kanan)','Mariordo, CC BY-SA 4.0']}
+};
+let tp='BEV';
+function drawType(){
+  $('tp').innerHTML=Object.keys(TYPES).map(k=>`<button class="chip" data-k="${k}" aria-pressed="${k===tp}">${k}</button>`).join('');
+  const T=TYPES[tp];
+  $('mx').innerHTML=COMP.map((c,i)=>{const v=T.on[i];return `<div class="${v?'on':''}"><b>${v?'ADA':'tidak ada'}${typeof v==='string'?' ('+v+')':''}</b>${c}</div>`}).join('');
+  $('tinfo').innerHTML=`<h3>${T.n}: ${T.full}</h3><p>${T.t}</p><p><span class="k">CONTOH: </span>${T.ex}</p>`;
+  $('tfig').innerHTML=fg(T.f[0],T.f[1],T.f[1],T.f[2]);
+}
+$('tp').onclick=e=>{const b=e.target.closest('button');if(b){tp=b.dataset.k;drawType()}};drawType();
+
+// ----- anatomi -----
+const PART=[
+ {id:'bat',n:'Paket baterai tegangan tinggi',x:140,y:80,w:170,h:100,lb:'Baterai HV',t:'Kumpulan sel lithium-ion di bawah lantai yang menyimpan energi. Umumnya 300–900 V pada mobil.',k:'Dilindungi casing logam dan dipantau BMS. Jangan dibuka tanpa pelatihan dan APD.',m:['Modul 14','modul-14.html'],f:['Lithium-Ion_Battery_for_BMW_i3_-_Battery_Pack.JPG','Paket baterai lithium-ion BMW i3','RudolfSimon, CC BY-SA 3.0']},
+ {id:'bms',n:'BMS',x:150,y:150,w:42,h:22,lb:'BMS',t:'Otak paket baterai: memantau tegangan dan suhu tiap sel, menyeimbangkan sel, dan memutus bila ada bahaya.',k:'Kode gangguan baterai biasanya berasal dari sini.',m:['Modul 15','modul-15.html']},
+ {id:'pdu',n:'Kontaktor dan kotak distribusi daya',x:180,y:42,w:76,h:24,lb:'Kontaktor/PDU',t:'Kontaktor utama menyambung atau memutus baterai ke seluruh sistem. Pre-charge mencegah lonjakan arus saat dinyalakan.',k:'Kontaktor bisa lengket (welded). Dengar bunyi klik saat kendaraan dinyalakan.',m:['Modul 06','modul-06.html']},
+ {id:'inv',n:'Inverter',x:330,y:80,w:70,h:30,lb:'Inverter',t:'Mengubah DC baterai menjadi AC tiga fasa untuk motor dan mengatur kecepatannya lewat frekuensi dan lebar pulsa. Di dalamnya ada IGBT atau MOSFET.',k:'Komponen panas: butuh pendingin. Sisa muatan di kapasitor bisa berbahaya.',m:['Modul 07','modul-07.html'],f:['Infineon_IGBT-Modul.jpg','Modul IGBT Infineon, contoh komponen utama di dalam inverter','Leonrosenbaum, CC BY-SA 3.0']},
+ {id:'mot',n:'Motor traksi dan reduksi satu kecepatan',x:330,y:122,w:70,h:40,lb:'Motor',t:'Mengubah listrik menjadi gerak. Biasanya dipasang bersama roda gigi reduksi satu kecepatan sehingga mobil tidak butuh transmisi bergigi banyak.',k:'Periksa suara, getaran, suhu, dan sensor posisi.',m:['Modul 08','modul-08.html'],f:['Electric_Motor_-_BMW_i3.jpg','Motor listrik kendaraan BMW i3','LunchboxLarry, CC BY 2.0']},
+ {id:'obc',n:'Pengisi daya onboard (OBC)',x:60,y:80,w:60,h:30,lb:'OBC',t:'Mengubah listrik AC dari colokan menjadi DC untuk baterai pada pengisian AC (lambat). Pengisian DC cepat melewati OBC.',k:'Gangguan pengisian AC sering terkait OBC, kabel, atau stasiun pengisian.',m:['Modul 10','modul-10.html']},
+ {id:'dcdc',n:'Konverter DC-DC',x:60,y:122,w:60,h:30,lb:'DC-DC',t:'Menurunkan tegangan tinggi menjadi sekitar 12 V untuk lampu, klakson, layar, dan pengisian aki 12 V. Fungsinya seperti alternator pada mobil bensin.',k:'Aki 12 V cepat habis walau baterai besar penuh bisa berarti DC-DC bermasalah.',m:['Modul 18','modul-18.html']},
+ {id:'port',n:'Port pengisian',x:60,y:196,r:9,lb:'Port',t:'Tempat colokan pengisi daya. Ada kontak AC dan DC serta pin sinyal yang berkomunikasi dengan stasiun pengisian.',k:'Periksa pin kotor, bengkok, atau terbakar, dan penguncinya.',m:['Modul 10','modul-10.html'],f:['Type2_CCS_Bmw_i3.jpg','Port pengisian Type 2 CCS pada BMW i3','Teknisk Kompetanse, CC BY-SA 4.0']},
+ {id:'th',n:'Manajemen termal',x:320,y:42,w:80,h:24,lb:'Termal',t:'Pompa, pendingin, dan pemanas cairan yang menjaga baterai, inverter, dan motor pada suhu ideal. Baterai yang terlalu panas atau dingin menurun kinerjanya.',k:'Periksa cairan pendingin khusus EV, pompa, dan sensor suhu (NTC, modul 06).',m:['Modul 14','modul-14.html']},
+ {id:'a12',n:'Aki 12 V',x:130,y:42,w:40,h:24,lb:'12 V',t:'Menyuplai kunci, komputer, kontaktor, lampu, dan sistem keselamatan. Tanpanya, kontaktor utama tidak bisa menutup.',k:'Mobil listrik "mati total" sering disebabkan aki 12 V lemah.',m:['Modul 18','modul-18.html']}
+];
+let sel='bat';
+function drawCar(){
+  const wheels=[[70,22],[70,200],[340,22],[340,200]].map(([x,y])=>`<rect x="${x}" y="${y}" width="40" height="16" rx="4" fill="var(--line)"/>`).join('');
+  const cables=`<g stroke="var(--u)" stroke-width="2.4" fill="none" stroke-linecap="round"><path d="M218 66V80M225 180V190"/><path d="M310 130H330"/><path d="M310 95H330"/><path d="M140 95H120"/><path d="M140 137H120"/><path d="M256 54H320"/></g>`;
+  const parts=PART.map(p=>{
+    const sh=p.r?`<circle cx="${p.x}" cy="${p.y}" r="${p.r}"/>`:`<rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="5"/>`;
+    const tx=p.r?p.x:p.x+p.w/2,ty=p.r?p.y+22:p.y+p.h/2+4;
+    return `<g class="cp${p.id===sel?' sel':''}" data-id="${p.id}" tabindex="0" role="button" aria-label="${p.n}">${sh}<text x="${tx}" y="${ty}" text-anchor="middle">${p.lb}</text></g>`;
+  }).join('');
+  $('car').innerHTML=`<rect x="30" y="30" width="400" height="180" rx="48" fill="none" stroke="var(--dim)" stroke-width="2"/>${wheels}${cables}${parts}`;
+  const p=PART.find(x=>x.id===sel);
+  $('cinfo').innerHTML=`<h3>${p.n}</h3><p>${p.t}</p><p><span class="k">DI BENGKEL: </span>${p.k}</p><p><span class="k">PELAJARI: </span><a href="${p.m[1]}">${p.m[0]}</a></p>`;
+  $('cfig').innerHTML=p.f?fg(p.f[0],p.f[0],p.f[1],p.f[2]):'';
+}
+$('car').addEventListener('click',e=>{const g=e.target.closest('.cp');if(g){sel=g.dataset.id;drawCar()}});
+$('car').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const g=e.target.closest('.cp');if(g){e.preventDefault();sel=g.dataset.id;drawCar();$('car').querySelector('.cp.sel').focus()}}});
+drawCar();
+
+// ----- aliran daya -----
+const ND={col:[10,80,'Colokan'],obc:[110,24,'OBC'],bat:[230,80,'Baterai HV'],inv:[350,80,'Inverter'],mot:[450,80,'Motor'],rod:[550,80,'Roda'],dcd:[230,160,'DC-DC'],a12:[350,160,'Aki 12 V']};
+const EDG={e1:'M70 90L110 50',e2:'M170 50L230 90',e3:'M70 100H230',e4:'M290 100H350',e5:'M410 100H450',e6:'M510 100H550',e7:'M260 120V160',e8:'M290 180H350'};
+const MODES={
+ jalan:{n:'Berjalan stabil',on:{e4:'',e5:'',e6:'',e7:'thin',e8:'thin'},t:'Baterai memberi DC ke inverter, inverter membuat AC tiga fasa untuk motor, motor menggerakkan roda. Sebagian kecil daya lewat DC-DC ke sistem 12 V.'},
+ akselerasi:{n:'Akselerasi',on:{e4:'',e5:'',e6:'',e7:'thin',e8:'thin'},t:'Arus dari baterai meningkat tajam. Inilah saat baterai, kabel, dan sambungan paling dibebani (modul 05: uji tegangan jatuh).'},
+ regen:{n:'Pengereman regeneratif',on:{e4:'rev',e5:'rev',e6:'rev',e7:'thin',e8:'thin'},t:'Arah berbalik: roda memutar motor yang menjadi generator, inverter menyearahkan, dan energi kembali ke baterai.'},
+ ac:{n:'Pengisian AC (lambat)',on:{e1:'',e2:'',e7:'thin',e8:'thin'},t:'Listrik AC dari colokan diubah OBC menjadi DC untuk baterai. Kecepatannya dibatasi kapasitas OBC.'},
+ dc:{n:'Pengisian DC (cepat)',on:{e3:'',e7:'thin',e8:'thin'},t:'Stasiun pengisi sudah menyuplai DC, jadi listrik langsung ke baterai tanpa melewati OBC. Karena itu bisa jauh lebih cepat.'},
+ parkir:{n:'Parkir, hanya sistem 12 V',on:{e7:'thin',e8:'thin'},t:'Walau berhenti, DC-DC atau aki 12 V tetap memberi daya ke komputer dan alarm, sehingga baterai besar menurun pelan.'}
+};
+let fm='jalan';
+function drawFlow(){
+  $('fm').innerHTML=Object.entries(MODES).map(([k,v])=>`<button class="chip" data-k="${k}" aria-pressed="${k===fm}">${v.n}</button>`).join('');
+  const M=MODES[fm];
+  const eds=Object.entries(EDG).map(([k,d])=>`<path d="${d}" class="${k in M.on?'on '+M.on[k]:''}"/>`).join('');
+  const nds=Object.values(ND).map(([x,y,t])=>`<g class="nd"><rect x="${x}" y="${y}" width="60" height="40" rx="6"/><text x="${x+30}" y="${y+24}">${t}</text></g>`).join('');
+  $('flow').innerHTML=eds+nds;
+  $('ftx').textContent=M.t;
+}
+$('fm').onclick=e=>{const b=e.target.closest('button');if(b){fm=b.dataset.k;drawFlow()}};drawFlow();
+
+// ----- 400 V vs 800 V -----
+function vlt(){
+  const P=+$('vp').value*1000,V=+$('vv').value,R=+$('vr').value/1000,I=P/V,H=I*I*R,H4=(P/400)**2*R,H8=(P/800)**2*R;
+  $('vpT').textContent=$('vp').value+' kW';$('vrT').textContent=fx(R*1000,0)+' mΩ';
+  $('vi').textContent=fx(I,0)+' A';$('vh').textContent=fx(H/1000,2)+' kW';$('v4').textContent=fx(H4/1000,2)+' kW';$('v8').textContent=fx(H8/1000,2)+' kW';
+}
+['vp','vv','vr'].forEach(i=>$(i).addEventListener('input',vlt));vlt();
+
+// ----- video -----
+const CARD=v=>`<div class="vl"><a class="th" href="${v.link}" target="_blank" rel="noopener" aria-label="Tonton: ${v.judul}"><img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="Pratinjau ${v.judul}" loading="lazy"><span class="pl">▶ Tonton di YouTube</span></a><div><h4><a href="${v.link}" target="_blank" rel="noopener">${v.judul}</a></h4><p><span class="bd">${v.bahasa}</span><span style="color:var(--dim);font-size:12px">${v.kanal||''}</span></p><p>${v.desk}</p></div></div>`;
+const VIDEOS_ID=[]; // tambahkan video Indonesia: { id:'ID', judul:'...', bahasa:'Indonesia', kanal:'...', link:'https://www.youtube.com/watch?v=ID', desk:'...' }
+const VIDEOS=[
+ { id:'tJfERzrG-D8', judul:'How an Electric Car Works? Its Parts & Functions [Explained]', bahasa:'Inggris', kanal:'', link:'https://www.youtube.com/watch?v=tJfERzrG-D8', desk:'Bagian utama mobil listrik dan fungsinya: paket baterai, inverter, motor traksi, dan konverter DC-DC.' },
+ { id:'_xp0w6CiLy4', judul:'How Do Electric Cars Work?', bahasa:'Inggris', kanal:'', link:'https://www.youtube.com/watch?v=_xp0w6CiLy4', desk:'Jalur energi dari paket baterai sampai motor.' },
+ { id:'E9-uQMkNqvM', judul:'The Secret Behind Electric Motors: Inverter Explained', bahasa:'Inggris', kanal:'', link:'https://www.youtube.com/watch?v=E9-uQMkNqvM', desk:'Cara kerja inverter motor dan mengapa ia komponen penting pada EV.' },
+ { id:'Xl87abBl9-A', judul:'How Hybrid Cars Work - Part 1: Inverter and Battery Electronics', bahasa:'Inggris', kanal:'', link:'https://www.youtube.com/watch?v=Xl87abBl9-A', desk:'Cara kerja mobil hibrida: baterai, inverter atau konverter, dan motor listrik yang terhubung ke penggerak.' }
+];
+$('vlistid').innerHTML=VIDEOS_ID.map(CARD).join('');
+$('vlist').innerHTML=VIDEOS.map(CARD).join('');
+const YT='https://www.youtube.com/results?search_query=';
+const VL=[['id','perbedaan BEV HEV PHEV FCEV'],['id','komponen mobil listrik dan fungsinya'],['id','cara kerja inverter mobil listrik'],['id','cara kerja mobil hybrid Prius']];
+$('vlinks').innerHTML=VL.map(x=>`<li><a href="${YT+encodeURIComponent(x[1])}" target="_blank" rel="noopener">${x[1]}</a> (Bahasa Indonesia)</li>`).join('');
+
+// ----- kuis -----
+const Q=[
+['Komponen yang tidak ada pada BEV adalah...',['Inverter','Mesin pembakaran dan tangki bensin','Baterai tegangan tinggi'],1,'BEV sepenuhnya memakai listrik. Mesin dan tangki bensin tidak ada.'],
+['Fungsi inverter pada mobil listrik adalah...',['Mengubah AC colokan menjadi DC','Mengubah DC baterai menjadi AC tiga fasa untuk motor','Menurunkan tegangan menjadi 12 V'],1,'Inverter mengubah DC dan mengatur kecepatan motor lewat frekuensi dan lebar pulsa.'],
+['Perbedaan utama PHEV dan HEV adalah...',['PHEV tidak punya mesin','PHEV punya baterai lebih besar dan bisa dicolok','PHEV memakai hidrogen'],1,'PHEV bisa diisi dari colokan dan baterainya lebih besar, sehingga bisa jalan listrik murni untuk jarak tertentu.'],
+['FCEV menghasilkan listrik dari...',['Bensin','Hidrogen lewat fuel cell','Colokan di rumah saja'],1,'Fuel cell mengubah hidrogen menjadi listrik. Uap air menjadi hasil buangannya.'],
+['Konverter DC-DC pada mobil listrik berguna untuk...',['Mengisi baterai besar dari AC','Menurunkan tegangan tinggi ke sekitar 12 V','Mengubah DC jadi AC'],1,'DC-DC menyuplai sistem 12 V dan mengisi aki 12 V, seperti alternator pada mobil bensin.'],
+['Mengapa sistem 800 V mendukung pengisian lebih cepat?',['Arus lebih kecil untuk daya sama, rugi kabel lebih kecil','Baterainya lebih kecil','Tidak ada pengaruh'],0,'Daya = tegangan × arus. Tegangan dua kali lipat membuat arus separuh dan panas kabel seperempat.'],
+['Pengisian DC cepat berbeda dari AC karena...',['Melewati OBC lebih lama','Listrik DC langsung ke baterai, melewati OBC','Memakai baterai 12 V'],1,'Pengisi DC sudah menyuplai DC, jadi OBC tidak dipakai.']
+];
+let sc=0,ans=0;
+$('quiz').innerHTML=Q.map((q,i)=>`<div class="q" data-i="${i}"><h4>${i+1}. ${q[0]}</h4>${q[1].map((o,j)=>`<button class="opt" data-j="${j}">${o}</button>`).join('')}<p class="why" hidden></p></div>`).join('');
+$('quiz').onclick=e=>{
+  const b=e.target.closest('button');if(!b||b.disabled)return;
+  const box=b.closest('.q'),q=Q[+box.dataset.i],ok=+b.dataset.j===q[2];
+  box.querySelectorAll('button').forEach((x,j)=>{x.disabled=true;if(j===q[2])x.classList.add('right')});
+  if(!ok)b.classList.add('wrong');else sc++;
+  const w=box.querySelector('.why');w.hidden=false;w.textContent=(ok?'Benar. ':'Belum tepat. ')+q[3];
+  if(++ans===Q.length){const s=$('score');s.hidden=false;s.className='verdict '+(sc>=6?'ok':sc>=5?'warn':'bad');s.textContent=`Skor Anda ${sc} dari ${Q.length}. `+(sc>=6?'Siap lanjut ke modul berikutnya.':'Ulangi diagram komponen dan aliran daya, lalu coba kuis lagi.')}
+};
+</script>
+</body>
+</html>

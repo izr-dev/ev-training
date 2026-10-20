@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>10 Pengisian Daya Mobil Listrik | Training EV</title>
+<script src="assets/tema.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#060A12;--panel:#0C1220;--line:#1B2740;--text:#E6ECF5;--dim:#8593AA;--u:#FFC857;--v:#3DDC97;--w:#4DA3FF;--alert:#FF6B8B;--disp:'Chakra Petch',system-ui,sans-serif;--body:'Sora',system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font:400 16px/1.7 var(--body)}
+main{max-width:920px;margin:0 auto;padding:40px clamp(16px,4vw,32px) 0}
+h1{font:700 clamp(28px,4vw,44px)/1.1 var(--disp);margin:0 0 8px}
+h2{font:700 24px var(--disp);margin:52px 0 6px}
+a{color:var(--w)}
+.lead{color:var(--dim);margin:0 0 18px}
+.no{font:700 15px var(--disp);color:var(--v)}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;margin:12px 0}
+.goal{margin:0 0 8px;padding:14px 18px 14px 36px;border:1px solid var(--line);border-left:3px solid var(--v);border-radius:6px;background:var(--panel)}
+.ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 22px;margin:8px 0}
+.ctl label{display:block;font-size:13px;color:var(--dim)}
+.ctl b{color:var(--text);font-family:var(--disp)}
+.ctl input[type=range]{width:100%;accent-color:var(--v)}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0}
+.out div{padding:10px 12px;border:1px solid var(--line);border-radius:6px}
+.out span{display:block;font-size:12px;color:var(--dim)}
+.out strong{font:700 20px var(--disp)}
+main canvas{width:100%;height:200px;display:block;background:var(--ink);border:1px solid var(--line);border-radius:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--dim);font:500 13px var(--body);cursor:pointer}
+.chip[aria-pressed=true]{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 16px;background:var(--ink);border:1px solid var(--line);border-radius:6px;color:var(--text);font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--v)}
+.opt.right{border-color:var(--v);background:color-mix(in srgb,var(--v) 14%,transparent)}
+.opt.wrong{border-color:var(--alert);background:color-mix(in srgb,var(--alert) 12%,transparent)}
+.why{font-size:14px;color:var(--dim);margin:8px 0 0}
+.verdict{padding:10px 14px;border-radius:6px;border:1px solid var(--line);margin-top:12px;font-size:14px}
+.ok{border-color:var(--v);color:var(--v)}.warn{border-color:var(--u);color:var(--u)}.bad{border-color:var(--alert);color:var(--alert)}
+.story{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.story figure{margin:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.story img{width:100%;height:230px;object-fit:contain;background:#fff;border-radius:6px;display:block}
+.story figcaption{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5}
+.story h3{margin:10px 0 4px;font:600 17px var(--disp)}
+.story p{margin:4px 0;font-size:14px}
+table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+.cmp th,.cmp td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.cmp th{color:var(--dim);font-weight:500}
+.vl{display:grid;grid-template-columns:210px 1fr;gap:6px 16px;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.vl a.th{position:relative;display:block;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--ink)}
+.vl img{width:100%;height:100%;object-fit:cover;display:block}
+.vl .pl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);color:#fff;font:700 15px var(--disp)}
+.vl h4{margin:0 0 4px;font:600 16px var(--disp)}
+.vl p{margin:4px 0;font-size:14px}
+.vl .bd{display:inline-block;padding:1px 8px;border:1px solid var(--v);border-radius:999px;color:var(--v);font-size:11px;margin-right:6px}
+@media(max-width:560px){.vl{grid-template-columns:1fr}}
+details.dl{margin-top:20px;border:1px solid var(--line);border-radius:8px;padding:4px 16px}
+details.dl summary{cursor:pointer;padding:12px 0;color:var(--w);font-weight:500}
+.exp li{margin:6px 0}
+.q{margin:18px 0}.q h4{margin:0 0 8px;font:600 16px var(--body)}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:44px;padding-top:20px;border-top:1px solid var(--line)}
+.nav a,.nav button{padding:10px 18px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);font:600 14px var(--disp);text-decoration:none;cursor:pointer}
+.nav button{background:var(--v);border-color:var(--v);color:var(--ink)}
+.nav button[disabled]{background:var(--panel);color:var(--v)}
+
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:12px 0}
+.tools figure{margin:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.tools img{width:100%;height:200px;object-fit:contain;background:#fff;border-radius:6px;display:block}
+.tools figcaption{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5}
+.fm{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:12px 0}
+.fm div{padding:12px;border:1px solid var(--line);border-left:3px solid var(--v);border-radius:6px;background:var(--panel)}
+.fm b{display:block;font:700 18px var(--disp);color:var(--u)}
+.fm span{font-size:13px;color:var(--dim)}
+.stack{display:flex;height:30px;border-radius:6px;overflow:hidden;border:1px solid var(--line);margin:10px 0}
+.stack i{display:flex;align-items:center;justify-content:center;font:600 12px var(--disp);color:var(--ink);min-width:0;white-space:nowrap;transition:width .2s}
+.lg{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--dim)}
+.lg b{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}
+.vl{display:grid;grid-template-columns:210px 1fr;gap:6px 16px;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.vl a.th{position:relative;display:block;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--ink)}
+.vl img{width:100%;height:100%;object-fit:cover;display:block}
+.vl .pl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);color:#fff;font:700 15px var(--disp)}
+.vl h4{margin:0 0 4px;font:600 16px var(--disp)}
+.vl p{margin:4px 0;font-size:14px}
+.vl .bd{display:inline-block;padding:1px 8px;border:1px solid var(--v);border-radius:999px;color:var(--v);font-size:11px;margin-right:6px}
+@media(max-width:560px){.vl{grid-template-columns:1fr}}
+.cp rect,.cp circle{fill:var(--panel);stroke:var(--dim);stroke-width:1.6;transition:fill .15s,stroke .15s}
+.cp:hover rect,.cp:hover circle,.cp:focus rect,.cp:focus circle{stroke:var(--v)}
+.cp.sel rect,.cp.sel circle{fill:color-mix(in srgb,var(--v) 22%,var(--panel));stroke:var(--v);stroke-width:2.4}
+.cp text{fill:var(--text);font:600 10px var(--body);pointer-events:none}
+.cp{cursor:pointer;outline:none}
+.anat{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;align-items:start}
+@media(max-width:760px){.anat{grid-template-columns:1fr}}
+.info h3{font:700 20px var(--disp);margin:0 0 6px;color:var(--v)}
+.info p{margin:6px 0;font-size:15px}
+.info .k{color:var(--u);font:600 12px var(--disp)}
+.mx{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:12px 0}
+.mx div{padding:8px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;color:var(--dim);transition:all .2s}
+.mx div.on{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
+.mx div b{display:block;font:600 11px var(--disp);color:var(--dim)}
+.mx div.on b{color:var(--v)}
+.flow line,.flow path{stroke:var(--line);stroke-width:3;fill:none}
+.flow .on{stroke:var(--u);stroke-width:4;stroke-dasharray:8 7;animation:fl 0.9s linear infinite}
+.flow .on.rev{animation-direction:reverse;stroke:var(--v)}
+.flow .on.thin{stroke-width:2.6}
+@keyframes fl{to{stroke-dashoffset:-30}}
+.flow .nd rect{fill:var(--panel);stroke:var(--dim);stroke-width:1.6}
+.flow .nd text{fill:var(--text);font:600 11px var(--body);text-anchor:middle}
+@media(prefers-reduced-motion:reduce){.flow .on{animation:none}}
+
+.stp{counter-reset:s;list-style:none;margin:10px 0;padding:0}
+.stp li{position:relative;margin:6px 0;padding:10px 12px 10px 48px;background:var(--ink);border:1px solid var(--line);border-radius:6px;font-size:14px}
+.stp li::before{counter-increment:s;content:counter(s);position:absolute;left:12px;top:8px;width:26px;height:26px;border-radius:50%;background:var(--v);color:var(--ink);font:700 14px/26px var(--disp);text-align:center}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font:600 12px var(--disp);margin-right:6px}
+</style>
+</head>
+<body data-kode="10">
+<div id="site-header"></div>
+<main>
+  <div class="no">Modul 10 &nbsp;|&nbsp; Jenis kendaraan</div>
+  <h1>Pengisian Daya Mobil Listrik</h1>
+  <p class="lead">Mengisi mobil listrik bukan sekadar mencolok kabel. Ada soal AC lawan DC, jenis konektor, batas charger di dalam mobil, dan kurva pengisian yang melambat di akhir. Modul ini membahas semuanya, lengkap dengan standar yang dipakai di Indonesia.</p>
+  <ul class="goal">
+    <li>Membedakan pengisian AC dan DC serta menjelaskan peran OBC.</li>
+    <li>Mengenali konektor Type 2, CCS2, dan CHAdeMO, dan memeriksa kecocokannya.</li>
+    <li>Memperkirakan waktu pengisian dan memahami mengapa pengisian melambat setelah sekitar 80%.</li>
+  </ul>
+
+  <div class="box" id="hook">
+    <b>Tebak dulu.</b> Mengapa pengisian DC cepat bisa jauh lebih cepat daripada pengisian AC di rumah?
+    <div id="hopt"></div><p class="why" id="hans" hidden></p>
+  </div>
+
+  <h2>1. AC lawan DC: siapa yang mengubah listrik?</h2>
+  <table class="cmp">
+    <tr><th></th><th>Pengisian AC</th><th>Pengisian DC cepat</th></tr>
+    <tr><td><b>Konversi AC ke DC dilakukan oleh</b></td><td>OBC di dalam mobil (kecil dan terbatas)</td><td>Stasiun pengisi (besar, di dalam lemarinya)</td></tr>
+    <tr><td><b>Daya tipikal</b></td><td>sekitar 1,4 kW (Level 1), 3,3 sampai 22 kW (Level 2)</td><td>sekitar 50 sampai 350 kW</td></tr>
+    <tr><td><b>Dipakai untuk</b></td><td>di rumah, kantor, dan tempat parkir</td><td>perjalanan jauh dan isi cepat</td></tr>
+    <tr><td><b>Yang membatasi kecepatan</b></td><td>kapasitas OBC mobil</td><td>kemampuan baterai menerima daya, dan suhu</td></tr>
+  </table>
+  <p class="why">Kuncinya satu kalimat: <b>AC itu mobil yang bekerja, DC itu stasiun yang bekerja.</b> Level di tabel (angka daya) mengikuti panduan umum dan bisa berbeda per negara dan produk.</p>
+
+  <h2>2. Konektor: Type 2, CCS2, dan CHAdeMO</h2>
+  <p class="lead">Pemerintah (ESDM) menetapkan tiga jenis colokan untuk SPKLU: Type 2 untuk AC, serta CCS2 dan CHAdeMO untuk DC. CCS2 menjadi yang paling banyak dipakai di Indonesia, sedangkan CHAdeMO adalah standar lama yang masih dipakai pada mobil seperti Nissan Leaf.</p>
+  <div class="tools" id="figCon"></div>
+  <div class="box">
+    <b>Cocok atau tidak?</b> Pilih soket mobil dan colokan stasiun.
+    <div class="ctl">
+      <label>Soket di mobil<select id="cm" style="width:100%;padding:6px;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:6px"><option value="t2">Type 2 (AC saja)</option><option value="ccs" selected>CCS2 (AC dan DC)</option><option value="cha">CHAdeMO (DC)</option></select></label>
+      <label>Colokan di stasiun<select id="cs" style="width:100%;padding:6px;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:6px"><option value="t2">Type 2 (AC)</option><option value="ccs" selected>CCS2 (DC)</option><option value="cha">CHAdeMO (DC)</option></select></label>
+    </div>
+    <div class="verdict" id="cv"></div>
+  </div>
+  <p class="why">CCS2 adalah Type 2 ditambah dua pin DC besar di bawahnya, jadi soket CCS2 menerima colokan Type 2 maupun CCS2. Standar SNI yang mengaturnya: SNI IEC 61851 (sistem pengisian), SNI IEC 62196 (konektor), dan ISO 15118 (komunikasi antara kendaraan dan stasiun). Standar tiap negara berbeda: Cina memakai GB/T, Amerika Utara memakai CCS1 dan NACS (Tesla), dan India punya konektor khusus untuk roda dua dan tiga. Kementerian ESDM pada Agustus 2026 sedang menyiapkan satu standar konektor untuk kendaraan listrik roda dua dan tiga di Indonesia.</p>
+
+  <h2>3. Simulasi pengisian: mengapa melambat setelah 80%</h2>
+  <div class="box">
+    <div class="ctl">
+      <label>Kapasitas baterai: <b id="sbT"></b><input type="range" id="sb" min="20" max="120" step="1" value="60"></label>
+      <label>Mulai dari: <b id="s0T"></b><input type="range" id="s0" min="0" max="90" step="1" value="10"></label>
+      <label>Sampai: <b id="s1T"></b><input type="range" id="s1" min="20" max="100" step="1" value="80"></label>
+      <label>Jenis pengisian<select id="sm" style="width:100%;padding:6px;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:6px"><option value="ac">AC (lewat OBC)</option><option value="dc" selected>DC cepat</option></select></label>
+      <label>Daya stasiun<select id="sp" style="width:100%;padding:6px;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:6px"><option value="3.3">3,3 kW (AC)</option><option value="7.4">7,4 kW (AC)</option><option value="11">11 kW (AC)</option><option value="22">22 kW (AC)</option><option value="50">50 kW (DC)</option><option value="120" selected>120 kW (DC)</option><option value="150">150 kW (DC)</option><option value="350">350 kW (DC)</option></select></label>
+      <label>OBC mobil (batas AC): <b id="soT"></b><input type="range" id="so" min="3.3" max="22" step=".1" value="7.4"></label>
+      <label>Batas DC mobil: <b id="sdT"></b><input type="range" id="sd" min="30" max="350" step="5" value="100"></label>
+    </div>
+    <canvas id="chg" style="height:220px" aria-label="Kurva persen baterai terhadap waktu pengisian"></canvas>
+    <div class="out"><div><span>Daya yang dipakai</span><strong id="so1"></strong></div><div><span>Waktu pengisian</span><strong id="st"></strong></div><div><span>Energi masuk baterai</span><strong id="se"></strong></div><div><span>Daya rata-rata</span><strong id="sa"></strong></div></div>
+    <div class="verdict" id="sv"></div>
+    <p class="why">Model sederhana: daya konstan sampai 80%, lalu menurun linear sampai sekitar 10% dari daya awal di 100% (fase tegangan konstan), dengan efisiensi pengisian 92%. Daya efektif = yang terkecil dari stasiun, batas mobil (DC) atau OBC (AC). Mobil nyata juga menurunkan daya karena suhu dan karakter sel. Angka ilustrasi.</p>
+  </div>
+
+  <h2>4. Urutan pengisian: "jabat tangan" mobil dan stasiun</h2>
+  <ol class="stp">
+    <li>Colokan masuk. Pin sinyal (control pilot dan proximity pilot) memberi tahu mobil bahwa colokan terpasang dan menyatakan arus maksimum yang boleh diminta.</li>
+    <li>Mobil dan stasiun berkomunikasi dan memeriksa kecocokan, insulasi, dan keamanan.</li>
+    <li>Kontaktor di stasiun dan di mobil menutup setelah pemeriksaan selesai (modul 06).</li>
+    <li>Daya mengalir. Pada DC, BMS mobil terus meminta arus sesuai kondisi sel (modul 15).</li>
+    <li>Pengisian melambat mendekati penuh, berhenti, dan kontaktor membuka sebelum colokan dilepas.</li>
+  </ol>
+
+  <h2>5. Mengisi di SPKLU Indonesia</h2>
+  <ol class="stp">
+    <li>Buka aplikasi PLN Mobile, masuk menu Electric Vehicle, lalu pilih SPKLU dan lokasinya.</li>
+    <li>Di lokasi, pilih Charge lalu pindai barcode pada mesin pengisi.</li>
+    <li>Tulis jumlah daya (kWh) yang akan diisi, lalu bayar (dompet digital seperti GoPay, OVO, LinkAja, atau saldo PLN Mobile).</li>
+    <li>Sambungkan nozzle ke port mobil. Pengisian mulai setelah tahap sinkronisasi selesai.</li>
+    <li>Pengisian berhenti otomatis sesuai pembelian. Cabut nozzle dan kembalikan ke tempatnya.</li>
+  </ol>
+  <ul class="rec">
+    <li><b>Jumlah SPKLU:</b> sekitar 4.892 unit pada Mei 2026 menurut satu sumber sekunder, naik dari 624 pada akhir 2023. PLN juga menyiapkan lebih dari 1.600 SPKLU di jalur mudik Lebaran 2026. Angka cepat berubah, cek ulang.</li>
+    <li><b>Peta jalan:</b> Keputusan Menteri ESDM No. 24.K/TL.01/MEM.L/2025 memuat rencana pembangunan SPKLU 2025 sampai 2030.</li>
+    <li><b>SPKLU lawan SPLU:</b> SPKLU untuk kendaraan listrik, sedangkan SPLU adalah stasiun pengisian listrik umum untuk keperluan lain (misalnya pedagang).</li>
+    <li><b>PLN EYE:</b> pengisi yang dipasang di tiang listrik, tersedia dalam daya 7 kW dan 22 kW.</li>
+    <li><b>Kebijakan merek:</b> sebagian SPKLU milik pabrikan hanya untuk mereknya (misalnya milik Hyundai), sedangkan BYD membuka SPKLU di diler untuk semua merek (menurut Gridoto).</li>
+    <li><b>Di rumah:</b> PLN menawarkan layanan home charging dengan harga khusus untuk pasang baru sampai 13.200 VA atau tambah daya sampai 16.500 VA.</li>
+  </ul>
+
+  <h2>6. Tips dan keselamatan</h2>
+  <ul class="rec">
+    <li>Periksa jenis konektor dan daya maksimal yang didukung mobil sebelum mengisi di luar diler.</li>
+    <li>Jangan mengisi bila konektor, kabel, atau port rusak, basah, kotor, berbau gosong, atau terasa sangat panas (kaitan: termometer inframerah, modul 05).</li>
+    <li>Pengisian yang sering sampai 100% atau selalu dengan DC cepat dapat mempercepat penuaan baterai. Banyak pabrikan menyarankan mengisi harian di kisaran menengah (misalnya sampai sekitar 80%). Ikuti anjuran pabrikan kendaraan Anda.</li>
+    <li>Pengisi yang tidak bersertifikat SNI berisiko. Gunakan perangkat bersertifikat dan instalasi yang sesuai (modul 04).</li>
+  </ul>
+
+  <h2>7. Video pendukung</h2>
+  <h3 style="font:600 18px var(--disp);margin:14px 0 6px">Bahasa Indonesia</h3>
+  <p class="why">Belum ada video berbahasa Indonesia yang bisa saya pastikan benar-benar ada. Gunakan tautan pencarian (hasil pencarian YouTube, bukan video tertentu) dan bacaan Indonesia berikut. Video pilihan Anda bisa ditambahkan di daftar <code>VIDEOS_ID</code> dalam skrip.</p>
+  <ul class="rec" id="vlinks"></ul>
+  <p class="why"><b>Bacaan bahasa Indonesia:</b> <a href="https://money.kompas.com/read/2024/06/02/221708326/cara-isi-daya-mobil-listrik-di-spklu-pakai-aplikasi-pln-mobile" target="_blank" rel="noopener">Kompas: cara isi daya di SPKLU lewat PLN Mobile</a>, <a href="https://www.gridoto.com/amp/224305535/charger-mobil-listrik-bisa-dipakai-semua-merek-ini-penjelasannya?page=all" target="_blank" rel="noopener">Gridoto: apakah charger bisa dipakai semua merek</a>, <a href="https://auto2000.co.id/berita-dan-tips/spklu-pln" target="_blank" rel="noopener">Auto2000: panduan SPKLU PLN 2026</a>, dan <a href="https://industri.kontan.co.id/news/sesuai-kesepakatan-akan-ada-3-tipe-colokan-kendaraan-listrik-di-indonesia" target="_blank" rel="noopener">Kontan: tiga tipe colokan di Indonesia</a>.</p>
+  <div id="vlistid"></div>
+  <h3 style="font:600 18px var(--disp);margin:22px 0 6px">Bahasa Inggris</h3>
+  <p class="why">Tips subtitle: aktifkan CC, buka Setelan, Subtitel/CC, lalu Terjemahkan otomatis ke Indonesia, bila pemilik video mengaktifkan subtitel.</p>
+  <div id="vlist"></div>
+
+  <details class="dl"><summary>Catatan untuk pengajar</summary>
+    <p><b>Alur sekitar 75 menit:</b> tebakan (5), AC lawan DC (10), konektor dan kecocokan (15), simulasi pengisian (20), urutan dan SPKLU (10), kuis (10).</p>
+    <p><b>Peragaan:</b> bawa foto atau colokan bekas Type 2 dan CCS2, dan minta peserta menunjukkan dua pin DC tambahan pada CCS2. Tunjukkan layar pengisian di mobil bila ada.</p>
+    <p><b>Pertanyaan pemicu:</b> Mobil dengan OBC 7,4 kW dicolok ke wallbox 22 kW. Berapa daya yang masuk? (7,4 kW: OBC yang menjadi batasnya.)</p>
+    <p><b>Pesan utama:</b> AC mobil yang bekerja, DC stasiun yang bekerja. Yang menentukan kecepatan bukan hanya kabel, tetapi juga OBC, batas DC mobil, dan kondisi baterai.</p>
+  </details>
+
+  <h2>8. Kuis</h2>
+  <div id="quiz"></div><div class="verdict" id="score" hidden></div>
+
+  <p class="why" style="margin-top:30px">Sumber foto, Wikimedia Commons: <a href="https://commons.wikimedia.org/wiki/File:Chademo-combo2-iec-type-2-connectors-side-by-side.jpg" target="_blank" rel="noopener">CHAdeMO, CCS Combo 2, dan Type 2</a> (Paul Sladen, CC0), <a href="https://commons.wikimedia.org/wiki/File:Type2_CCS_Bmw_i3.jpg" target="_blank" rel="noopener">port Type 2 CCS BMW i3</a> (Teknisk Kompetanse, CC BY-SA 4.0), dan <a href="https://commons.wikimedia.org/wiki/File:CCS_(Type2_Combo)_Charging_Plug.jpg" target="_blank" rel="noopener">colokan CCS (Type 2 Combo)</a> (Danilo Bargen, CC BY-SA 4.0). Sumber isi: <a href="https://gatrik.esdm.go.id/assets/uploads/download_index/files/3da74-bahan-ditjen-ketenagalistrikan.pdf" target="_blank" rel="noopener">Ditjen Ketenagalistrikan ESDM</a> (tipe colokan dan standar SNI), Kontan, Gridoto, Kompas, Auto2000, ANTARA, Kabarbursa, dan panduan Plug and Range serta Learn EV Charging (AC/DC dan level). Cek ulang sebelum dipakai sebagai rujukan resmi.</p>
+
+  <div class="nav">
+    <a href="modul-09.html">Sebelumnya: 09</a><a href="index.html#modul">Daftar modul</a>
+    <button id="doneBtn">Tandai selesai</button><a href="modul-11.html">Berikutnya: 11</a>
+  </div>
+</main>
+<div id="site-footer"></div>
+<script>
+const $=id=>document.getElementById(id);
+fetch('assets/layout.html').then(r=>{if(!r.ok)throw 0;return r.text()}).then(h=>{
+  const d=new DOMParser().parseFromString(h,'text/html');
+  document.head.append(...d.querySelectorAll('style'));
+  $('site-header').replaceWith(d.querySelector('header'));$('site-footer').replaceWith(d.querySelector('footer'));
+}).catch(()=>{$('site-header').textContent='Training EV'});
+const kode=document.body.dataset.kode, btn=$('doneBtn');
+let done=[]; try{done=JSON.parse(localStorage.getItem('evDone')||'[]')}catch(e){}
+const mark=()=>{btn.textContent='Selesai ✓';btn.disabled=true};
+if(done.includes(kode))mark();
+btn.onclick=()=>{if(!done.includes(kode))done.push(kode);try{localStorage.setItem('evDone',JSON.stringify(done))}catch(e){}mark()};
+const cs=k=>getComputedStyle(document.documentElement).getPropertyValue('--'+k).trim();
+const fx=(n,d=1)=>(+n).toLocaleString('id-ID',{maximumFractionDigits:d});
+function hook(id,aid,opts,ok,html){$(id).innerHTML=opts.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('');$(id).onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;[...$(id).children].forEach((x,i)=>{x.disabled=true;if(i===ok)x.classList.add('right')});if(+b.dataset.i!==ok)b.classList.add('wrong');const a=$(aid);a.hidden=false;a.innerHTML=html}}
+hook('hopt','hans',['Kabelnya jauh lebih panjang','Konversi AC ke DC dilakukan di stasiun yang besar, bukan di OBC mobil yang kecil','Baterai mobil dibuat lebih kecil','Tegangannya hanya 12 V'],1,'Jawabannya <b>konversi dilakukan di stasiun</b>. Pada AC, OBC kecil di dalam mobil yang mengubah listrik dan menjadi batas kecepatan. Pada DC, stasiun yang besar sudah mengubahnya dan langsung memberi DC ke baterai.');
+
+// ----- foto -----
+const CM='https://commons.wikimedia.org/wiki/',fp=f=>CM+'Special:FilePath/'+encodeURIComponent(f)+'?width=520';
+const fg=(f,alt,cap,by)=>`<figure><img src="${fp(f)}" alt="${alt}" loading="lazy" onerror="this.closest('figure').style.display='none'"><figcaption>${cap}. Sumber: <a href="${CM}File:${encodeURIComponent(f)}" target="_blank" rel="noopener">${f.replace(/_/g,' ')}</a>, ${by}, Wikimedia Commons</figcaption></figure>`;
+$('figCon').innerHTML=fg('Chademo-combo2-iec-type-2-connectors-side-by-side.jpg','Tiga jenis colokan berdampingan','Berdampingan: CHAdeMO (kiri), CCS Combo 2 (tengah), dan Type 2 (kanan). Itulah tiga jenis colokan SPKLU di Indonesia','Paul Sladen, CC0')+fg('Type2_CCS_Bmw_i3.jpg','Port CCS pada BMW i3','Port pengisian Type 2 CCS pada BMW i3: bagian atas untuk AC, dua pin besar di bawah untuk DC','Teknisk Kompetanse, CC BY-SA 4.0')+fg('CCS_(Type2_Combo)_Charging_Plug.jpg','Colokan CCS Type 2 Combo','Colokan CCS (Type 2 Combo)','Danilo Bargen, CC BY-SA 4.0');
+
+// ----- kecocokan konektor -----
+function cmp(){
+  const m=$('cm').value,s=$('cs').value,v=$('cv');
+  const N={t2:'Type 2',ccs:'CCS2',cha:'CHAdeMO'};
+  let cls,msg;
+  if(m===s){cls='ok';msg=`${N[m]} ke ${N[s]}: cocok.`+(m==='ccs'?' Soket CCS2 menerima colokan CCS2 untuk AC dan DC.':'')}
+  else if(m==='ccs'&&s==='t2'){cls='ok';msg='Cocok untuk pengisian AC. Soket CCS2 memuat bentuk Type 2 di bagian atas, jadi colokan Type 2 masuk. Pengisian AC saja, bukan DC.'}
+  else if(m==='cha'&&s==='t2'){cls='warn';msg='Tidak otomatis. Mobil dengan CHAdeMO biasanya punya soket AC terpisah (jenisnya bergantung model). Periksa soket AC mobil Anda.'}
+  else{cls='bad';msg=`Tidak cocok: bentuk ${N[s]} tidak masuk ke soket ${N[m]}. Adaptor tertentu mungkin ada, tetapi pakai hanya yang resmi dan sesuai pabrikan.`}
+  v.className='verdict '+cls;v.textContent=msg;
+}
+['cm','cs'].forEach(i=>$(i).addEventListener('change',cmp));cmp();
+
+// ----- simulasi pengisian -----
+const cv=$('chg'),cx=cv.getContext('2d');
+function sim(){
+  const cap=+$('sb').value,s0=+$('s0').value/100,s1=Math.max(+$('s1').value/100,s0+.01),mode=$('sm').value,sp=+$('sp').value,obc=+$('so').value,dcl=+$('sd').value,eff=.92;
+  $('sbT').textContent=cap+' kWh';$('s0T').textContent=Math.round(s0*100)+'%';$('s1T').textContent=Math.round(s1*100)+'%';$('soT').textContent=fx(obc,1)+' kW';$('sdT').textContent=dcl+' kW';
+  const pmax=mode==='ac'?Math.min(sp,obc):Math.min(sp,dcl);
+  const pw=s=>s<.8?pmax:pmax*Math.max(.1,1-(s-.8)/.2*.9);
+  let soc=s0,t=0,E=0;const pts=[[0,soc]];const dt=1/60; // jam
+  while(soc<s1&&t<80){const p=pw(soc);const dE=p*dt*eff;soc=Math.min(s1,soc+dE/cap);E+=dE;t+=dt;pts.push([t,soc])}
+  $('so1').textContent=fx(pmax,1)+' kW';$('st').textContent=t>=2?fx(t,1)+' jam':fx(t*60,0)+' menit';$('se').textContent=fx(E,1)+' kWh';$('sa').textContent=fx(E/t,1)+' kW';
+  const v=$('sv');
+  if(mode==='ac'&&sp>obc){v.className='verdict warn';v.textContent=`Stasiun AC ${sp} kW, tetapi OBC mobil hanya ${fx(obc,1)} kW. OBC yang menjadi batas.`}
+  else if(mode==='dc'&&sp>dcl){v.className='verdict warn';v.textContent=`Stasiun ${sp} kW, tetapi mobil hanya menerima sampai ${dcl} kW. Mobil yang menjadi batas.`}
+  else if(mode==='ac'&&sp>=50){v.className='verdict warn';v.textContent='Daya 50 kW ke atas hanya dimiliki stasiun DC. Pilih jenis pengisian DC.'}
+  else if(mode==='dc'&&sp<50){v.className='verdict warn';v.textContent='Daya di bawah 50 kW umumnya stasiun AC. Pilih jenis pengisian AC.'}
+  else{v.className='verdict ok';v.textContent='Daya stasiun dan batas mobil sejalan. Lihat bagaimana kurva melandai setelah 80%.'}
+  draw(pts,s0,s1,t);
+}
+function draw(pts,s0,s1,T){
+  const W=cv.clientWidth,H=cv.clientHeight,L=44,R=10,T0=12,B=26,pw=W-L-R,ph=H-T0-B;
+  cx.clearRect(0,0,W,H);cx.strokeStyle=cs('line');cx.lineWidth=1;cx.beginPath();cx.moveTo(L,T0);cx.lineTo(L,T0+ph);cx.lineTo(L+pw,T0+ph);cx.stroke();
+  [0,.25,.5,.75,1].forEach(g=>{const y=T0+ph*(1-g);cx.beginPath();cx.strokeStyle=cs('line');cx.globalAlpha=.5;cx.moveTo(L,y);cx.lineTo(L+pw,y);cx.stroke();cx.globalAlpha=1;cx.fillStyle=cs('dim');cx.font='11px sans-serif';cx.fillText(Math.round(g*100)+'%',4,y+4)});
+  const X=t=>L+pw*t/Math.max(T,.01),Y=s=>T0+ph*(1-s);
+  cx.beginPath();pts.forEach((p,i)=>i?cx.lineTo(X(p[0]),Y(p[1])):cx.moveTo(X(p[0]),Y(p[1])));cx.strokeStyle=cs('v');cx.lineWidth=2.6;cx.stroke();
+  if(.8>s0&&.8<s1){cx.setLineDash([4,4]);cx.strokeStyle=cs('u');cx.beginPath();cx.moveTo(L,Y(.8));cx.lineTo(L+pw,Y(.8));cx.stroke();cx.setLineDash([]);cx.fillStyle=cs('u');cx.fillText('80%',L+pw-30,Y(.8)-4)}
+  cx.fillStyle=cs('dim');cx.fillText('waktu pengisian',L+pw-90,H-8);
+}
+function sizeAll(){const d=Math.min(2,devicePixelRatio||1);cv.width=cv.clientWidth*d;cv.height=cv.clientHeight*d;cx.setTransform(d,0,0,d,0,0);sim()}
+['sb','s0','s1','sm','sp','so','sd'].forEach(i=>$(i).addEventListener('input',sim));
+addEventListener('resize',sizeAll);sizeAll();
+
+// ----- video -----
+const CARD=v=>`<div class="vl"><a class="th" href="${v.link}" target="_blank" rel="noopener" aria-label="Tonton: ${v.judul}"><img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="Pratinjau ${v.judul}" loading="lazy"><span class="pl">▶ Tonton di YouTube</span></a><div><h4><a href="${v.link}" target="_blank" rel="noopener">${v.judul}</a></h4><p><span class="bd">${v.bahasa}</span><span style="color:var(--dim);font-size:12px">${v.kanal||''}</span></p><p>${v.desk}</p></div></div>`;
+const VIDEOS_ID=[]; // tambahkan video Indonesia: { id:'ID', judul:'...', bahasa:'Indonesia', kanal:'...', link:'https://www.youtube.com/watch?v=ID', desk:'...' }
+const VIDEOS=[
+ { id:'aolY-wPgYsE', judul:'EV Charging Explained: Level 1, 2, and DC Fast Charging!', bahasa:'Inggris', kanal:'', link:'https://www.youtube.com/shorts/aolY-wPgYsE', desk:'Video pendek yang menjelaskan pengisian DC cepat serta pengisian AC Level 1 dan Level 2, dan perbedaan kecepatannya.' }
+];
+$('vlistid').innerHTML=VIDEOS_ID.map(CARD).join('');
+$('vlist').innerHTML=VIDEOS.map(CARD).join('');
+const YT='https://www.youtube.com/results?search_query=';
+const VL=[['id','cara mengisi mobil listrik di SPKLU PLN Mobile'],['id','perbedaan charger AC dan DC mobil listrik'],['id','perbedaan konektor CCS2 CHAdeMO Type 2'],['id','home charging mobil listrik di rumah']];
+$('vlinks').innerHTML=VL.map(x=>`<li><a href="${YT+encodeURIComponent(x[1])}" target="_blank" rel="noopener">${x[1]}</a> (Bahasa Indonesia)</li>`).join('');
+
+// ----- kuis -----
+const Q=[
+['Pada pengisian AC, yang mengubah AC menjadi DC adalah...',['Stasiun pengisi','OBC di dalam mobil','Kabel pengisi'],1,'OBC (on-board charger) di dalam mobil yang melakukan konversi pada pengisian AC.'],
+['Tiga jenis colokan SPKLU yang ditetapkan ESDM adalah...',['Type 2 (AC), CHAdeMO (DC), CCS2 (DC)','USB, Type 1, GB/T','NACS, Type 3, CCS1'],0,'Type 2 untuk AC, serta CHAdeMO dan CCS2 untuk DC.'],
+['Mobil memiliki OBC 7,4 kW dan dicolok ke wallbox AC 22 kW. Daya yang masuk sekitar...',['22 kW','7,4 kW','29,4 kW'],1,'Daya efektif adalah yang terkecil. OBC menjadi batasnya.'],
+['Mengapa pengisian melambat setelah sekitar 80%?',['Stasiun kehabisan daya','Baterai mendekati penuh sehingga arus diturunkan (fase tegangan konstan)','Kabel makin panas karena lebih panjang'],1,'Mendekati penuh, arus diturunkan agar sel aman. Maka kurva melandai.'],
+['Soket mobil CCS2 dapat menerima colokan...',['Type 2 (AC) dan CCS2','CHAdeMO','GB/T saja'],0,'CCS2 adalah Type 2 ditambah dua pin DC, jadi menerima kedua colokan itu.'],
+['Setelah membayar di PLN Mobile, langkah berikutnya adalah...',['Pindai barcode','Pasang nozzle ke port, lalu tunggu sinkronisasi','Tutup kap mesin'],1,'Pasang nozzle, tunggu sinkronisasi, dan pengisian mulai. Berhenti otomatis sesuai pembelian.'],
+['Bila colokan terasa sangat panas atau berbau gosong saat mengisi, yang benar adalah...',['Lanjut saja','Hentikan pengisian dan laporkan, jangan dipaksakan','Siram dengan air'],1,'Konektor yang panas atau berbau gosong menandakan masalah. Hentikan pengisian dan periksa.']
+];
+let sc=0,ans=0;
+$('quiz').innerHTML=Q.map((q,i)=>`<div class="q" data-i="${i}"><h4>${i+1}. ${q[0]}</h4>${q[1].map((o,j)=>`<button class="opt" data-j="${j}">${o}</button>`).join('')}<p class="why" hidden></p></div>`).join('');
+$('quiz').onclick=e=>{
+  const b=e.target.closest('button');if(!b||b.disabled)return;
+  const box=b.closest('.q'),q=Q[+box.dataset.i],ok=+b.dataset.j===q[2];
+  box.querySelectorAll('button').forEach((x,j)=>{x.disabled=true;if(j===q[2])x.classList.add('right')});
+  if(!ok)b.classList.add('wrong');else sc++;
+  const w=box.querySelector('.why');w.hidden=false;w.textContent=(ok?'Benar. ':'Belum tepat. ')+q[3];
+  if(++ans===Q.length){const s=$('score');s.hidden=false;s.className='verdict '+(sc>=6?'ok':sc>=5?'warn':'bad');s.textContent=`Skor Anda ${sc} dari ${Q.length}. `+(sc>=6?'Siap lanjut ke modul berikutnya.':'Ulangi simulasi pengisian dan kecocokan konektor, lalu coba kuis lagi.')}
+};
+</script>
+</body>
+</html>

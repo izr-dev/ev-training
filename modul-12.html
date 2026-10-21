@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>12 Personal Transporter | Training EV</title>
+<script src="assets/tema.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#060A12;--panel:#0C1220;--line:#1B2740;--text:#E6ECF5;--dim:#8593AA;--u:#FFC857;--v:#3DDC97;--w:#4DA3FF;--alert:#FF6B8B;--disp:'Chakra Petch',system-ui,sans-serif;--body:'Sora',system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font:400 16px/1.7 var(--body)}
+main{max-width:920px;margin:0 auto;padding:40px clamp(16px,4vw,32px) 0}
+h1{font:700 clamp(28px,4vw,44px)/1.1 var(--disp);margin:0 0 8px}
+h2{font:700 24px var(--disp);margin:52px 0 6px}
+a{color:var(--w)}
+.lead{color:var(--dim);margin:0 0 18px}
+.no{font:700 15px var(--disp);color:var(--v)}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;margin:12px 0}
+.goal{margin:0 0 8px;padding:14px 18px 14px 36px;border:1px solid var(--line);border-left:3px solid var(--v);border-radius:6px;background:var(--panel)}
+.ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 22px;margin:8px 0}
+.ctl label{display:block;font-size:13px;color:var(--dim)}
+.ctl b{color:var(--text);font-family:var(--disp)}
+.ctl input[type=range]{width:100%;accent-color:var(--v)}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0}
+.out div{padding:10px 12px;border:1px solid var(--line);border-radius:6px}
+.out span{display:block;font-size:12px;color:var(--dim)}
+.out strong{font:700 20px var(--disp)}
+main canvas{width:100%;height:200px;display:block;background:var(--ink);border:1px solid var(--line);border-radius:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--dim);font:500 13px var(--body);cursor:pointer}
+.chip[aria-pressed=true]{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 16px;background:var(--ink);border:1px solid var(--line);border-radius:6px;color:var(--text);font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--v)}
+.opt.right{border-color:var(--v);background:color-mix(in srgb,var(--v) 14%,transparent)}
+.opt.wrong{border-color:var(--alert);background:color-mix(in srgb,var(--alert) 12%,transparent)}
+.why{font-size:14px;color:var(--dim);margin:8px 0 0}
+.verdict{padding:10px 14px;border-radius:6px;border:1px solid var(--line);margin-top:12px;font-size:14px}
+.ok{border-color:var(--v);color:var(--v)}.warn{border-color:var(--u);color:var(--u)}.bad{border-color:var(--alert);color:var(--alert)}
+.story{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.story figure{margin:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.story img{width:100%;height:230px;object-fit:contain;background:#fff;border-radius:6px;display:block}
+.story figcaption{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5}
+.story h3{margin:10px 0 4px;font:600 17px var(--disp)}
+.story p{margin:4px 0;font-size:14px}
+table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+.cmp th,.cmp td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.cmp th{color:var(--dim);font-weight:500}
+.vl{display:grid;grid-template-columns:210px 1fr;gap:6px 16px;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.vl a.th{position:relative;display:block;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--ink)}
+.vl img{width:100%;height:100%;object-fit:cover;display:block}
+.vl .pl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);color:#fff;font:700 15px var(--disp)}
+.vl h4{margin:0 0 4px;font:600 16px var(--disp)}
+.vl p{margin:4px 0;font-size:14px}
+.vl .bd{display:inline-block;padding:1px 8px;border:1px solid var(--v);border-radius:999px;color:var(--v);font-size:11px;margin-right:6px}
+@media(max-width:560px){.vl{grid-template-columns:1fr}}
+details.dl{margin-top:20px;border:1px solid var(--line);border-radius:8px;padding:4px 16px}
+details.dl summary{cursor:pointer;padding:12px 0;color:var(--w);font-weight:500}
+.exp li{margin:6px 0}
+.q{margin:18px 0}.q h4{margin:0 0 8px;font:600 16px var(--body)}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:44px;padding-top:20px;border-top:1px solid var(--line)}
+.nav a,.nav button{padding:10px 18px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);font:600 14px var(--disp);text-decoration:none;cursor:pointer}
+.nav button{background:var(--v);border-color:var(--v);color:var(--ink)}
+.nav button[disabled]{background:var(--panel);color:var(--v)}
+
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:12px 0}
+.tools figure{margin:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.tools img{width:100%;height:200px;object-fit:contain;background:#fff;border-radius:6px;display:block}
+.tools figcaption{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5}
+.fm{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:12px 0}
+.fm div{padding:12px;border:1px solid var(--line);border-left:3px solid var(--v);border-radius:6px;background:var(--panel)}
+.fm b{display:block;font:700 18px var(--disp);color:var(--u)}
+.fm span{font-size:13px;color:var(--dim)}
+.stack{display:flex;height:30px;border-radius:6px;overflow:hidden;border:1px solid var(--line);margin:10px 0}
+.stack i{display:flex;align-items:center;justify-content:center;font:600 12px var(--disp);color:var(--ink);min-width:0;white-space:nowrap;transition:width .2s}
+.lg{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--dim)}
+.lg b{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}
+.vl{display:grid;grid-template-columns:210px 1fr;gap:6px 16px;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.vl a.th{position:relative;display:block;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--ink)}
+.vl img{width:100%;height:100%;object-fit:cover;display:block}
+.vl .pl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);color:#fff;font:700 15px var(--disp)}
+.vl h4{margin:0 0 4px;font:600 16px var(--disp)}
+.vl p{margin:4px 0;font-size:14px}
+.vl .bd{display:inline-block;padding:1px 8px;border:1px solid var(--v);border-radius:999px;color:var(--v);font-size:11px;margin-right:6px}
+@media(max-width:560px){.vl{grid-template-columns:1fr}}
+.cp rect,.cp circle{fill:var(--panel);stroke:var(--dim);stroke-width:1.6;transition:fill .15s,stroke .15s}
+.cp:hover rect,.cp:hover circle,.cp:focus rect,.cp:focus circle{stroke:var(--v)}
+.cp.sel rect,.cp.sel circle{fill:color-mix(in srgb,var(--v) 22%,var(--panel));stroke:var(--v);stroke-width:2.4}
+.cp text{fill:var(--text);font:600 10px var(--body);pointer-events:none}
+.cp{cursor:pointer;outline:none}
+.anat{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;align-items:start}
+@media(max-width:760px){.anat{grid-template-columns:1fr}}
+.info h3{font:700 20px var(--disp);margin:0 0 6px;color:var(--v)}
+.info p{margin:6px 0;font-size:15px}
+.info .k{color:var(--u);font:600 12px var(--disp)}
+.mx{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:12px 0}
+.mx div{padding:8px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;color:var(--dim);transition:all .2s}
+.mx div.on{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
+.mx div b{display:block;font:600 11px var(--disp);color:var(--dim)}
+.mx div.on b{color:var(--v)}
+.flow line,.flow path{stroke:var(--line);stroke-width:3;fill:none}
+.flow .on{stroke:var(--u);stroke-width:4;stroke-dasharray:8 7;animation:fl 0.9s linear infinite}
+.flow .on.rev{animation-direction:reverse;stroke:var(--v)}
+.flow .on.thin{stroke-width:2.6}
+@keyframes fl{to{stroke-dashoffset:-30}}
+.flow .nd rect{fill:var(--panel);stroke:var(--dim);stroke-width:1.6}
+.flow .nd text{fill:var(--text);font:600 11px var(--body);text-anchor:middle}
+@media(prefers-reduced-motion:reduce){.flow .on{animation:none}}
+
+.stp{counter-reset:s;list-style:none;margin:10px 0;padding:0}
+.stp li{position:relative;margin:6px 0;padding:10px 12px 10px 48px;background:var(--ink);border:1px solid var(--line);border-radius:6px;font-size:14px}
+.stp li::before{counter-increment:s;content:counter(s);position:absolute;left:12px;top:8px;width:26px;height:26px;border-radius:50%;background:var(--v);color:var(--ink);font:700 14px/26px var(--disp);text-align:center}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font:600 12px var(--disp);margin-right:6px}
+</style>
+</head>
+<body data-kode="12">
+<div id="site-header"></div>
+<main>
+  <div class="no">Modul 12 &nbsp;|&nbsp; Jenis kendaraan</div>
+  <h1>Personal Transporter</h1>
+  <p class="lead">Sepeda listrik, skuter, hoverboard, dan sepeda roda satu: kendaraan kecil yang kini ada di jalan, kampus, dan kompleks. Modul ini membahas jenisnya, cara hoverboard menjaga keseimbangan, aturan di Indonesia (Permenhub 45/2020), dan risiko baterainya.</p>
+  <ul class="goal">
+    <li>Menyebut lima jenis kendaraan tertentu bermotor listrik menurut Permenhub 45/2020.</li>
+    <li>Menjelaskan prinsip self-balancing (inverted pendulum) dan komponen penyusunnya.</li>
+    <li>Menerapkan aturan keselamatan dan area operasi, serta mengenali risiko kebakaran baterai.</li>
+  </ul>
+  <div class="box" id="hook">
+    <b>Tebak dulu.</b> Mengapa hoverboard tidak jatuh ke depan atau belakang saat Anda berdiri di atasnya?
+    <div id="hopt"></div><p class="why" id="hans" hidden></p>
+  </div>
+
+  <h2>1. Lima jenis kendaraan tertentu</h2>
+  <p class="lead">Permenhub 45/2020 mengatur lima jenis: otopet (kick scooter), skuter listrik, hoverboard, sepeda listrik, dan sepeda roda satu (unicycle).</p>
+  <div class="tools" id="fig"></div>
+
+  <h2>2. Simulasi: menyeimbangkan seperti hoverboard</h2>
+  <p class="lead">Hoverboard, Segway, dan sepeda roda satu listrik adalah <b>pendulum terbalik</b>: sensor membaca kemiringan, lalu roda digerakkan untuk "mengejar" titik berat. Atur penguatan pengendali, lalu beri dorongan. Syaratnya, penguatan Kp harus cukup besar (di atas sekitar 10) dan Kd memberi peredam.</p>
+  <div class="box">
+    <div class="ctl">
+      <label>Kp (respons terhadap kemiringan): <b id="kpT"></b><input type="range" id="kp" min="0" max="40" step="1" value="25"></label>
+      <label>Kd (peredam): <b id="kdT"></b><input type="range" id="kd" min="0" max="12" step=".5" value="5"></label>
+      <label>Batas akselerasi motor: <b id="kaT"></b><input type="range" id="ka" min="1" max="15" step=".5" value="8"></label>
+    </div>
+    <canvas id="inv" style="height:240px" aria-label="Simulasi pendulum terbalik yang dikendalikan"></canvas>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="chip" id="pl" style="color:var(--text)">Dorong kiri</button><button class="chip" id="pr" style="color:var(--text)">Dorong kanan</button><button class="chip" id="rs" style="border-color:var(--v);color:var(--text)">Ulang</button></div>
+    <div class="out"><div><span>Kemiringan</span><strong id="ia"></strong></div><div><span>Keadaan</span><strong id="is" style="font-size:16px"></strong></div></div>
+    <p class="why">Model sederhana: batang setinggi 0,5 m di atas kereta dengan percepatan a = Kp × kemiringan + Kd × laju kemiringan, dibatasi batas motor. Kemiringan positif ke kanan. Kp di bawah sekitar 10 (percepatan gravitasi) tidak bisa menahan batang. Ini ilustrasi, bukan firmware hoverboard.</p>
+  </div>
+  <p>Perangkat nyata memakai IMU (gyroscope dan accelerometer) untuk membaca kemiringan, dan satu atau dua motor roda untuk koreksi. Jika Anda condong ke depan, motor menggerakkan roda maju untuk menyusul titik berat. Sepeda roda satu listrik seimbang maju-mundur oleh sistem ini, sedangkan keseimbangan samping ditentukan gerakan pengendara.</p>
+
+  <h2>3. Isi sebuah personal transporter</h2>
+  <table class="cmp">
+    <tr><th>Bagian</th><th>Fungsi</th><th>Pelajari</th></tr>
+    <tr><td><b>Motor hub BLDC</b></td><td>Motor di dalam roda, sering tanpa roda gigi</td><td><a href="modul-16.html">Modul 16</a></td></tr>
+    <tr><td><b>Controller</b></td><td>Mengubah DC baterai menjadi tiga fasa untuk motor</td><td><a href="modul-07.html">Modul 07</a>, <a href="modul-17.html">17</a></td></tr>
+    <tr><td><b>Baterai dan BMS</b></td><td>Menyimpan energi dan melindungi sel</td><td><a href="modul-14.html">Modul 14</a>, <a href="modul-15.html">15</a></td></tr>
+    <tr><td><b>Throttle dan sensor pedal</b></td><td>Memberi perintah gas (sensor Hall)</td><td><a href="modul-06.html">Modul 06</a></td></tr>
+    <tr><td><b>IMU (khusus self-balancing)</b></td><td>Membaca kemiringan untuk menjaga keseimbangan</td><td>Bagian 2 modul ini</td></tr>
+  </table>
+
+  <h2>4. Aturan di Indonesia (Permenhub 45/2020)</h2>
+  <ul class="rec">
+    <li><b>Syarat keselamatan sepeda dan skuter listrik:</b> lampu utama, reflektor belakang dan samping, rem yang berfungsi, serta klakson atau bel.</li>
+    <li><b>Pengguna:</b> memakai helm, berusia minimal 12 tahun, dan tidak membonceng kecuali ada tempat duduk penumpang. Tidak boleh memodifikasi daya motor untuk menaikkan kecepatan.</li>
+    <li><b>Kecepatan:</b> sepeda listrik dan skuter listrik sampai 25 km/jam; otopet, hoverboard, dan sepeda roda satu jauh lebih rendah (sekitar 6 km/jam, menurut ringkasan berita).</li>
+    <li><b>Area:</b> lajur sepeda atau lajur khusus, serta kawasan tertentu seperti permukiman, car free day, perkantoran, wisata, dan sekitar angkutan umum. <b>Tidak untuk jalan raya umum.</b> Trotoar boleh bila aman bagi pejalan kaki, tetapi sebagian daerah seperti DKI melarangnya (juga jembatan penyeberangan).</li>
+    <li><b>Bila dimodifikasi atau lebih cepat dari batas:</b> kendaraan itu diperlakukan sebagai sepeda motor listrik, sehingga perlu uji tipe (SUT), pelat nomor, helm, dan SIM.</li>
+    <li><b>Kecelakaan:</b> Kemenhub mencatat 435 kendaraan berbasis listrik terlibat kecelakaan pada Januari sampai Mei 2025, dan 333 di antaranya sepeda listrik.</li>
+  </ul>
+  <div class="box">
+    <b>Cek: legalkah?</b>
+    <div class="ctl">
+      <label>Jenis<select id="rj" style="width:100%;padding:6px;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:6px"><option value="s">Sepeda listrik</option><option value="k">Skuter listrik</option><option value="h">Hoverboard</option><option value="u">Sepeda roda satu</option></select></label>
+      <label>Kecepatan jalan: <b id="rvT"></b><input type="range" id="rv" min="3" max="50" step="1" value="20"></label>
+      <label>Tempat<select id="rl" style="width:100%;padding:6px;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:6px"><option value="lj">Lajur sepeda</option><option value="kw">Kawasan permukiman, CFD, atau wisata</option><option value="tr">Trotoar</option><option value="jr">Jalan raya umum</option></select></label>
+    </div>
+    <div class="verdict" id="rc"></div>
+    <p class="why">Ringkasan edukasi dari Permenhub 45/2020 dan pemberitaan, bukan nasihat hukum. Aturan daerah dan peraturan baru bisa berbeda. Cek ke Dishub setempat.</p>
+  </div>
+
+  <h2>5. Baterai dan risiko kebakaran</h2>
+  <ul class="rec">
+    <li>Kebakaran baterai pada hoverboard pernah menimbulkan korban: kebakaran pada Maret 2017 menewaskan dua anak, dan pada 2018 sebuah rumah di Michigan rusak berat. Pada Maret 2023 sebuah hoverboard ditarik dari pasar karena kebakaran 2022.</li>
+    <li>Pakai charger asli dan sesuai tegangan, jangan menutup perangkat saat diisi, dan jangan mengisi tanpa pengawasan di tempat yang menghalangi jalan keluar.</li>
+    <li>Hentikan pemakaian dan jauhkan bila baterai menggembung, berbau, terlalu panas, atau pernah jatuh keras dan rusak.</li>
+    <li>Pilih produk yang berlabel keselamatan baterai dan listrik (contohnya UL 2272 untuk perangkat personal e-mobility) dan terdaftar bila diwajibkan di Indonesia. Pelajari K3 di <a href="modul-04.html">modul 04</a>.</li>
+  </ul>
+
+  <h2>6. Hitung: berapa jauh?</h2>
+  <div class="box">
+    <div class="ctl">
+      <label>Tegangan baterai: <b id="bvT"></b><input type="range" id="bv" min="24" max="60" step="1" value="36"></label>
+      <label>Kapasitas: <b id="baT"></b><input type="range" id="ba" min="4" max="30" step=".5" value="10"></label>
+      <label>Konsumsi: <b id="bcT"></b><input type="range" id="bc" min="8" max="40" step="1" value="20"></label>
+    </div>
+    <div class="out"><div><span>Energi baterai</span><strong id="be"></strong></div><div><span>Perkiraan jarak</span><strong id="br"></strong></div></div>
+    <p class="why">Energi (Wh) = V × Ah. Jarak = Wh ÷ konsumsi. Konsumsi puluhan Wh/km hanyalah contoh kasar, dan pada kecepatan tinggi hambatan udara dan beban membuatnya naik (modul 08).</p>
+  </div>
+
+  <h2>7. Video pendukung</h2>
+  <h3 style="font:600 18px var(--disp);margin:14px 0 6px">Bahasa Indonesia</h3>
+  <p class="why">Belum ada video berbahasa Indonesia yang bisa saya pastikan benar-benar ada. Gunakan tautan pencarian (hasil pencarian YouTube, bukan video tertentu) dan bacaan Indonesia berikut. Video pilihan Anda bisa ditambahkan di daftar <code>VIDEOS_ID</code> dalam skrip.</p>
+  <ul class="rec" id="vlinks"></ul>
+  <p class="why"><b>Bacaan bahasa Indonesia:</b> <a href="https://dephub.go.id/post/read/kemenhub-terbitkan-regulasi-kendaraan-bermotor-listrik" target="_blank" rel="noopener">Kemenhub: regulasi kendaraan bermotor listrik</a>, <a href="https://www.tempo.co/arsip/apakah-sepeda-listrik-boleh-digunakan-di-jalan-raya-begini-aturannya-1063285" target="_blank" rel="noopener">Tempo: apakah sepeda listrik boleh di jalan raya</a>, <a href="https://www.cnnindonesia.com/otomotif/20230808195701-603-983579/tak-boleh-di-jalan-raya-di-mana-seharusnya-berkendara-sepeda-listrik" target="_blank" rel="noopener">CNN Indonesia: di mana sepeda listrik boleh dipakai</a>, dan <a href="https://dishub.tulungagung.go.id/2025/04/15/dimana-sebenarnya-sepeda-listrik-boleh-digunakan/" target="_blank" rel="noopener">Dishub Tulungagung: panduan area penggunaan</a>.</p>
+  <div id="vlistid"></div>
+  <h3 style="font:600 18px var(--disp);margin:22px 0 6px">Bahasa Inggris</h3>
+  <p class="why">Tips subtitle: aktifkan CC, buka Setelan, Subtitel/CC, lalu Terjemahkan otomatis ke Indonesia, bila pemilik video mengaktifkan subtitel.</p>
+  <div id="vlist"></div>
+
+  <details class="dl"><summary>Catatan untuk pengajar</summary>
+    <p><b>Alur sekitar 60 menit:</b> tebakan (5), lima jenis (10), simulasi keseimbangan (15), isi dan aturan (15), baterai dan jarak (10), kuis (5).</p>
+    <p><b>Peragaan:</b> bawa hoverboard bekas atau skuter dan buka penutupnya untuk menunjukkan controller, baterai, dan motor hub. Minta peserta mencoba keseimbangan di simulasi dengan Kp kecil lalu besar.</p>
+    <p><b>Pesan utama:</b> kendaraan kecil tetap berbahaya bila baterai, aturan, atau pengendalinya diabaikan. Teknisi sering diminta memperbaiki perangkat tanpa sertifikasi.</p>
+  </details>
+
+  <h2>8. Kuis</h2>
+  <div id="quiz"></div><div class="verdict" id="score" hidden></div>
+
+  <p class="why" style="margin-top:30px">Sumber foto, Wikimedia Commons: <a href="https://commons.wikimedia.org/wiki/File:Xiaomi_M365_Scooter.jpg" target="_blank" rel="noopener">Xiaomi M365 Scooter</a> (Sprucecopse, CC0), <a href="https://commons.wikimedia.org/wiki/File:Hoverboard_1.jpg" target="_blank" rel="noopener">Hoverboard 1</a> (Nulall, CC0), <a href="https://commons.wikimedia.org/wiki/File:Electric_Bicycle.jpg" target="_blank" rel="noopener">Electric Bicycle</a> (Mikefairbanks, CC BY-SA 3.0), <a href="https://commons.wikimedia.org/wiki/File:Segway_PT_(2006).jpg" target="_blank" rel="noopener">Segway PT (2006)</a> (Richard dipfan, CC BY 2.0), dan <a href="https://commons.wikimedia.org/wiki/File:Electric_kick_scooter_citybee.JPG" target="_blank" rel="noopener">Electric kick scooter citybee</a>. Aturan dari Kemenhub, Tempo, CNN Indonesia, Kompas TV, dan Dishub Tulungagung; data kecelakaan dari Dirjen Hubdat via Kontan; prinsip keseimbangan dari Wikipedia (Inverted pendulum, Self-balancing scooter, Electric unicycle). Cek ulang sebelum dipakai sebagai rujukan resmi.</p>
+
+  <div class="nav">
+    <a href="modul-11.html">Sebelumnya: 11</a><a href="index.html#modul">Daftar modul</a>
+    <button id="doneBtn">Tandai selesai</button><a href="modul-13.html">Berikutnya: 13</a>
+  </div>
+</main>
+<div id="site-footer"></div>
+<script>
+const $=id=>document.getElementById(id);
+fetch('assets/layout.html').then(r=>{if(!r.ok)throw 0;return r.text()}).then(h=>{
+  const d=new DOMParser().parseFromString(h,'text/html');
+  document.head.append(...d.querySelectorAll('style'));
+  $('site-header').replaceWith(d.querySelector('header'));$('site-footer').replaceWith(d.querySelector('footer'));
+}).catch(()=>{$('site-header').textContent='Training EV'});
+const kode=document.body.dataset.kode, btn=$('doneBtn');
+let done=[]; try{done=JSON.parse(localStorage.getItem('evDone')||'[]')}catch(e){}
+const mark=()=>{btn.textContent='Selesai ✓';btn.disabled=true};
+if(done.includes(kode))mark();
+btn.onclick=()=>{if(!done.includes(kode))done.push(kode);try{localStorage.setItem('evDone',JSON.stringify(done))}catch(e){}mark()};
+const cs=k=>getComputedStyle(document.documentElement).getPropertyValue('--'+k).trim();
+const fx=(n,d=1)=>(+n).toLocaleString('id-ID',{maximumFractionDigits:d});
+function hook(id,aid,opts,ok,html){$(id).innerHTML=opts.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('');$(id).onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;[...$(id).children].forEach((x,i)=>{x.disabled=true;if(i===ok)x.classList.add('right')});if(+b.dataset.i!==ok)b.classList.add('wrong');const a=$(aid);a.hidden=false;a.innerHTML=html}}
+hook('hopt','hans',['Karena ada roda gigi penahan','Karena sensor gyroscope dan accelerometer membaca kemiringan dan motor terus mengoreksi','Karena baterai berat di bawah','Karena ada magnet di roda'],1,'Jawabannya <b>sensor dan motor yang terus mengoreksi</b>. Hoverboard adalah pendulum terbalik: tanpa pengendali ia jatuh, dan IMU serta motor roda mengejar titik berat ratusan kali per detik.');
+
+// ----- foto -----
+const CM='https://commons.wikimedia.org/wiki/',fp=f=>CM+'Special:FilePath/'+encodeURIComponent(f)+'?width=520';
+const fg=(f,alt,cap,by)=>`<figure><img src="${fp(f)}" alt="${alt}" loading="lazy" onerror="this.closest('figure').style.display='none'"><figcaption>${cap}. Sumber: <a href="${CM}File:${encodeURIComponent(f)}" target="_blank" rel="noopener">${f.replace(/_/g,' ')}</a>, ${by}, Wikimedia Commons</figcaption></figure>`;
+$('fig').innerHTML=
+ fg('Xiaomi_M365_Scooter.jpg','Skuter listrik Xiaomi M365','Skuter listrik lipat (Xiaomi M365), contoh skuter listrik populer','Sprucecopse, CC0')+
+ fg('Electric_kick_scooter_citybee.JPG','Skuter listrik sewa','Skuter listrik sewa (shared scooter)','Dmitry G, domain publik')+
+ fg('Hoverboard_1.jpg','Hoverboard','Hoverboard atau self-balancing scooter dua roda','Nulall, CC0')+
+ fg('Electric_Bicycle.jpg','Sepeda listrik','Sepeda listrik dengan motor hub bergigi 750 W','Mikefairbanks, CC BY-SA 3.0')+
+ fg('Segway_PT_(2006).jpg','Rombongan Segway PT','Rombongan pengendara Segway PT di Washington, D.C., 2006','Richard dipfan, CC BY 2.0');
+
+// ----- pendulum terbalik -----
+const cv=$('inv'),cx=cv.getContext('2d');
+let S;function reset(){S={th:.06,w:0,x:0,v:0,fall:false,hist:[]}}reset();
+const L=.5,g=9.81;
+function step(dt){
+  const Kp=+$('kp').value,Kd=+$('kd').value,am=+$('ka').value;
+  let a=Kp*S.th+Kd*S.w;a=Math.max(-am,Math.min(am,a));
+  const acc=(g/L)*Math.sin(S.th)-(a/L)*Math.cos(S.th);
+  S.w+=acc*dt;S.th+=S.w*dt;S.v+=a*dt;S.v*=.9995;S.x+=S.v*dt;
+  S.hist.push(S.th);if(S.hist.length>600)S.hist.shift();
+  if(Math.abs(S.th)>1.1)S.fall=true;
+}
+$('pl').onclick=()=>{S.w-=1.4};$('pr').onclick=()=>{S.w+=1.4};$('rs').onclick=reset;
+['kp','kd','ka'].forEach(i=>$(i).addEventListener('input',()=>{$('kpT').textContent=$('kp').value;$('kdT').textContent=fx($('kd').value,1);$('kaT').textContent=fx($('ka').value,1)+' m/s²'}));
+$('kpT').textContent=$('kp').value;$('kdT').textContent=fx($('kd').value,1);$('kaT').textContent=fx($('ka').value,1)+' m/s²';
+function draw(){
+  const W=cv.clientWidth,H=cv.clientHeight,gy=H-50,cxm=W/2;
+  cx.clearRect(0,0,W,H);
+  cx.strokeStyle=cs('line');cx.lineWidth=2;cx.beginPath();cx.moveTo(0,gy);cx.lineTo(W,gy);cx.stroke();
+  cx.strokeStyle=cs('dim');for(let i=-20;i<40;i++){const px=((i*60-S.x*120)%(W+120)+W+120)%(W+120)-60;cx.beginPath();cx.moveTo(px,gy);cx.lineTo(px,gy+8);cx.stroke()}
+  const sc=130;
+  cx.fillStyle=cs('panel');cx.strokeStyle=cs('dim');cx.lineWidth=2;cx.fillRect(cxm-40,gy-26,80,18);cx.strokeRect(cxm-40,gy-26,80,18);
+  cx.fillStyle=cs('dim');[ -28,28].forEach(o=>{cx.beginPath();cx.arc(cxm+o,gy-8,10,0,6.283);cx.fill()});
+  const bx=cxm+Math.sin(S.th)*L*sc,by=gy-26-Math.cos(S.th)*L*sc;
+  cx.strokeStyle=S.fall?cs('alert'):cs('v');cx.lineWidth=5;cx.lineCap='round';cx.beginPath();cx.moveTo(cxm,gy-26);cx.lineTo(bx,by);cx.stroke();
+  cx.fillStyle=S.fall?cs('alert'):cs('u');cx.beginPath();cx.arc(bx,by,11,0,6.283);cx.fill();
+  const hx=W-210,hy=14,hw=196,hh=50;cx.strokeStyle=cs('line');cx.lineWidth=1;cx.strokeRect(hx,hy,hw,hh);cx.beginPath();cx.moveTo(hx,hy+hh/2);cx.lineTo(hx+hw,hy+hh/2);cx.stroke();
+  cx.beginPath();S.hist.forEach((t,i)=>{const px=hx+hw*i/600,py=hy+hh/2-Math.max(-1,Math.min(1,t))*hh/2;i?cx.lineTo(px,py):cx.moveTo(px,py)});cx.strokeStyle=cs('u');cx.lineWidth=1.8;cx.stroke();
+  cx.fillStyle=cs('dim');cx.font='11px sans-serif';cx.fillText('kemiringan',hx+4,hy+12);
+  $('ia').textContent=fx(S.th*180/Math.PI,1)+'°';
+  const st=$('is');st.textContent=S.fall?'Jatuh. Tekan Ulang.':Math.abs(S.th)<.02&&Math.abs(S.w)<.05?'Tegak dan tenang':'Mengoreksi...';st.style.color=S.fall?'var(--alert)':'var(--v)';
+}
+function sizeAll(){const d=Math.min(2,devicePixelRatio||1);cv.width=cv.clientWidth*d;cv.height=cv.clientHeight*d;cx.setTransform(d,0,0,d,0,0)}
+sizeAll();addEventListener('resize',sizeAll);
+(function loop(){if(!S.fall)for(let i=0;i<3;i++)step(.005);draw();requestAnimationFrame(loop)})();
+
+// ----- cek aturan -----
+function rul(){
+  const j=$('rj').value,v=+$('rv').value,l=$('rl').value,vv=$('rc'),N={s:'Sepeda listrik',k:'Skuter listrik',h:'Hoverboard',u:'Sepeda roda satu'};
+  $('rvT').textContent=v+' km/jam';
+  const lim=(j==='s'||j==='k')?25:6;
+  let cls='ok',msg=`${N[j]} pada ${v} km/jam di tempat yang diizinkan umumnya memenuhi ringkasan aturan. Tetap pakai helm dan perlengkapan keselamatan.`;
+  if(l==='jr'){cls='bad';msg='Jalan raya umum tidak diperbolehkan untuk kendaraan tertentu ini. Gunakan lajur sepeda, kawasan tertentu, atau jalur khusus.'}
+  else if(v>lim){cls='bad';msg=(j==='s'||j==='k')?`Batas kecepatan ${N[j].toLowerCase()} sekitar 25 km/jam. Pada ${v} km/jam kendaraan ini dianggap seperti sepeda motor listrik: perlu uji tipe, pelat nomor, helm, dan SIM.`:`Batas kecepatan ${N[j].toLowerCase()} jauh lebih rendah (sekitar 6 km/jam). ${v} km/jam melampaui batas.`}
+  else if(l==='tr'){cls='warn';msg='Trotoar boleh bila aman dan memadai bagi pejalan kaki dan tidak ada lajur khusus, tetapi sebagian daerah (misalnya DKI) melarangnya. Cek aturan daerah dan utamakan pejalan kaki.'}
+  vv.className='verdict '+cls;vv.textContent=msg;
+}
+['rj','rv','rl'].forEach(i=>$(i).addEventListener('input',rul));rul();
+
+// ----- jarak -----
+function bt(){const V=+$('bv').value,A=+$('ba').value,C=+$('bc').value,E=V*A;$('bvT').textContent=V+' V';$('baT').textContent=fx(A,1)+' Ah';$('bcT').textContent=C+' Wh/km';$('be').textContent=fx(E,0)+' Wh';$('br').textContent=fx(E/C,0)+' km'}
+['bv','ba','bc'].forEach(i=>$(i).addEventListener('input',bt));bt();
+
+// ----- video -----
+const CARD=v=>`<div class="vl"><a class="th" href="${v.link}" target="_blank" rel="noopener" aria-label="Tonton: ${v.judul}"><img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="Pratinjau ${v.judul}" loading="lazy"><span class="pl">▶ Tonton di YouTube</span></a><div><h4><a href="${v.link}" target="_blank" rel="noopener">${v.judul}</a></h4><p><span class="bd">${v.bahasa}</span><span style="color:var(--dim);font-size:12px">${v.kanal||''}</span></p><p>${v.desk}</p></div></div>`;
+const VIDEOS_ID=[]; // tambahkan video Indonesia: { id:'ID', judul:'...', bahasa:'Indonesia', kanal:'...', link:'https://www.youtube.com/watch?v=ID', desk:'...' }
+const VIDEOS=[
+ { id:'xqoNhGEhk2Y', judul:'EUC: Turning by tilting the wheel', bahasa:'Inggris', kanal:'', link:'https://www.youtube.com/watch?v=xqoNhGEhk2Y', desk:'Peragaan cara sepeda roda satu listrik (EUC) berbelok dengan memiringkan roda. Tautan ini dikutip pada artikel Wikipedia "Electric unicycle".' }
+];
+$('vlistid').innerHTML=VIDEOS_ID.map(CARD).join('');
+$('vlist').innerHTML=VIDEOS.map(CARD).join('');
+const YT='https://www.youtube.com/results?search_query=';
+const VL=[['id','aturan sepeda listrik dan skuter listrik Kemenhub'],['id','cara kerja hoverboard self balancing'],['id','sepeda listrik motor hub cara kerja'],['id','bahaya baterai hoverboard terbakar']];
+$('vlinks').innerHTML=VL.map(x=>`<li><a href="${YT+encodeURIComponent(x[1])}" target="_blank" rel="noopener">${x[1]}</a> (Bahasa Indonesia)</li>`).join('');
+
+// ----- kuis -----
+const Q=[
+['Lima kendaraan tertentu menurut Permenhub 45/2020 adalah...',['Mobil, motor, bus, truk, kereta','Otopet, skuter listrik, hoverboard, sepeda listrik, sepeda roda satu','Hanya sepeda listrik'],1,'Peraturan itu mengatur otopet, skuter listrik, hoverboard, sepeda listrik, dan sepeda roda satu.'],
+['Hoverboard menjaga keseimbangan terutama dengan...',['Roda gigi penahan','IMU yang membaca kemiringan dan motor yang mengoreksi','Magnet di roda'],1,'Sistem pendulum terbalik: sensor membaca kemiringan dan motor mengejar titik berat.'],
+['Pada simulasi pendulum terbalik, mengapa Kp terlalu kecil membuat batang jatuh?',['Karena baterai habis','Karena koreksi lebih lemah daripada tarikan gravitasi','Karena roda terlalu besar'],1,'Koreksi harus lebih kuat daripada percepatan jatuh akibat gravitasi, sekitar 10 m/s² dalam model ini.'],
+['Sepeda listrik yang dimodifikasi sehingga melaju lebih dari 25 km/jam...',['Tetap boleh di jalan raya','Diperlakukan seperti sepeda motor listrik: butuh uji tipe, pelat, helm, dan SIM','Dilarang total di mana pun'],1,'Di atas batas kecepatan itu, kendaraan dianggap seperti sepeda motor listrik dan perlu memenuhi persyaratannya.'],
+['Tindakan yang benar bila baterai skuter menggembung atau berbau adalah...',['Tetap dipakai sampai habis','Hentikan pemakaian dan jauhkan, jangan diisi','Diisi lebih lama'],1,'Baterai menggembung atau berbau adalah tanda bahaya kebakaran. Hentikan dan jauhkan.'],
+['Baterai 36 V 10 Ah menyimpan energi sekitar...',['36 Wh','360 Wh','3.600 Wh'],1,'36 × 10 = 360 Wh. Pada 20 Wh/km, jaraknya sekitar 18 km.']
+];
+let sc=0,ans=0;
+$('quiz').innerHTML=Q.map((q,i)=>`<div class="q" data-i="${i}"><h4>${i+1}. ${q[0]}</h4>${q[1].map((o,j)=>`<button class="opt" data-j="${j}">${o}</button>`).join('')}<p class="why" hidden></p></div>`).join('');
+$('quiz').onclick=e=>{
+  const b=e.target.closest('button');if(!b||b.disabled)return;
+  const box=b.closest('.q'),q=Q[+box.dataset.i],ok=+b.dataset.j===q[2];
+  box.querySelectorAll('button').forEach((x,j)=>{x.disabled=true;if(j===q[2])x.classList.add('right')});
+  if(!ok)b.classList.add('wrong');else sc++;
+  const w=box.querySelector('.why');w.hidden=false;w.textContent=(ok?'Benar. ':'Belum tepat. ')+q[3];
+  if(++ans===Q.length){const s=$('score');s.hidden=false;s.className='verdict '+(sc>=5?'ok':sc>=4?'warn':'bad');s.textContent=`Skor Anda ${sc} dari ${Q.length}. `+(sc>=5?'Siap lanjut ke modul berikutnya.':'Ulangi simulasi dan aturan, lalu coba kuis lagi.')}
+};
+</script>
+</body>
+</html>

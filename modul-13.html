@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>13 Motor Listrik R2: Gambaran Umum | Training EV</title>
+<script src="assets/tema.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#060A12;--panel:#0C1220;--line:#1B2740;--text:#E6ECF5;--dim:#8593AA;--u:#FFC857;--v:#3DDC97;--w:#4DA3FF;--alert:#FF6B8B;--disp:'Chakra Petch',system-ui,sans-serif;--body:'Sora',system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font:400 16px/1.7 var(--body)}
+main{max-width:920px;margin:0 auto;padding:40px clamp(16px,4vw,32px) 0}
+h1{font:700 clamp(28px,4vw,44px)/1.1 var(--disp);margin:0 0 8px}
+h2{font:700 24px var(--disp);margin:52px 0 6px}
+a{color:var(--w)}
+.lead{color:var(--dim);margin:0 0 18px}
+.no{font:700 15px var(--disp);color:var(--v)}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;margin:12px 0}
+.goal{margin:0 0 8px;padding:14px 18px 14px 36px;border:1px solid var(--line);border-left:3px solid var(--v);border-radius:6px;background:var(--panel)}
+.ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 22px;margin:8px 0}
+.ctl label{display:block;font-size:13px;color:var(--dim)}
+.ctl b{color:var(--text);font-family:var(--disp)}
+.ctl input[type=range]{width:100%;accent-color:var(--v)}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0}
+.out div{padding:10px 12px;border:1px solid var(--line);border-radius:6px}
+.out span{display:block;font-size:12px;color:var(--dim)}
+.out strong{font:700 20px var(--disp)}
+main canvas{width:100%;height:200px;display:block;background:var(--ink);border:1px solid var(--line);border-radius:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--dim);font:500 13px var(--body);cursor:pointer}
+.chip[aria-pressed=true]{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 16px;background:var(--ink);border:1px solid var(--line);border-radius:6px;color:var(--text);font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--v)}
+.opt.right{border-color:var(--v);background:color-mix(in srgb,var(--v) 14%,transparent)}
+.opt.wrong{border-color:var(--alert);background:color-mix(in srgb,var(--alert) 12%,transparent)}
+.why{font-size:14px;color:var(--dim);margin:8px 0 0}
+.verdict{padding:10px 14px;border-radius:6px;border:1px solid var(--line);margin-top:12px;font-size:14px}
+.ok{border-color:var(--v);color:var(--v)}.warn{border-color:var(--u);color:var(--u)}.bad{border-color:var(--alert);color:var(--alert)}
+.story{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.story figure{margin:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.story img{width:100%;height:230px;object-fit:contain;background:#fff;border-radius:6px;display:block}
+.story figcaption{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5}
+.story h3{margin:10px 0 4px;font:600 17px var(--disp)}
+.story p{margin:4px 0;font-size:14px}
+table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+.cmp th,.cmp td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.cmp th{color:var(--dim);font-weight:500}
+.vl{display:grid;grid-template-columns:210px 1fr;gap:6px 16px;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.vl a.th{position:relative;display:block;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--ink)}
+.vl img{width:100%;height:100%;object-fit:cover;display:block}
+.vl .pl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);color:#fff;font:700 15px var(--disp)}
+.vl h4{margin:0 0 4px;font:600 16px var(--disp)}
+.vl p{margin:4px 0;font-size:14px}
+.vl .bd{display:inline-block;padding:1px 8px;border:1px solid var(--v);border-radius:999px;color:var(--v);font-size:11px;margin-right:6px}
+@media(max-width:560px){.vl{grid-template-columns:1fr}}
+details.dl{margin-top:20px;border:1px solid var(--line);border-radius:8px;padding:4px 16px}
+details.dl summary{cursor:pointer;padding:12px 0;color:var(--w);font-weight:500}
+.exp li{margin:6px 0}
+.q{margin:18px 0}.q h4{margin:0 0 8px;font:600 16px var(--body)}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:44px;padding-top:20px;border-top:1px solid var(--line)}
+.nav a,.nav button{padding:10px 18px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);font:600 14px var(--disp);text-decoration:none;cursor:pointer}
+.nav button{background:var(--v);border-color:var(--v);color:var(--ink)}
+.nav button[disabled]{background:var(--panel);color:var(--v)}
+
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:12px 0}
+.tools figure{margin:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.tools img{width:100%;height:200px;object-fit:contain;background:#fff;border-radius:6px;display:block}
+.tools figcaption{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5}
+.fm{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:12px 0}
+.fm div{padding:12px;border:1px solid var(--line);border-left:3px solid var(--v);border-radius:6px;background:var(--panel)}
+.fm b{display:block;font:700 18px var(--disp);color:var(--u)}
+.fm span{font-size:13px;color:var(--dim)}
+.stack{display:flex;height:30px;border-radius:6px;overflow:hidden;border:1px solid var(--line);margin:10px 0}
+.stack i{display:flex;align-items:center;justify-content:center;font:600 12px var(--disp);color:var(--ink);min-width:0;white-space:nowrap;transition:width .2s}
+.lg{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--dim)}
+.lg b{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}
+.vl{display:grid;grid-template-columns:210px 1fr;gap:6px 16px;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.vl a.th{position:relative;display:block;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--ink)}
+.vl img{width:100%;height:100%;object-fit:cover;display:block}
+.vl .pl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);color:#fff;font:700 15px var(--disp)}
+.vl h4{margin:0 0 4px;font:600 16px var(--disp)}
+.vl p{margin:4px 0;font-size:14px}
+.vl .bd{display:inline-block;padding:1px 8px;border:1px solid var(--v);border-radius:999px;color:var(--v);font-size:11px;margin-right:6px}
+@media(max-width:560px){.vl{grid-template-columns:1fr}}
+.cp rect,.cp circle{fill:var(--panel);stroke:var(--dim);stroke-width:1.6;transition:fill .15s,stroke .15s}
+.cp:hover rect,.cp:hover circle,.cp:focus rect,.cp:focus circle{stroke:var(--v)}
+.cp.sel rect,.cp.sel circle{fill:color-mix(in srgb,var(--v) 22%,var(--panel));stroke:var(--v);stroke-width:2.4}
+.cp text{fill:var(--text);font:600 10px var(--body);pointer-events:none}
+.cp{cursor:pointer;outline:none}
+.anat{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;align-items:start}
+@media(max-width:760px){.anat{grid-template-columns:1fr}}
+.info h3{font:700 20px var(--disp);margin:0 0 6px;color:var(--v)}
+.info p{margin:6px 0;font-size:15px}
+.info .k{color:var(--u);font:600 12px var(--disp)}
+.mx{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:12px 0}
+.mx div{padding:8px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;color:var(--dim);transition:all .2s}
+.mx div.on{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
+.mx div b{display:block;font:600 11px var(--disp);color:var(--dim)}
+.mx div.on b{color:var(--v)}
+.flow line,.flow path{stroke:var(--line);stroke-width:3;fill:none}
+.flow .on{stroke:var(--u);stroke-width:4;stroke-dasharray:8 7;animation:fl 0.9s linear infinite}
+.flow .on.rev{animation-direction:reverse;stroke:var(--v)}
+.flow .on.thin{stroke-width:2.6}
+@keyframes fl{to{stroke-dashoffset:-30}}
+.flow .nd rect{fill:var(--panel);stroke:var(--dim);stroke-width:1.6}
+.flow .nd text{fill:var(--text);font:600 11px var(--body);text-anchor:middle}
+@media(prefers-reduced-motion:reduce){.flow .on{animation:none}}
+
+.stp{counter-reset:s;list-style:none;margin:10px 0;padding:0}
+.stp li{position:relative;margin:6px 0;padding:10px 12px 10px 48px;background:var(--ink);border:1px solid var(--line);border-radius:6px;font-size:14px}
+.stp li::before{counter-increment:s;content:counter(s);position:absolute;left:12px;top:8px;width:26px;height:26px;border-radius:50%;background:var(--v);color:var(--ink);font:700 14px/26px var(--disp);text-align:center}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font:600 12px var(--disp);margin-right:6px}
+
+abbr.tt{text-decoration:underline dotted var(--v);text-underline-offset:3px;cursor:help;position:relative}
+abbr.tt::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 6px);width:max-content;max-width:260px;padding:8px 10px;background:var(--panel);color:var(--text);border:1px solid var(--v);border-radius:6px;font:400 12px/1.5 var(--body);opacity:0;pointer-events:none;transform:translateY(4px);transition:opacity .15s,transform .15s;z-index:30;white-space:normal}
+abbr.tt:hover::after,abbr.tt:focus::after{opacity:1;transform:none}
+
+.cp rect,.cp circle{fill:var(--panel);stroke:var(--dim);stroke-width:1.6;transition:fill .15s,stroke .15s}
+.cp:hover rect,.cp:hover circle,.cp:focus rect,.cp:focus circle{stroke:var(--v)}
+.cp.sel rect,.cp.sel circle{fill:color-mix(in srgb,var(--v) 22%,var(--panel));stroke:var(--v);stroke-width:2.4}
+.cp text{fill:var(--text);font:600 9px var(--body);pointer-events:none}
+.cp{cursor:pointer;outline:none}
+.anat{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;align-items:start}
+@media(max-width:760px){.anat{grid-template-columns:1fr}}
+.info h3{font:700 20px var(--disp);margin:0 0 6px;color:var(--v)}
+.info p{margin:6px 0;font-size:15px}
+.info .k{color:var(--u);font:600 12px var(--disp)}
+.chain{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin:12px 0}
+.chain div{padding:10px;border:1px solid var(--line);border-radius:6px;font-size:13px;color:var(--dim);text-align:center;transition:all .2s}
+.chain div.on{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
+.chain div.off{border-color:var(--alert);color:var(--alert);background:color-mix(in srgb,var(--alert) 10%,transparent)}
+.chain b{display:block;font:600 11px var(--disp)}
+.sw{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+</style>
+</head>
+<body data-kode="13">
+<div id="site-header"></div>
+<main>
+  <div class="no">Modul 13 &nbsp;|&nbsp; Jenis kendaraan</div>
+  <h1>Motor Listrik R2: Gambaran Umum</h1>
+  <p class="lead">Inilah pintu masuk ke bagian R2 yang mendalam. Modul ini memetakan seluruh sistem motor listrik roda dua: jenis penggerak, komponen utama, alur dari gas sampai roda, pengaman, dan cara membaca spesifikasinya. Arahkan kursor atau ketuk istilah bergaris titik untuk melihat artinya.</p>
+  <ul class="goal">
+    <li>Membedakan penggerak hub, mid-drive, dan sistem dengan roda gigi atau sabuk.</li>
+    <li>Menyebut komponen utama R2, letaknya, dan modul yang membahasnya.</li>
+    <li>Menjelaskan alur gas ke roda, pengaman <abbr class="tt" tabindex="0" data-tip="Pengaman yang memutus tenaga motor bila syarat keselamatan tidak terpenuhi, misalnya standar samping masih turun.">interlock</abbr>, dan batas kecepatan saat baterai lemah.</li>
+  </ul>
+
+  <div class="box" id="hook">
+    <b>Tebak dulu.</b> Anda memutar gas penuh, tetapi motor listrik tidak bergerak sama sekali. Standar samping masih turun. Mengapa?
+    <div id="hopt"></div><p class="why" id="hans" hidden></p>
+  </div>
+
+  <h2>1. Tiga cara menggerakkan roda</h2>
+  <div class="tools" id="fig1"></div>
+  <table class="cmp">
+    <tr><th></th><th>Hub motor (di dalam roda)</th><th>Mid-drive atau sabuk</th></tr>
+    <tr><td><b>Cara kerja</b></td><td>Motor menyatu dengan roda, tanpa rantai</td><td>Motor di bagian tengah atau samping, menggerakkan roda lewat sabuk, rantai, atau roda gigi</td></tr>
+    <tr><td><b>Kelebihan</b></td><td>Sederhana, senyap, perawatan sedikit, ruang bodi lapang</td><td>Ada reduksi sehingga torsi roda lebih besar, motor berputar di rentang efisien, bobot lebih terpusat</td></tr>
+    <tr><td><b>Kekurangan</b></td><td>Menambah bobot di roda (pegas tak tertopang), torsi tanpa reduksi terbatas</td><td>Lebih banyak komponen mekanis yang aus</td></tr>
+    <tr><td><b>Contoh</b></td><td>ALVA ONE XP (hub drive, 4 kW, 46,5 N·m), banyak skuter dan sepeda listrik</td><td>Gesits (motor PMSM dengan sabuk), ALVA CERVO (mid-drive, puncak 9,8 kW, 53,5 N·m), Zero (sabuk)</td></tr>
+  </table>
+  <p class="why">Rantai tenaga R2 secara umum: <b>baterai, controller, motor, reduksi (bila ada), penggerak akhir, roda</b>. Spesifikasi di atas dari pemberitaan (Fortune IDN dan Detik) dan perlu dicek ulang. Contoh baterai Gesits yang dilaporkan: Li-NCM 72 V 20 Ah dengan jarak sekitar 50 km pada versi awal. Volta 401 memakai baterai 60 V 23 Ah dengan motor 1.500 W.</p>
+
+  <h2>2. Anatomi R2 (klik komponen)</h2>
+  <div class="anat">
+    <div class="box"><svg id="bike" viewBox="0 0 480 250" role="group" aria-label="Diagram komponen motor listrik" style="width:100%;height:auto"></svg></div>
+    <div><div class="info" id="binfo"></div></div>
+  </div>
+  <p class="why">Diagram ini skema umum skuter listrik hub rear. Letak komponen berbeda antar model. Warna kabel hub motor yang lazim: kabel daya tebal merah dan hitam (baterai ke controller), tiga kabel fasa kuning, hijau, dan biru (controller ke motor), serta lima kabel kecil sensor Hall (dua untuk suplai dan tiga untuk sinyal). Warna dapat berbeda, jadi baca dokumen produknya.</p>
+
+  <h2>3. Dari gas ke roda: simulasi pengaman dan mode</h2>
+  <p class="lead">Atur kondisi motor. Setiap kotak berubah warna sesuai apakah syaratnya terpenuhi. Ini logika umum seperti pada kit simulasi (Lab 3 dan 4), bukan firmware motor tertentu.</p>
+  <div class="box">
+    <div class="sw" id="sw"></div>
+    <div class="ctl">
+      <label>Gas (throttle): <b id="gT"></b><input type="range" id="g" min="0" max="100" step="1" value="60"></label>
+      <label>Sisa baterai: <b id="oT"></b><input type="range" id="o" min="0" max="100" step="1" value="60"></label>
+      <label>Mode kecepatan<select id="m" style="width:100%;padding:6px;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:6px"><option value="1">Mode 1 (hemat, 40%)</option><option value="2" selected>Mode 2 (normal, 70%)</option><option value="3">Mode 3 (sport, 100%)</option></select></label>
+      <label>Kecepatan maksimum motor: <b id="vT"></b><input type="range" id="vm" min="40" max="100" step="5" value="70"></label>
+    </div>
+    <div class="chain" id="ch"></div>
+    <div class="out"><div><span>Tegangan sinyal gas (contoh)</span><strong id="gv"></strong></div><div><span>Kecepatan yang diizinkan</span><strong id="sp"></strong></div></div>
+    <div class="verdict" id="sv"></div>
+    <p class="why">Sinyal gas jenis Hall umumnya bergerak dari sekitar 1 V (lepas) sampai sekitar 4 V (penuh). Rentang ini contoh, bukan spesifikasi tertentu. Aturan baterai lemah (batas kecepatan di bawah 20%, berhenti di bawah 5%) dan persentase mode adalah contoh logika seperti kit, dan pada motor nyata diatur oleh controller dan BMS (modul 15 dan 21).</p>
+  </div>
+
+  <h2>4. Membaca spesifikasi dan menghitung arus</h2>
+  <table class="cmp">
+    <tr><th>Tulisan di brosur</th><th>Artinya</th></tr>
+    <tr><td><b>72 V 20 Ah</b></td><td>Tegangan nominal dan kapasitas. Energi = 72 × 20 = 1.440 Wh (modul 14).</td></tr>
+    <tr><td><b>Daya nominal dan puncak</b></td><td>Nominal bisa dipertahankan lama, puncak hanya sesaat. Bandingkan dengan batas baterai.</td></tr>
+    <tr><td><b>Torsi (N·m)</b></td><td>Kekuatan dorong, terutama di putaran rendah (modul 08).</td></tr>
+    <tr><td><b>Jarak tempuh</b></td><td>Klaim pada kondisi uji tertentu. Jarak nyata bergantung beban, kecepatan, dan jalan.</td></tr>
+  </table>
+  <div class="box">
+    <div class="ctl">
+      <label>Tegangan baterai: <b id="bvT"></b><input type="range" id="bv" min="48" max="96" step="1" value="72"></label>
+      <label>Kapasitas: <b id="baT"></b><input type="range" id="ba" min="10" max="60" step="1" value="20"></label>
+      <label>Daya motor: <b id="bpT"></b><input type="range" id="bp" min=".5" max="10" step=".1" value="3"></label>
+    </div>
+    <div class="out"><div><span>Energi baterai</span><strong id="be"></strong></div><div><span>Arus saat daya penuh</span><strong id="bi"></strong></div><div><span>C-rate</span><strong id="bc"></strong></div><div><span>Habis dalam (daya penuh)</span><strong id="bt"></strong></div></div>
+    <p class="why">Arus = daya ÷ tegangan, C-rate = arus ÷ kapasitas. Tegangan turun saat beban, sehingga arus nyata sedikit lebih besar (modul 14).</p>
+  </div>
+
+  <h2>5. Tukar baterai</h2>
+  <div class="tools" id="fig2"></div>
+  <ul class="rec">
+    <li><b>Tukar baterai (battery swap)</b> mengganti baterai habis dengan yang penuh dalam hitungan menit, tanpa menunggu pengisian. Di Indonesia, SPBKLU milik PLN melayani penukaran dalam waktu kurang dari lima menit menurut pemberitaan.</li>
+    <li><b>Tantangannya adalah standar.</b> Ukuran dan konektor baterai belum seragam antar merek, sehingga penyedia seperti SWAP Battery, Oyika, dan Honda Mobile Power Pack memakai baterai sendiri-sendiri, dan Volta serta PLN bekerja sama memperbanyak stasiun.</li>
+    <li>Kementerian ESDM pada Agustus 2026 sedang menyiapkan satu standar konektor untuk kendaraan listrik roda dua dan tiga (modul 10).</li>
+  </ul>
+
+  <h2>6. Peta modul R2 berikutnya</h2>
+  <ul class="rec">
+    <li><a href="modul-14.html">14 Baterai</a> dan <a href="modul-15.html">15 BMS</a>: sumber energi dan pelindungnya.</li>
+    <li><a href="modul-16.html">16 Motor BLDC</a>: cara motor berputar.</li>
+    <li><a href="modul-17.html">17 Charger, throttle, rem regeneratif, dan instrumen</a> dan <a href="modul-18.html">18 Sistem 12 V dan DC-DC</a>.</li>
+    <li><a href="modul-19.html">19 Komunikasi data</a>, <a href="modul-20.html">20 Kabel, konektor, dan wiring</a>, dan <a href="modul-21.html">21 Controller (Votol)</a>.</li>
+  </ul>
+
+  <h2>7. Video pendukung</h2>
+  <h3 style="font:600 18px var(--disp);margin:14px 0 6px">Bahasa Indonesia</h3>
+  <div id="vlistid"></div>
+  <p class="why" style="margin-top:14px"><b>Cari video lain.</b> Tautan berikut membuka hasil pencarian YouTube, bukan video tertentu.</p>
+  <ul class="rec" id="vlinks"></ul>
+  <p class="why"><b>Bacaan bahasa Indonesia:</b> <a href="https://www.alvaauto.com/blog/rekomendasi-motor-listrik-2026/" target="_blank" rel="noopener">ALVA: teknologi motor listrik masa kini (hub drive dan mid drive)</a>, <a href="https://www.autofun.co.id/berita-motor/pengguna-makin-ramai-ini-daftar-penyedia-layanan-ganti-baterai-motor-listrik-di-indonesia-37415" target="_blank" rel="noopener">Autofun: penyedia layanan ganti baterai</a>, dan <a href="https://www.fortuneidn.com/business/rekomendasi-motor-listrik-terbaik-2026-d7w03-00-fykp7-ndwh72" target="_blank" rel="noopener">Fortune IDN: rekomendasi motor listrik 2026</a>.</p>
+  <h3 style="font:600 18px var(--disp);margin:22px 0 6px">Bahasa Inggris</h3>
+  <p class="why">Belum ada video berbahasa Inggris yang bisa saya pastikan benar-benar ada untuk topik ini. Gunakan tautan pencarian, atau tambahkan video pilihan Anda di daftar <code>VIDEOS</code> dalam skrip.</p>
+  <ul class="rec" id="vlinksEn"></ul><div id="vlist"></div>
+
+  <details class="dl"><summary>Catatan untuk pengajar</summary>
+    <p><b>Alur sekitar 60 menit:</b> tebakan (5), jenis penggerak (10), anatomi klik komponen (15), simulasi pengaman (15), spesifikasi dan arus (10), tukar baterai dan kuis (5).</p>
+    <p><b>Peragaan:</b> bawa satu R2 dan tunjuk tiap komponen di diagram. Minta peserta mengaktifkan standar samping dan menyebut apa yang terjadi di simulasi lalu mengecek di kendaraan.</p>
+    <p><b>Pesan utama:</b> motor listrik adalah sistem: baterai, controller, motor, dan sensor pengaman bekerja berantai. Banyak "kerusakan" ternyata hanya satu sensor yang tidak terpenuhi.</p>
+  </details>
+
+  <h2>8. Kuis</h2>
+  <div id="quiz"></div><div class="verdict" id="score" hidden></div>
+
+  <p class="why" style="margin-top:30px">Sumber foto: <a href="https://commons.wikimedia.org/wiki/File:Electric_Bicycle.jpg" target="_blank" rel="noopener">Electric Bicycle</a> (Mikefairbanks, CC BY-SA 3.0), <a href="https://commons.wikimedia.org/wiki/File:2014_Zero_Motorcycles_Zero_S.JPG" target="_blank" rel="noopener">2014 Zero Motorcycles Zero S</a> (CecilT77, CC BY-SA 4.0), <a href="https://commons.wikimedia.org/wiki/File:Ola_electric_scooter.jpg" target="_blank" rel="noopener">Ola electric scooter</a> (Jinoy Tom Jacob, CC BY-SA 4.0), dan <a href="https://en.wikipedia.org/wiki/File:GoStation.jpg" target="_blank" rel="noopener">GoStation</a> (Xiaoan888, CC0), Wikimedia. Spesifikasi dan layanan tukar baterai dari Fortune IDN, Detik, Autofun, dan ALVA; kabel hub motor dari panduan Leoguar Bikes. Cek ulang sebelum dipakai sebagai rujukan resmi.</p>
+
+  <div class="nav">
+    <a href="modul-12.html">Sebelumnya: 12</a><a href="index.html#modul">Daftar modul</a>
+    <button id="doneBtn">Tandai selesai</button><a href="modul-14.html">Berikutnya: 14</a>
+  </div>
+</main>
+<div id="site-footer"></div>
+<script>
+const $=id=>document.getElementById(id);
+fetch('assets/layout.html').then(r=>{if(!r.ok)throw 0;return r.text()}).then(h=>{
+  const d=new DOMParser().parseFromString(h,'text/html');
+  document.head.append(...d.querySelectorAll('style'));
+  $('site-header').replaceWith(d.querySelector('header'));$('site-footer').replaceWith(d.querySelector('footer'));
+}).catch(()=>{$('site-header').textContent='Training EV'});
+const kode=document.body.dataset.kode, btn=$('doneBtn');
+let done=[]; try{done=JSON.parse(localStorage.getItem('evDone')||'[]')}catch(e){}
+const mark=()=>{btn.textContent='Selesai ✓';btn.disabled=true};
+if(done.includes(kode))mark();
+btn.onclick=()=>{if(!done.includes(kode))done.push(kode);try{localStorage.setItem('evDone',JSON.stringify(done))}catch(e){}mark()};
+const fx=(n,d=1)=>(+n).toLocaleString('id-ID',{maximumFractionDigits:d});
+function hook(id,aid,opts,ok,html){$(id).innerHTML=opts.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('');$(id).onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;[...$(id).children].forEach((x,i)=>{x.disabled=true;if(i===ok)x.classList.add('right')});if(+b.dataset.i!==ok)b.classList.add('wrong');const a=$(aid);a.hidden=false;a.innerHTML=html}}
+hook('hopt','hans',['Baterai rusak total','Sensor standar samping memutus tenaga motor (interlock keselamatan)','Gas sudah putus','Motor listrik memang harus dihangatkan dulu'],1,'Jawabannya <b>interlock keselamatan</b>. Controller menerima sinyal dari sensor standar samping, dan bila standar masih turun, tenaga ke motor ditahan agar motor tidak melaju saat standar terbuka. Hal yang sama berlaku pada rem dan kunci kontak.');
+
+// ----- foto -----
+const CM='https://commons.wikimedia.org/wiki/',fp=f=>CM+'Special:FilePath/'+encodeURIComponent(f)+'?width=520';
+const WP='https://en.wikipedia.org/wiki/Special:FilePath/GoStation.jpg?width=520';
+const fg=(src,link,name,alt,cap,by,site)=>`<figure><img src="${src}" alt="${alt}" loading="lazy" onerror="this.closest('figure').style.display='none'"><figcaption>${cap}. Sumber: <a href="${link}" target="_blank" rel="noopener">${name}</a>, ${by}, ${site}</figcaption></figure>`;
+const cm=(f,alt,cap,by)=>fg(fp(f),CM+'File:'+encodeURIComponent(f),f.replace(/_/g,' '),alt,cap,by,'Wikimedia Commons');
+$('fig1').innerHTML=
+ cm('Electric_Bicycle.jpg','Sepeda listrik motor hub','Penggerak hub: motor 750 W di dalam roda belakang (sepeda listrik)','Mikefairbanks, CC BY-SA 3.0')+
+ cm('2014_Zero_Motorcycles_Zero_S.JPG','Zero S motor listrik','Motor listrik penuh Zero S yang menggerakkan roda belakang lewat sabuk','CecilT77, CC BY-SA 4.0')+
+ cm('Ola_electric_scooter.jpg','Skuter listrik','Skuter listrik (foto ilustrasi dari India)','Jinoy Tom Jacob, CC BY-SA 4.0');
+$('fig2').innerHTML=fg(WP,'https://en.wikipedia.org/wiki/File:GoStation.jpg','GoStation.jpg','Stasiun tukar baterai Gogoro','Unit GoStation, stasiun tukar baterai Gogoro di Taiwan (contoh sistem battery swap)','Xiaoan888, CC0','Wikipedia');
+
+// ----- anatomi -----
+const PART=[
+ {id:'bat',n:'Baterai',x:160,y:150,w:130,h:44,lb:'Baterai',t:'Menyimpan energi, biasanya di bawah jok atau lantai. Tegangan umum 48–96 V pada R2.',k:'Periksa casing, konektor, dan tegangan. Jangan membuka tanpa APD (modul 04).',m:['Modul 14','modul-14.html']},
+ {id:'bms',n:'BMS',x:172,y:158,w:40,h:18,lb:'BMS',t:'Memantau tegangan dan suhu sel, menyeimbangkan sel, dan memutus bila ada bahaya.',k:'Gejala: baterai mati mendadak, daya tidak muncul, atau sel tidak seimbang.',m:['Modul 15','modul-15.html']},
+ {id:'ctl',n:'Controller',x:110,y:104,w:70,h:30,lb:'Controller',t:'Otak penggerak. Membaca gas, sensor Hall, rem, dan standar samping, lalu mengatur arus ke motor lewat MOSFET.',k:'Periksa suhu, konektor, dan kode gangguan. Parameter bisa diatur pada controller seperti Votol.',m:['Modul 21','modul-21.html']},
+ {id:'mot',n:'Motor hub BLDC',x:90,y:190,r:26,lb:'Motor',t:'Motor di dalam roda belakang dengan tiga kabel fasa dan lima kabel sensor Hall.',k:'Periksa suara, panas, kabel fasa, dan sensor Hall.',m:['Modul 16','modul-16.html']},
+ {id:'thr',n:'Throttle (gas)',x:362,y:72,r:14,lb:'Gas',t:'Memberi perintah gas ke controller. Jenis Hall menghasilkan tegangan sinyal sekitar 1 V sampai 4 V.',k:'Ukur tegangan sinyal sambil memutar gas (modul 05 dan 06).',m:['Modul 17','modul-17.html']},
+ {id:'brk',n:'Rem dan sakelar rem',x:392,y:92,w:36,h:14,lb:'Rem',t:'Sakelar rem memutus tenaga motor saat rem ditekan. Pada sebagian motor, rem juga memicu regenerasi.',k:'Sakelar rem rusak bisa membuat motor tidak mau jalan atau terus menahan.',m:['Modul 17','modul-17.html']},
+ {id:'key',n:'Kunci kontak',x:330,y:112,r:10,lb:'Kunci',t:'Menyambungkan sinyal bangun ke controller dan BMS.',k:'Bila kunci ON tetapi tidak ada tanda hidup, periksa sekering dan sambungan.',m:['Modul 20','modul-20.html']},
+ {id:'dsp',n:'Display dan instrumen',x:332,y:46,w:44,h:22,lb:'Display',t:'Menampilkan kecepatan, sisa baterai, dan kode gangguan, serta komunikasi dengan controller.',k:'Bila display mati tetapi motor jalan, periksa kabel komunikasi (modul 19).',m:['Modul 17','modul-17.html']},
+ {id:'std',n:'Sensor standar samping',x:210,y:204,w:30,h:12,lb:'Standar',t:'Sakelar atau sensor yang memberi tahu controller bahwa standar samping turun. Interlock keselamatan.',k:'Bila motor tidak jalan, periksa sensor ini lebih dulu.',m:['Modul 20','modul-20.html']},
+ {id:'dcd',n:'Konverter DC-DC 12 V',x:292,y:132,w:54,h:22,lb:'DC-DC',t:'Menurunkan tegangan baterai menjadi 12 V untuk lampu, klakson, dan display.',k:'Lampu redup atau mati padahal baterai penuh bisa berarti DC-DC bermasalah.',m:['Modul 18','modul-18.html']},
+ {id:'chg',n:'Port charger',x:244,y:122,r:9,lb:'Port',t:'Tempat mencolok charger. Konektornya belum seragam antar merek.',k:'Periksa pin kotor atau terbakar dan penguncinya.',m:['Modul 17','modul-17.html']}
+];
+let sel='bat';
+function drawBike(){
+  const body=`<path d="M60 160H300L330 130H350L370 90H400" fill="none" stroke="var(--dim)" stroke-width="3"/><path d="M110 150C120 120 190 100 250 110L260 150Z" fill="none" stroke="var(--dim)" stroke-width="2.4"/><line x1="350" y1="130" x2="402" y2="190" stroke="var(--dim)" stroke-width="3"/><circle cx="402" cy="190" r="26" fill="none" stroke="var(--dim)" stroke-width="5"/>`;
+  const parts=PART.map(p=>{
+    const sh=p.r?`<circle cx="${p.x}" cy="${p.y}" r="${p.r}"/>`:`<rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="4"/>`;
+    const tx=p.r?p.x:p.x+p.w/2,ty=p.r?p.y+3:p.y+p.h/2+3;
+    return `<g class="cp${p.id===sel?' sel':''}" data-id="${p.id}" tabindex="0" role="button" aria-label="${p.n}">${sh}<text x="${tx}" y="${ty}" text-anchor="middle">${p.lb}</text></g>`;
+  }).join('');
+  $('bike').innerHTML=body+parts;
+  const p=PART.find(x=>x.id===sel);
+  $('binfo').innerHTML=`<h3>${p.n}</h3><p>${p.t}</p><p><span class="k">DI BENGKEL: </span>${p.k}</p><p><span class="k">PELAJARI: </span><a href="${p.m[1]}">${p.m[0]}</a></p>`;
+}
+$('bike').addEventListener('click',e=>{const g=e.target.closest('.cp');if(g){sel=g.dataset.id;drawBike()}});
+$('bike').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const g=e.target.closest('.cp');if(g){e.preventDefault();sel=g.dataset.id;drawBike();$('bike').querySelector('.cp.sel').focus()}}});
+drawBike();
+
+// ----- simulasi pengaman -----
+const SW={key:['Kunci kontak',true],std:['Standar samping diangkat',true],brk:['Rem dilepas',true]};
+function drawSw(){$('sw').innerHTML=Object.entries(SW).map(([k,v])=>`<button class="chip" data-k="${k}" aria-pressed="${v[1]}">${v[0]}: ${v[1]?'ya':'tidak'}</button>`).join('')}
+$('sw').onclick=e=>{const b=e.target.closest('button');if(b){SW[b.dataset.k][1]=!SW[b.dataset.k][1];drawSw();sim()}};drawSw();
+function sim(){
+  const g=+$('g').value,soc=+$('o').value,mode=+$('m').value,vm=+$('vm').value,MF={1:.4,2:.7,3:1}[mode];
+  $('gT').textContent=g+'%';$('oT').textContent=soc+'%';$('vT').textContent=vm+' km/jam';
+  $('gv').textContent=fx(1+3*g/100,2)+' V';
+  const key=SW.key[1],std=SW.std[1],brk=SW.brk[1];
+  let lim=1,note='';
+  if(soc<5){lim=0;note='Baterai kurang dari 5%: motor berhenti dan buzzer berbunyi.'}
+  else if(soc<20){lim=.5;note='Baterai kurang dari 20%: kecepatan dibatasi setengahnya.'}
+  const ok=key&&std&&brk&&lim>0;
+  const V=ok?vm*MF*lim*g/100:0;
+  const steps=[
+   ['Kunci',key?'on':'off',key?'ON':'OFF'],
+   ['Standar samping',std?'on':'off',std?'naik':'turun'],
+   ['Rem',brk?'on':'off',brk?'dilepas':'ditekan'],
+   ['Baterai',lim>0?'on':'off',lim===0?'habis':lim<1?'lemah':'cukup'],
+   ['Controller',ok?'on':'off',ok?'mengalir':'diblokir'],
+   ['Roda',V>0?'on':'off',fx(V,0)+' km/jam']
+  ];
+  $('ch').innerHTML=steps.map(s=>`<div class="${s[1]}"><b>${s[0]}</b>${s[2]}</div>`).join('');
+  $('sp').textContent=fx(V,0)+' km/jam';
+  const v=$('sv');
+  if(!key){v.className='verdict warn';v.textContent='Kunci kontak OFF: controller tidak bangun, tidak ada tenaga ke motor.'}
+  else if(!std){v.className='verdict bad';v.textContent='Standar samping masih turun: interlock memblokir tenaga ke motor. Naikkan standar.'}
+  else if(!brk){v.className='verdict warn';v.textContent='Rem ditekan: sakelar rem memutus tenaga motor.'}
+  else if(lim===0){v.className='verdict bad';v.textContent=note}
+  else if(lim<1){v.className='verdict warn';v.textContent=note+` Kecepatan sekarang ${fx(V,0)} km/jam.`}
+  else if(g===0){v.className='verdict ok';v.textContent='Semua syarat terpenuhi. Putar gas untuk melaju.'}
+  else{v.className='verdict ok';v.textContent=`Semua syarat terpenuhi. Mode ${mode} membatasi kecepatan ke ${Math.round(MF*100)}% dari maksimum, yaitu ${fx(V,0)} km/jam pada gas ${g}%.`}
+}
+['g','o','m','vm'].forEach(i=>$(i).addEventListener('input',sim));sim();
+
+// ----- spesifikasi -----
+function spec(){
+  const V=+$('bv').value,A=+$('ba').value,P=+$('bp').value*1000,E=V*A,I=P/V,C=I/A,t=E/P;
+  $('bvT').textContent=V+' V';$('baT').textContent=A+' Ah';$('bpT').textContent=fx(P/1000,1)+' kW';
+  $('be').textContent=fx(E,0)+' Wh';$('bi').textContent=fx(I,0)+' A';$('bc').textContent=fx(C,2)+'C';$('bt').textContent=t>=1?fx(t,1)+' jam':fx(t*60,0)+' menit';
+}
+['bv','ba','bp'].forEach(i=>$(i).addEventListener('input',spec));spec();
+
+// ----- video -----
+const CARD=v=>`<div class="vl"><a class="th" href="${v.link}" target="_blank" rel="noopener" aria-label="Tonton: ${v.judul}"><img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="Pratinjau ${v.judul}" loading="lazy"><span class="pl">▶ Tonton di YouTube</span></a><div><h4><a href="${v.link}" target="_blank" rel="noopener">${v.judul}</a></h4><p><span class="bd">${v.bahasa}</span><span style="color:var(--dim);font-size:12px">${v.kanal||''}</span></p><p>${v.desk}</p></div></div>`;
+const VIDEOS_ID=[
+ { id:'GHGgleyV0iA', judul:'GESITS Motor Listrik Buatan Indonesia | First Impression Review | GridOto.com', bahasa:'Indonesia', kanal:'GridOto', link:'https://www.youtube.com/watch?v=GHGgleyV0iA', desk:'Kesan pertama Gesits versi mendekati produksi massal, yang langsung dicoba Presiden Joko Widodo pada 7 November 2018.' },
+ { id:'UpeaSrZykxM', judul:'GESITS Motor Listrik Buatan Indonesia, Test Ride Kelebihan dan Kekurangan Untuk Harian | Otomotif TV', bahasa:'Indonesia', kanal:'Otomotif TV', link:'https://www.youtube.com/watch?v=UpeaSrZykxM', desk:'Uji pemakaian harian Gesits, produksi dan pemasaran WIKA Industri Manufaktur (WIMA).' },
+ { id:'jENkY2ulemE', judul:'REVIEW MOTOR LISTRIK BERSUBSIDI YANG LAGI VIRAL - VOLTA 401', bahasa:'Indonesia', kanal:'', link:'https://www.youtube.com/watch?v=jENkY2ulemE', desk:'Ulasan fitur Volta 401, motor listrik bersubsidi dengan desain ergonomis dan modern.' },
+ { id:'fUm0bA3I2Hg', judul:'HASIL KERJA SAMA 2 BRAND MOTOR LISTRIK | First Impression Gesits by Volta GV1', bahasa:'Indonesia', kanal:'', link:'https://www.youtube.com/watch?v=fUm0bA3I2Hg', desk:'Kesan pertama Gesits by Volta GV1, motor hasil kerja sama dua merek motor listrik.' }
+];
+const VIDEOS=[]; // tambahkan video Inggris: { id:'ID', judul:'...', bahasa:'Inggris', kanal:'...', link:'https://www.youtube.com/watch?v=ID', desk:'...' }
+$('vlistid').innerHTML=VIDEOS_ID.map(CARD).join('');
+$('vlist').innerHTML=VIDEOS.map(CARD).join('');
+const YT='https://www.youtube.com/results?search_query=';
+$('vlinks').innerHTML=[['cara kerja motor listrik hub motor controller baterai'],['perawatan motor listrik harian'],['tukar baterai motor listrik SPBKLU']].map(x=>`<li><a href="${YT+encodeURIComponent(x[0])}" target="_blank" rel="noopener">${x[0]}</a> (Bahasa Indonesia)</li>`).join('');
+$('vlinksEn').innerHTML=[['how electric motorcycles work hub motor mid drive'],['electric scooter controller throttle explained']].map(x=>`<li><a href="${YT+encodeURIComponent(x[0])}" target="_blank" rel="noopener">${x[0]}</a> (Bahasa Inggris)</li>`).join('');
+
+// ----- kuis -----
+const Q=[
+['Motor tidak mau jalan walau gas diputar penuh dan standar samping masih turun. Penyebab paling mungkin...',['Gas putus','Interlock standar samping memblokir tenaga','Baterai terlalu penuh'],1,'Controller memblokir tenaga bila sinyal standar samping menyatakan standar turun.'],
+['Hub motor adalah motor yang...',['Berada di dalam roda tanpa rantai','Berada di mesin dengan rantai','Berada di setang'],0,'Pada hub motor, rotor dan roda menyatu sehingga tidak perlu rantai.'],
+['Dibanding hub, mid-drive atau sabuk umumnya...',['Memberi reduksi sehingga torsi roda lebih besar','Tidak punya komponen mekanis','Selalu lebih murah'],0,'Ada rasio reduksi yang menukar kecepatan dengan torsi (modul 08).'],
+['Motor BLDC hub biasanya punya berapa kabel fasa?',['Dua','Tiga','Lima'],1,'Tiga kabel fasa (sering kuning, hijau, biru) dari controller ke motor. Lima kabel kecil lain adalah sensor Hall.'],
+['Baterai 72 V 20 Ah menyimpan energi sekitar...',['144 Wh','1.440 Wh','14.400 Wh'],1,'72 × 20 = 1.440 Wh. Pada 3 kW, arus sekitar 42 A atau sekitar 2C.'],
+['Pada simulasi, sisa baterai di bawah 20% menyebabkan...',['Kecepatan dibatasi','Motor melaju lebih cepat','Tidak ada perubahan'],0,'Banyak sistem membatasi kecepatan saat baterai lemah, lalu berhenti di batas sangat rendah.'],
+['Hambatan terbesar penukaran baterai antar merek adalah...',['Baterai belum seragam ukuran dan konektornya','Tidak ada listrik','Motor tidak bisa melepas baterai'],0,'Ukuran dan konektor belum seragam, sehingga tiap penyedia memakai baterainya sendiri. ESDM menyiapkan standar konektor roda dua dan tiga.']
+];
+let sc=0,ans=0;
+$('quiz').innerHTML=Q.map((q,i)=>`<div class="q" data-i="${i}"><h4>${i+1}. ${q[0]}</h4>${q[1].map((o,j)=>`<button class="opt" data-j="${j}">${o}</button>`).join('')}<p class="why" hidden></p></div>`).join('');
+$('quiz').onclick=e=>{
+  const b=e.target.closest('button');if(!b||b.disabled)return;
+  const box=b.closest('.q'),q=Q[+box.dataset.i],ok=+b.dataset.j===q[2];
+  box.querySelectorAll('button').forEach((x,j)=>{x.disabled=true;if(j===q[2])x.classList.add('right')});
+  if(!ok)b.classList.add('wrong');else sc++;
+  const w=box.querySelector('.why');w.hidden=false;w.textContent=(ok?'Benar. ':'Belum tepat. ')+q[3];
+  if(++ans===Q.length){const s=$('score');s.hidden=false;s.className='verdict '+(sc>=6?'ok':sc>=5?'warn':'bad');s.textContent=`Skor Anda ${sc} dari ${Q.length}. `+(sc>=6?'Siap lanjut ke modul berikutnya.':'Ulangi diagram dan simulasi pengaman, lalu coba kuis lagi.')}
+};
+</script>
+</body>
+</html>

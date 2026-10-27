@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>14 Baterai | Training EV</title>
+<script src="assets/tema.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#060A12;--panel:#0C1220;--line:#1B2740;--text:#E6ECF5;--dim:#8593AA;--u:#FFC857;--v:#3DDC97;--w:#4DA3FF;--alert:#FF6B8B;--disp:'Chakra Petch',system-ui,sans-serif;--body:'Sora',system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font:400 16px/1.7 var(--body)}
+main{max-width:920px;margin:0 auto;padding:40px clamp(16px,4vw,32px) 0}
+h1{font:700 clamp(28px,4vw,44px)/1.1 var(--disp);margin:0 0 8px}
+h2{font:700 24px var(--disp);margin:52px 0 6px}
+a{color:var(--w)}
+.lead{color:var(--dim);margin:0 0 18px}
+.no{font:700 15px var(--disp);color:var(--v)}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;margin:12px 0}
+.goal{margin:0 0 8px;padding:14px 18px 14px 36px;border:1px solid var(--line);border-left:3px solid var(--v);border-radius:6px;background:var(--panel)}
+.ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 22px;margin:8px 0}
+.ctl label{display:block;font-size:13px;color:var(--dim)}
+.ctl b{color:var(--text);font-family:var(--disp)}
+.ctl input[type=range]{width:100%;accent-color:var(--v)}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0}
+.out div{padding:10px 12px;border:1px solid var(--line);border-radius:6px}
+.out span{display:block;font-size:12px;color:var(--dim)}
+.out strong{font:700 20px var(--disp)}
+main canvas{width:100%;height:200px;display:block;background:var(--ink);border:1px solid var(--line);border-radius:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--dim);font:500 13px var(--body);cursor:pointer}
+.chip[aria-pressed=true]{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 16px;background:var(--ink);border:1px solid var(--line);border-radius:6px;color:var(--text);font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--v)}
+.opt.right{border-color:var(--v);background:color-mix(in srgb,var(--v) 14%,transparent)}
+.opt.wrong{border-color:var(--alert);background:color-mix(in srgb,var(--alert) 12%,transparent)}
+.why{font-size:14px;color:var(--dim);margin:8px 0 0}
+.verdict{padding:10px 14px;border-radius:6px;border:1px solid var(--line);margin-top:12px;font-size:14px}
+.ok{border-color:var(--v);color:var(--v)}.warn{border-color:var(--u);color:var(--u)}.bad{border-color:var(--alert);color:var(--alert)}
+.story{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.story figure{margin:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.story img{width:100%;height:230px;object-fit:contain;background:#fff;border-radius:6px;display:block}
+.story figcaption{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5}
+.story h3{margin:10px 0 4px;font:600 17px var(--disp)}
+.story p{margin:4px 0;font-size:14px}
+table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+.cmp th,.cmp td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.cmp th{color:var(--dim);font-weight:500}
+.vl{display:grid;grid-template-columns:210px 1fr;gap:6px 16px;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.vl a.th{position:relative;display:block;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--ink)}
+.vl img{width:100%;height:100%;object-fit:cover;display:block}
+.vl .pl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);color:#fff;font:700 15px var(--disp)}
+.vl h4{margin:0 0 4px;font:600 16px var(--disp)}
+.vl p{margin:4px 0;font-size:14px}
+.vl .bd{display:inline-block;padding:1px 8px;border:1px solid var(--v);border-radius:999px;color:var(--v);font-size:11px;margin-right:6px}
+@media(max-width:560px){.vl{grid-template-columns:1fr}}
+details.dl{margin-top:20px;border:1px solid var(--line);border-radius:8px;padding:4px 16px}
+details.dl summary{cursor:pointer;padding:12px 0;color:var(--w);font-weight:500}
+.exp li{margin:6px 0}
+.q{margin:18px 0}.q h4{margin:0 0 8px;font:600 16px var(--body)}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:44px;padding-top:20px;border-top:1px solid var(--line)}
+.nav a,.nav button{padding:10px 18px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);font:600 14px var(--disp);text-decoration:none;cursor:pointer}
+.nav button{background:var(--v);border-color:var(--v);color:var(--ink)}
+.nav button[disabled]{background:var(--panel);color:var(--v)}
+
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:12px 0}
+.tools figure{margin:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.tools img{width:100%;height:200px;object-fit:contain;background:#fff;border-radius:6px;display:block}
+.tools figcaption{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5}
+.fm{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:12px 0}
+.fm div{padding:12px;border:1px solid var(--line);border-left:3px solid var(--v);border-radius:6px;background:var(--panel)}
+.fm b{display:block;font:700 18px var(--disp);color:var(--u)}
+.fm span{font-size:13px;color:var(--dim)}
+.stack{display:flex;height:30px;border-radius:6px;overflow:hidden;border:1px solid var(--line);margin:10px 0}
+.stack i{display:flex;align-items:center;justify-content:center;font:600 12px var(--disp);color:var(--ink);min-width:0;white-space:nowrap;transition:width .2s}
+.lg{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--dim)}
+.lg b{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}
+.vl{display:grid;grid-template-columns:210px 1fr;gap:6px 16px;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.vl a.th{position:relative;display:block;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--ink)}
+.vl img{width:100%;height:100%;object-fit:cover;display:block}
+.vl .pl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);color:#fff;font:700 15px var(--disp)}
+.vl h4{margin:0 0 4px;font:600 16px var(--disp)}
+.vl p{margin:4px 0;font-size:14px}
+.vl .bd{display:inline-block;padding:1px 8px;border:1px solid var(--v);border-radius:999px;color:var(--v);font-size:11px;margin-right:6px}
+@media(max-width:560px){.vl{grid-template-columns:1fr}}
+.cp rect,.cp circle{fill:var(--panel);stroke:var(--dim);stroke-width:1.6;transition:fill .15s,stroke .15s}
+.cp:hover rect,.cp:hover circle,.cp:focus rect,.cp:focus circle{stroke:var(--v)}
+.cp.sel rect,.cp.sel circle{fill:color-mix(in srgb,var(--v) 22%,var(--panel));stroke:var(--v);stroke-width:2.4}
+.cp text{fill:var(--text);font:600 10px var(--body);pointer-events:none}
+.cp{cursor:pointer;outline:none}
+.anat{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;align-items:start}
+@media(max-width:760px){.anat{grid-template-columns:1fr}}
+.info h3{font:700 20px var(--disp);margin:0 0 6px;color:var(--v)}
+.info p{margin:6px 0;font-size:15px}
+.info .k{color:var(--u);font:600 12px var(--disp)}
+.mx{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:12px 0}
+.mx div{padding:8px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;color:var(--dim);transition:all .2s}
+.mx div.on{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
+.mx div b{display:block;font:600 11px var(--disp);color:var(--dim)}
+.mx div.on b{color:var(--v)}
+.flow line,.flow path{stroke:var(--line);stroke-width:3;fill:none}
+.flow .on{stroke:var(--u);stroke-width:4;stroke-dasharray:8 7;animation:fl 0.9s linear infinite}
+.flow .on.rev{animation-direction:reverse;stroke:var(--v)}
+.flow .on.thin{stroke-width:2.6}
+@keyframes fl{to{stroke-dashoffset:-30}}
+.flow .nd rect{fill:var(--panel);stroke:var(--dim);stroke-width:1.6}
+.flow .nd text{fill:var(--text);font:600 11px var(--body);text-anchor:middle}
+@media(prefers-reduced-motion:reduce){.flow .on{animation:none}}
+
+.stp{counter-reset:s;list-style:none;margin:10px 0;padding:0}
+.stp li{position:relative;margin:6px 0;padding:10px 12px 10px 48px;background:var(--ink);border:1px solid var(--line);border-radius:6px;font-size:14px}
+.stp li::before{counter-increment:s;content:counter(s);position:absolute;left:12px;top:8px;width:26px;height:26px;border-radius:50%;background:var(--v);color:var(--ink);font:700 14px/26px var(--disp);text-align:center}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font:600 12px var(--disp);margin-right:6px}
+
+abbr.tt{text-decoration:underline dotted var(--v);text-underline-offset:3px;cursor:help;position:relative}
+abbr.tt::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 6px);width:max-content;max-width:260px;padding:8px 10px;background:var(--panel);color:var(--text);border:1px solid var(--v);border-radius:6px;font:400 12px/1.5 var(--body);opacity:0;pointer-events:none;transform:translateY(4px);transition:opacity .15s,transform .15s;z-index:30;white-space:normal}
+abbr.tt:hover::after,abbr.tt:focus::after{opacity:1;transform:none}
+</style>
+</head>
+<body data-kode="14">
+<div id="site-header"></div>
+<main>
+  <div class="no">Modul 14 &nbsp;|&nbsp; R2 mendalam</div>
+  <h1>Baterai</h1>
+  <p class="lead">Baterai adalah komponen termahal dan paling menentukan di motor listrik. Modul ini mengajak Anda memahami <abbr class="tt" tabindex="0" data-tip="Satuan terkecil baterai. Satu sel lithium-ion punya tegangan sekitar 3 sampai 4 volt.">sel</abbr>, <abbr class="tt" tabindex="0" data-tip="Paket baterai: banyak sel yang dirangkai seri dan paralel.">pack</abbr>, kimia (LFP dan NMC), tegangan, kapasitas, <abbr class="tt" tabindex="0" data-tip="Ukuran seberapa cepat baterai diisi atau dikosongkan. 1C berarti arus sama dengan kapasitas dalam Ah, misalnya 30 A untuk baterai 30 Ah.">C-rate</abbr>, hambatan dalam, dan umur. Arahkan kursor atau ketuk istilah bergaris titik untuk melihat artinya.</p>
+  <ul class="goal">
+    <li>Membedakan Ah dan Wh dan menghitung energi pack dari tegangan dan kapasitas.</li>
+    <li>Menyusun pack seri-paralel dan memeriksa kecocokannya dengan batas controller.</li>
+    <li>Menjelaskan LFP lawan NMC, penurunan tegangan saat beban, dan hal yang memperpendek umur baterai.</li>
+  </ul>
+
+  <div class="box" id="hook">
+    <b>Tebak dulu.</b> Baterai A berlabel <b>72 V 30 Ah</b>, baterai B berlabel <b>48 V 45 Ah</b>. Mana yang menyimpan energi lebih banyak?
+    <div id="hopt"></div><p class="why" id="hans" hidden></p>
+  </div>
+
+  <h2>1. Dari sel menjadi pack</h2>
+  <div class="tools" id="fig1"></div>
+  <ul class="rec">
+    <li><b>Sel</b> adalah satuan terkecil. <b>Modul</b> adalah beberapa sel yang dirangkai. <b>Pack</b> adalah seluruh baterai lengkap dengan <abbr class="tt" tabindex="0" data-tip="Battery Management System: rangkaian yang memantau dan melindungi baterai. Dibahas di modul 15.">BMS</abbr>, kabel, dan casing.</li>
+    <li><b>Seri (S)</b> menambah tegangan. <b>Paralel (P)</b> menambah kapasitas. Pack "20S 10P" berarti 20 kelompok seri, tiap kelompok berisi 10 sel paralel.</li>
+    <li><b>Energi (Wh)</b> = tegangan nominal × kapasitas (Ah). Itu yang menentukan jarak tempuh, bukan Ah sendirian (modul 03).</li>
+    <li>Contoh nyata: baterai sepeda listrik di foto memuat 52 sel 5.000 mAh. Tersusun 13S4P dengan sel 3,7 V: 13 × 3,7 V sekitar 48 V dan 4 × 5 Ah = 20 Ah, jadi sekitar 960 Wh.</li>
+  </ul>
+
+  <h2>2. Kimia: LFP, NMC, dan timbal-asam</h2>
+  <table class="cmp">
+    <tr><th></th><th>LFP</th><th>NMC</th><th>Timbal-asam (aki)</th></tr>
+    <tr><td><b>Tegangan nominal per sel</b></td><td>3,2 V</td><td>3,6–3,7 V</td><td>2 V</td></tr>
+    <tr><td><b>Penuh dan kosong umum</b></td><td>3,65 V dan 2,5 V</td><td>4,2 V dan 3,0 V</td><td>sekitar 2,1 V dan 1,75 V</td></tr>
+    <tr><td><b>Energi per berat</b> (kasar)</td><td>sekitar 90–160 Wh/kg</td><td>sekitar 150–260 Wh/kg</td><td>sekitar 30–40 Wh/kg</td></tr>
+    <tr><td><b>Umur siklus</b> (kasar)</td><td>sekitar 2.000–5.000</td><td>sekitar 1.000–2.000</td><td>beberapa ratus</td></tr>
+    <tr><td><b>Karakter</b></td><td>Tahan panas dan lebih stabil, kurva tegangan datar, lebih berat untuk energi sama</td><td>Padat energi dan ringan, lebih sensitif terhadap panas</td><td>Murah, berat, umur pendek</td></tr>
+  </table>
+  <p class="why">Angka bervariasi per produsen dan per sumber, jadi anggap sebagai kisaran. LFP umumnya lebih tahan panas dan lebih stabil terhadap thermal runaway, sehingga cocok untuk iklim panas, sedangkan NMC unggul di ringan dan jarak. Ada juga kimia lain seperti LFMP (di antara LFP dan NMC), LTO, dan sodium-ion.</p>
+  <div class="tools" id="fig2"></div>
+
+  <h2>3. Susun pack Anda dan lihat tegangannya saat bekerja</h2>
+  <p class="lead">Pilih kimia, sel, susunan seri-paralel, dan batas <abbr class="tt" tabindex="0" data-tip="Pengendali motor. Ia punya batas tegangan maksimum dan batas tegangan rendah (LVC).">controller</abbr> Anda. Lalu atur daya motor dan sisa baterai untuk melihat bagaimana tegangan turun (<abbr class="tt" tabindex="0" data-tip="Penurunan tegangan terminal saat baterai dibebani, akibat hambatan dalam. Semakin besar arus, semakin besar penurunannya.">voltage sag</abbr>).</p>
+  <div class="box">
+    <div class="ctl">
+      <label>Kimia sel<select id="ch" style="width:100%;padding:6px;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:6px"><option value="nmc">NMC (3,6 V nominal)</option><option value="lfp">LFP (3,2 V nominal)</option></select></label>
+      <label>Kapasitas tiap sel: <b id="caT"></b><input type="range" id="ca" min="2" max="120" step=".5" value="5"></label>
+      <label>Seri (S): <b id="sT"></b><input type="range" id="s" min="4" max="30" step="1" value="20"></label>
+      <label>Paralel (P): <b id="pT"></b><input type="range" id="p" min="1" max="30" step="1" value="6"></label>
+      <label>Batas controller (contoh)<select id="cl" style="width:100%;padding:6px;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:6px"><option value="48">Controller 48 V (maks 60 V, LVC 40 V)</option><option value="60">Controller 60 V (maks 72 V, LVC 48 V)</option><option value="72" selected>Controller 72 V (maks 84 V, LVC 56 V)</option><option value="96">Controller 96 V (maks 120 V, LVC 72 V)</option></select></label>
+      <label>Hambatan dalam tiap sel: <b id="rT"></b><input type="range" id="rc" min="2" max="60" step="1" value="20"></label>
+      <label>Daya motor: <b id="wT"></b><input type="range" id="w" min=".3" max="12" step=".1" value="3"></label>
+      <label>Sisa baterai (SOC): <b id="oT"></b><input type="range" id="so" min="0" max="100" step="1" value="80"></label>
+    </div>
+    <canvas id="dis" style="height:230px" aria-label="Tegangan pack terhadap sisa baterai, tanpa beban dan saat beban"></canvas>
+    <div class="out">
+      <div><span>Tegangan nominal</span><strong id="vn"></strong></div>
+      <div><span>Penuh sampai kosong</span><strong id="vf"></strong></div>
+      <div><span>Kapasitas dan energi</span><strong id="ce"></strong></div>
+      <div><span>Jumlah sel dan berat perkiraan</span><strong id="sb"></strong></div>
+      <div><span>Tegangan saat beban</span><strong id="vl"></strong></div>
+      <div><span>Arus dan C-rate</span><strong id="ic"></strong></div>
+      <div><span>Panas di dalam pack</span><strong id="hp"></strong></div>
+      <div><span>Perkiraan waktu pakai</span><strong id="rt"></strong></div>
+    </div>
+    <div class="verdict" id="v1"></div>
+    <div class="verdict" id="v2"></div>
+    <p class="why">Garis hijau: tegangan tanpa beban (OCV). Garis kuning: tegangan saat beban pada daya yang dipilih. Garis putus-putus: batas controller. Kurva sel adalah gambaran umum, bukan data sel tertentu. Berat pack diperkirakan dari energi per berat sel dikalikan 1,25 untuk casing dan kabel. Hambatan dalam tiap sel memengaruhi: hambatan pack = hambatan sel × S ÷ P. Batas controller di atas hanya contoh: baca spesifikasi controller Anda.</p>
+  </div>
+
+  <h2>4. Periksa cepat: tegangan terukur, kondisi sel</h2>
+  <div class="box">
+    <div class="ctl">
+      <label>Kimia<select id="dk" style="width:100%;padding:6px;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:6px"><option value="nmc">NMC</option><option value="lfp">LFP</option></select></label>
+      <label>Jumlah sel seri (S): <b id="dsT"></b><input type="range" id="ds" min="4" max="30" step="1" value="20"></label>
+      <label>Tegangan pack terukur: <b id="dvT"></b><input type="range" id="dv" min="20" max="130" step=".1" value="72"></label>
+    </div>
+    <div class="out"><div><span>Rata-rata per sel</span><strong id="da"></strong></div><div><span>Perkiraan sisa baterai</span><strong id="ds2"></strong></div></div>
+    <div class="verdict" id="dd"></div>
+    <p class="why">Ini hanya perkiraan dari tegangan rata-rata. Untuk menemukan sel yang lemah, ukur tiap kelompok sel dan bandingkan (modul 05 dan 15). Pada LFP, tegangan hampir sama dari 20 sampai 90%, jadi perkiraan sisa baterai dari tegangan sangat kasar.</p>
+  </div>
+
+  <h2>5. Yang memperpendek umur baterai</h2>
+  <ul class="rec">
+    <li><b>Panas.</b> Suhu tinggi mempercepat penuaan. Parkir di tempat teduh dan jangan mengisi saat baterai panas.</li>
+    <li><b>Arus tinggi.</b> C-rate besar menaikkan panas di dalam sel. Motor yang terlalu bertenaga untuk packnya membebani sel.</li>
+    <li><b>Dalam pengosongan dan pengisian.</b> Sering habis total atau penuh 100% menua lebih cepat pada banyak kimia. Pengisian harian di kisaran menengah sering dianjurkan, tetapi ikuti anjuran pabrikan (LFP umumnya lebih toleran).</li>
+    <li><b>Disimpan lama dalam kondisi penuh atau kosong.</b> Simpan dengan sisa menengah di tempat sejuk dan kering, dan periksa berkala.</li>
+    <li><b>Sel tidak seimbang.</b> Satu sel yang lemah membatasi seluruh pack. BMS menyeimbangkan sel (modul 15).</li>
+  </ul>
+
+  <h2>6. Keselamatan baterai</h2>
+  <div class="verdict bad">Baterai yang menggembung, berbau, berasap, sangat panas, atau pernah rusak parah harus diperlakukan sebagai darurat. Jauhi dan jangan dipegang sendirian.</div>
+  <ul class="rec">
+    <li><b>Thermal runaway:</b> suhu di dalam sel naik tidak terkendali dan dapat memicu kebakaran. NMC melepaskan oksigen lebih mudah pada suhu tinggi, dan LFP lebih tahan, tetapi tidak ada baterai lithium yang bebas risiko.</li>
+    <li>Jangan memakai charger yang tidak sesuai, jangan menusuk, memotong, atau menyolder langsung ke sel tanpa pelatihan, dan jangan membuka pack dalam keadaan terhubung.</li>
+    <li>Ikuti urutan putus, kunci, tunggu, ukur, baru kerja (<a href="modul-04.html">modul 04</a>). Cara memadamkan baterai lithium berbeda-beda antar sumber, jadi hubungi pemadam kebakaran dan ikuti panduan pabrikan.</li>
+  </ul>
+
+  <h2>7. Video pendukung</h2>
+  <h3 style="font:600 18px var(--disp);margin:14px 0 6px">Bahasa Indonesia</h3>
+  <p class="why">Belum ada video berbahasa Indonesia yang bisa saya pastikan benar-benar ada. Gunakan tautan pencarian (hasil pencarian YouTube, bukan video tertentu) dan bacaan Indonesia berikut. Video pilihan Anda bisa ditambahkan di daftar <code>VIDEOS_ID</code> dalam skrip.</p>
+  <ul class="rec" id="vlinks"></ul>
+  <p class="why"><b>Bacaan bahasa Indonesia:</b> <a href="https://otomotif.kompas.com/read/2026/08/11/070200715/lfp-vs-nmc--mana-baterai-kendaraan-listrik-teraman-" target="_blank" rel="noopener">Kompas: LFP lawan NMC, mana yang teraman</a>, <a href="https://otomotif.kompas.com/read/2026/08/10/180100315/mengenal-beda-baterai-lfp-lfmp-dan-nmc-pada-mobil-listrik" target="_blank" rel="noopener">Kompas: beda LFP, LFMP, dan NMC</a>, <a href="https://www.idntimes.com/automotive/car/5-perbedaan-baterai-lfp-dan-nmc-pada-mobil-listrik-mana-lebih-ideal-c1c2-01-bfjms-w6dmgx" target="_blank" rel="noopener">IDN Times: 5 perbedaan baterai LFP dan NMC</a>, dan <a href="https://infomolis.id/artikel/baterai-mobil-listrik-lfp-vs-nmc-bedanya-apa-dan-mana-yang-cocok-buat-kamu/" target="_blank" rel="noopener">Infomolis: LFP lawan NMC di iklim Indonesia</a>.</p>
+  <div id="vlistid"></div>
+  <h3 style="font:600 18px var(--disp);margin:22px 0 6px">Bahasa Inggris</h3>
+  <p class="why">Tips subtitle: aktifkan CC, buka Setelan, Subtitel/CC, lalu Terjemahkan otomatis ke Indonesia, bila pemilik video mengaktifkan subtitel.</p>
+  <div id="vlist"></div>
+
+  <details class="dl"><summary>Catatan untuk pengajar</summary>
+    <p><b>Alur sekitar 90 menit:</b> tebakan (5), sel ke pack (10), kimia (10), simulasi pack dan beban (25), periksa cepat (10), umur dan keselamatan (15), kuis (15).</p>
+    <p><b>Peragaan:</b> bawa pack bekas atau sel 18650. Minta peserta menghitung S dan P dari label, lalu mengukur tegangan pack dengan multimeter (modul 05).</p>
+    <p><b>Pertanyaan pemicu:</b> Motor 72 V 3 kW dipasangi baterai kecil berarus rendah. Apa yang terjadi saat tanjakan? (Tegangan jatuh, controller memotong karena LVC, baterai panas.)</p>
+    <p><b>Pesan utama:</b> baterai bukan sekadar "tangki". Tegangan turun saat beban, SOC tidak linear terhadap tegangan, dan label 72 V adalah tegangan nominal, bukan tegangan saat penuh.</p>
+  </details>
+
+  <h2>8. Kuis</h2>
+  <div id="quiz"></div><div class="verdict" id="score" hidden></div>
+
+  <p class="why" style="margin-top:30px">Sumber foto, Wikimedia Commons: <a href="https://commons.wikimedia.org/wiki/File:Lithium-Ion_Cell_cylindric.JPG" target="_blank" rel="noopener">Lithium-Ion Cell cylindric</a> (RudolfSimon, CC BY-SA 3.0), <a href="https://commons.wikimedia.org/wiki/File:Lithium_Ion_Battery_Cell_-_Cylindrical_Cell,_Prismatic_Cell,_Pouch_Cell.png" target="_blank" rel="noopener">format sel silindris, prismatik, dan pouch</a> (CRBAman, CC BY-SA 4.0), <a href="https://commons.wikimedia.org/wiki/File:Lithium_ion_battery.png" target="_blank" rel="noopener">Lithium ion battery</a> (Walter Davison, CC BY-SA 4.0), <a href="https://commons.wikimedia.org/wiki/File:Electric_Bicycle.jpg" target="_blank" rel="noopener">Electric Bicycle</a> (Mikefairbanks, CC BY-SA 3.0), <a href="https://commons.wikimedia.org/wiki/File:Lithium-Ion_Battery_for_BMW_i3_-_Battery_Pack.JPG" target="_blank" rel="noopener">paket baterai BMW i3</a> (RudolfSimon, CC BY-SA 3.0), dan <a href="https://commons.wikimedia.org/wiki/File:Blades_in_LFP_battery_pack.jpg" target="_blank" rel="noopener">Blades in LFP battery pack</a> (pembuat dan lisensi tertera di halaman berkas). Kisaran kimia dari Tritek, GlobalSpec, Litime, CM Batteries, Liputan6, dan Infomolis. Cek ulang sebelum dipakai sebagai rujukan resmi.</p>
+
+  <div class="nav">
+    <a href="modul-13.html">Sebelumnya: 13</a><a href="index.html#modul">Daftar modul</a>
+    <button id="doneBtn">Tandai selesai</button><a href="modul-15.html">Berikutnya: 15</a>
+  </div>
+</main>
+<div id="site-footer"></div>
+<script>
+const $=id=>document.getElementById(id);
+fetch('assets/layout.html').then(r=>{if(!r.ok)throw 0;return r.text()}).then(h=>{
+  const d=new DOMParser().parseFromString(h,'text/html');
+  document.head.append(...d.querySelectorAll('style'));
+  $('site-header').replaceWith(d.querySelector('header'));$('site-footer').replaceWith(d.querySelector('footer'));
+}).catch(()=>{$('site-header').textContent='Training EV'});
+const kode=document.body.dataset.kode, btn=$('doneBtn');
+let done=[]; try{done=JSON.parse(localStorage.getItem('evDone')||'[]')}catch(e){}
+const mark=()=>{btn.textContent='Selesai ✓';btn.disabled=true};
+if(done.includes(kode))mark();
+btn.onclick=()=>{if(!done.includes(kode))done.push(kode);try{localStorage.setItem('evDone',JSON.stringify(done))}catch(e){}mark()};
+const cs=k=>getComputedStyle(document.documentElement).getPropertyValue('--'+k).trim();
+const fx=(n,d=1)=>(+n).toLocaleString('id-ID',{maximumFractionDigits:d});
+function hook(id,aid,opts,ok,html){$(id).innerHTML=opts.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('');$(id).onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;[...$(id).children].forEach((x,i)=>{x.disabled=true;if(i===ok)x.classList.add('right')});if(+b.dataset.i!==ok)b.classList.add('wrong');const a=$(aid);a.hidden=false;a.innerHTML=html}}
+hook('hopt','hans',['Baterai A (72 V 30 Ah)','Baterai B (48 V 45 Ah)','Sama besar','Tidak bisa dibandingkan'],2,'Jawabannya <b>sama besar</b>. Energi = tegangan × kapasitas: 72 × 30 = 2.160 Wh dan 48 × 45 = 2.160 Wh. Itulah mengapa Ah saja tidak cukup untuk membandingkan baterai. Bedanya, baterai 72 V mengalirkan arus lebih kecil untuk daya yang sama (modul 03).');
+
+// ----- foto -----
+const CM='https://commons.wikimedia.org/wiki/',fp=f=>CM+'Special:FilePath/'+encodeURIComponent(f)+'?width=520';
+const fg=(f,alt,cap,by)=>`<figure><img src="${fp(f)}" alt="${alt}" loading="lazy" onerror="this.closest('figure').style.display='none'"><figcaption>${cap}. Sumber: <a href="${CM}File:${encodeURIComponent(f)}" target="_blank" rel="noopener">${f.replace(/_/g,' ')}</a>, ${by}, Wikimedia Commons</figcaption></figure>`;
+$('fig1').innerHTML=
+ fg('Lithium-Ion_Cell_cylindric.JPG','Sel lithium-ion silindris dibuka','Sel lithium-ion silindris (18650) yang dibuka: lapisan elektroda digulung','RudolfSimon, CC BY-SA 3.0')+
+ fg('Lithium_Ion_Battery_Cell_-_Cylindrical_Cell,_Prismatic_Cell,_Pouch_Cell.png','Tiga format sel','Tiga format sel: silindris, prismatik, dan pouch','CRBAman, CC BY-SA 4.0')+
+ fg('Lithium_ion_battery.png','Skema baterai lithium-ion','Skema baterai lithium-ion: ion lithium bergerak antara anoda dan katoda','Walter Davison, CC BY-SA 4.0')+
+ fg('Electric_Bicycle.jpg','Sepeda listrik dengan baterai lepas pasang','Sepeda listrik dengan baterai 960 Wh yang memuat 52 sel 5.000 mAh','Mikefairbanks, CC BY-SA 3.0');
+$('fig2').innerHTML=
+ fg('Lithium-Ion_Battery_for_BMW_i3_-_Battery_Pack.JPG','Paket baterai BMW i3','Paket baterai lithium-ion mobil listrik (BMW i3)','RudolfSimon, CC BY-SA 3.0')+
+ fg('Blades_in_LFP_battery_pack.jpg','Sel pipih di pack LFP','Sel LFP berbentuk bilah dalam sebuah pack','lisensi tertera di halaman berkas');
+
+// ----- tabel kimia -----
+const CH={
+ nmc:{n:'NMC',vn:3.65,vf:4.2,ve:3.0,wk:200,
+  ocv:[[0,3.0],[5,3.3],[10,3.4],[20,3.5],[40,3.65],[60,3.78],[80,3.95],[100,4.2]]},
+ lfp:{n:'LFP',vn:3.2,vf:3.65,ve:2.5,wk:125,
+  ocv:[[0,2.5],[5,2.9],[10,3.05],[20,3.2],[40,3.26],[60,3.28],[80,3.33],[90,3.38],[100,3.65]]}
+};
+const ocv=(ch,soc)=>{const t=CH[ch].ocv;for(let i=1;i<t.length;i++){if(soc<=t[i][0]){const a=t[i-1],b=t[i];return a[1]+(b[1]-a[1])*(soc-a[0])/(b[0]-a[0])}}return t[t.length-1][1]};
+const inv=(ch,v)=>{const t=CH[ch].ocv;if(v<=t[0][1])return 0;for(let i=1;i<t.length;i++){if(v<=t[i][1]){const a=t[i-1],b=t[i];return a[0]+(b[0]-a[0])*(v-a[1])/(b[1]-a[1])}}return 100};
+const LIM={48:[60,40],60:[72,48],72:[84,56],96:[120,72]};
+
+// ----- pack, beban, dan kurva -----
+const cv=$('dis'),cx=cv.getContext('2d');
+function pack(){
+  const ch=$('ch').value,C=CH[ch],ca=+$('ca').value,S=+$('s').value,P=+$('p').value,lim=LIM[$('cl').value],rc=+$('rc').value/1000,Pw=+$('w').value*1000,soc=+$('so').value;
+  $('caT').textContent=fx(ca,1)+' Ah';$('sT').textContent=S;$('pT').textContent=P;$('rT').textContent=Math.round(rc*1000)+' mΩ';$('wT').textContent=fx(Pw/1000,1)+' kW';$('oT').textContent=soc+'%';
+  const Vn=S*C.vn,Vf=S*C.vf,Ve=S*C.ve,Ah=P*ca,Wh=Vn*Ah,cells=S*P,mass=Wh/C.wk*1.25,Rp=rc*S/P;
+  const Voc=S*ocv(ch,soc),disc=Voc*Voc-4*Rp*Pw;
+  let I=null,Vl=null;
+  if(disc>=0){I=(Voc-Math.sqrt(disc))/(2*Rp);Vl=Voc-I*Rp}
+  $('vn').textContent=fx(Vn,1)+' V';$('vf').textContent=fx(Vf,1)+' V sampai '+fx(Ve,1)+' V';
+  $('ce').textContent=fx(Ah,1)+' Ah, '+fx(Wh,0)+' Wh';$('sb').textContent=cells+' sel, sekitar '+fx(mass,1)+' kg';
+  if(I===null){$('vl').textContent='tidak tercapai';$('ic').textContent='-';$('hp').textContent='-';$('rt').textContent='-'}
+  else{$('vl').textContent=fx(Vl,1)+' V (turun '+fx(Voc-Vl,1)+' V)';$('ic').textContent=fx(I,0)+' A, '+fx(I/Ah,2)+'C';$('hp').textContent=fx(I*I*Rp,0)+' W';
+    const hrs=Ah*soc/100/I;$('rt').textContent=hrs>=1?fx(hrs,1)+' jam':fx(hrs*60,0)+' menit'}
+  const v1=$('v1'),v2=$('v2');
+  if(Vf>lim[0]){v1.className='verdict bad';v1.textContent=`Tegangan penuh pack ${fx(Vf,1)} V melebihi batas controller ${lim[0]} V. Controller bisa rusak. Kurangi jumlah sel seri.`}
+  else if(Ve<lim[1]-0.5*S*0&&Ve<lim[1]&&false){}
+  else if(Vf<lim[0]*0.8){v1.className='verdict warn';v1.textContent=`Tegangan penuh ${fx(Vf,1)} V jauh di bawah batas controller ${lim[0]} V. Tenaga dan kecepatan motor akan lebih rendah dari yang dirancang.`}
+  else{v1.className='verdict ok';v1.textContent=`Tegangan penuh ${fx(Vf,1)} V masih di bawah batas controller ${lim[0]} V.`}
+  if(I===null){v2.className='verdict bad';v2.textContent='Pack tidak sanggup menyuplai daya sebesar itu: hambatan dalam terlalu besar. Perbesar P, pilih sel berhambatan lebih kecil, atau kurangi daya.'}
+  else if(Vl<lim[1]){v2.className='verdict bad';v2.textContent=`Tegangan saat beban ${fx(Vl,1)} V turun di bawah batas rendah controller (LVC) ${lim[1]} V. Controller akan memotong atau mengurangi tenaga. Inilah penyebab motor "ngempos" saat tanjakan dengan baterai lemah.`}
+  else if(I/Ah>2){v2.className='verdict warn';v2.textContent=`Beban ${fx(I/Ah,1)}C tergolong tinggi untuk banyak sel. Panas di dalam pack ${fx(I*I*Rp,0)} W. Perbesar P untuk menurunkan C-rate.`}
+  else{v2.className='verdict ok';v2.textContent=`Beban ${fx(I/Ah,2)}C dan tegangan saat beban ${fx(Vl,1)} V. Aman dari batas rendah controller.`}
+  drawCurve(ch,S,Rp,I,soc,lim);
+}
+function drawCurve(ch,S,Rp,I,soc,lim){
+  const W=cv.clientWidth,H=cv.clientHeight,L=48,R=10,T0=12,B=26,pw=W-L-R,ph=H-T0-B,C=CH[ch];
+  const vmax=Math.max(S*C.vf,lim[0])*1.02,vmin=Math.min(S*C.ve,lim[1])*.9;
+  const X=s=>L+pw*s/100,Y=v=>T0+ph*(1-(v-vmin)/(vmax-vmin));
+  cx.clearRect(0,0,W,H);cx.strokeStyle=cs('line');cx.lineWidth=1;cx.beginPath();cx.moveTo(L,T0);cx.lineTo(L,T0+ph);cx.lineTo(L+pw,T0+ph);cx.stroke();
+  cx.fillStyle=cs('dim');cx.font='11px sans-serif';cx.fillText(fx(vmax,0)+' V',2,T0+8);cx.fillText(fx(vmin,0)+' V',2,T0+ph);cx.fillText('sisa baterai (SOC)',L+pw-100,H-8);cx.fillText('0%',L,H-8);cx.fillText('100%',L+pw-26,H-18);
+  cx.setLineDash([5,5]);cx.strokeStyle=cs('alert');[lim[0],lim[1]].forEach(v=>{cx.beginPath();cx.moveTo(L,Y(v));cx.lineTo(L+pw,Y(v));cx.stroke()});cx.setLineDash([]);
+  cx.fillStyle=cs('alert');cx.fillText('batas maks '+lim[0]+' V',L+6,Y(lim[0])-4);cx.fillText('LVC '+lim[1]+' V',L+6,Y(lim[1])-4);
+  const cur=(f,col)=>{cx.beginPath();for(let s=0;s<=100;s+=1){const v=f(s);s?cx.lineTo(X(s),Y(v)):cx.moveTo(X(s),Y(v))}cx.strokeStyle=col;cx.lineWidth=2.4;cx.stroke()};
+  cur(s=>S*ocv(ch,s),cs('v'));
+  if(I!==null){const Pw=+$('w').value*1000;cur(s=>{const Vo=S*ocv(ch,s),d=Vo*Vo-4*Rp*Pw;return d>=0?Vo-(Vo-Math.sqrt(d))/(2*Rp)*Rp:vmin},cs('u'))}
+  const mx=X(soc);cx.strokeStyle=cs('text');cx.lineWidth=1;cx.setLineDash([2,3]);cx.beginPath();cx.moveTo(mx,T0);cx.lineTo(mx,T0+ph);cx.stroke();cx.setLineDash([]);
+}
+['ch','ca','s','p','cl','rc','w','so'].forEach(i=>$(i).addEventListener('input',pack));
+function sizeAll(){const d=Math.min(2,devicePixelRatio||1);cv.width=cv.clientWidth*d;cv.height=cv.clientHeight*d;cx.setTransform(d,0,0,d,0,0);pack()}
+addEventListener('resize',sizeAll);
+
+// ----- periksa cepat -----
+function dg(){
+  const ch=$('dk').value,S=+$('ds').value,V=+$('dv').value,a=V/S,C=CH[ch],soc=inv(ch,a);
+  $('dsT').textContent=S;$('dvT').textContent=fx(V,1)+' V';$('da').textContent=fx(a,3)+' V';$('ds2').textContent=fx(soc,0)+'%'+(ch==='lfp'?' (kasar)':'');
+  const d=$('dd');
+  if(a>C.vf+.05){d.className='verdict bad';d.textContent=`Rata-rata ${fx(a,2)} V per sel melebihi batas penuh ${C.vf} V. Periksa jumlah S, charger, dan BMS.`}
+  else if(a<C.ve){d.className='verdict bad';d.textContent=`Rata-rata ${fx(a,2)} V per sel di bawah batas kosong ${C.ve} V. Baterai terlalu kosong: jangan dipaksa diisi cepat, dan periksa sel yang drop.`}
+  else if(a<C.ve+.25){d.className='verdict warn';d.textContent='Sisa baterai sangat rendah. Isi segera dan jangan dipakai berat.'}
+  else{d.className='verdict ok';d.textContent=`Rata-rata ${fx(a,2)} V per sel berada di rentang normal ${C.ve}–${C.vf} V.`}
+}
+['dk','ds','dv'].forEach(i=>$(i).addEventListener('input',dg));dg();
+
+// ----- video -----
+const CARD=v=>`<div class="vl"><a class="th" href="${v.link}" target="_blank" rel="noopener" aria-label="Tonton: ${v.judul}"><img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="Pratinjau ${v.judul}" loading="lazy"><span class="pl">▶ Tonton di YouTube</span></a><div><h4><a href="${v.link}" target="_blank" rel="noopener">${v.judul}</a></h4><p><span class="bd">${v.bahasa}</span><span style="color:var(--dim);font-size:12px">${v.kanal||''}</span></p><p>${v.desk}</p></div></div>`;
+const VIDEOS_ID=[]; // tambahkan video Indonesia: { id:'ID', judul:'...', bahasa:'Indonesia', kanal:'...', link:'https://www.youtube.com/watch?v=ID', desk:'...' }
+const VIDEOS=[
+ { id:'j_rNjiIiBKE', judul:'Battery 101: The Fundamentals of How A Lithium-Ion Battery Works', bahasa:'Inggris', kanal:'', link:'https://www.youtube.com/watch?v=j_rNjiIiBKE', desk:'Anoda, katoda, dan elektrolit, serta perbandingan cara kerja baterai lithium-ion dengan aki timbal-asam.' },
+ { id:'3Ru07FuWVo0', judul:'Working of Lithium Ion Battery', bahasa:'Inggris', kanal:'', link:'https://www.youtube.com/watch?v=3Ru07FuWVo0', desk:'Cara kerja bagian dalam baterai lithium-ion, dari anoda dan katoda sampai pembentukan lapisan SEI.' },
+ { id:'9OVtk6G2TnQ', judul:'How do batteries work? (TED-Ed, Adam Jacobson)', bahasa:'Inggris', kanal:'TED-Ed', link:'https://www.youtube.com/watch?v=9OVtk6G2TnQ', desk:'Sejarah baterai dari Galvani dan Volta, dan cara kerja dasarnya.' }
+];
+$('vlistid').innerHTML=VIDEOS_ID.map(CARD).join('');
+$('vlist').innerHTML=VIDEOS.map(CARD).join('');
+const YT='https://www.youtube.com/results?search_query=';
+const VL=[['id','perbedaan baterai LFP dan NMC motor listrik'],['id','cara kerja baterai lithium ion'],['id','cara membaca label baterai motor listrik V dan Ah'],['id','baterai motor listrik drop tegangan penyebab']];
+$('vlinks').innerHTML=VL.map(x=>`<li><a href="${YT+encodeURIComponent(x[1])}" target="_blank" rel="noopener">${x[1]}</a> (Bahasa Indonesia)</li>`).join('');
+
+// ----- kuis -----
+const Q=[
+['Baterai 72 V 30 Ah dan baterai 48 V 45 Ah menyimpan energi...',['Berbeda jauh','Sama besar (sekitar 2.160 Wh)','Tidak bisa dihitung'],1,'Energi = V × Ah. 72 × 30 = 48 × 45 = 2.160 Wh.'],
+['Pack NMC "72 V" (20S) bisa terukur sekitar 84 V saat penuh karena...',['Charger rusak','Label 72 V adalah tegangan nominal, sedangkan penuhnya 20 × 4,2 V','Baterai bocor'],1,'Tegangan nominal sel NMC sekitar 3,6 V. Saat penuh sel 4,2 V, jadi 20 sel menjadi 84 V.'],
+['Mengapa sisa baterai LFP sulit dibaca dari tegangan saja?',['Karena tegangannya hampir datar pada rentang SOC yang luas','Karena LFP tidak punya tegangan','Karena LFP hanya satu sel'],0,'Kurva LFP hampir datar dari sekitar 20 sampai 90%, sehingga tegangan hampir sama.'],
+['Pack 30 Ah mengalirkan 60 A. Berapa C-rate-nya?',['0,5C','1C','2C'],2,'C-rate = arus ÷ kapasitas = 60 ÷ 30 = 2C.'],
+['Mengapa tegangan baterai turun saat motor ditarik berat?',['Karena baterai mendadak kosong','Karena hambatan dalam: tegangan turun sebesar arus × hambatan','Karena controller menaikkan tegangan'],1,'Voltage sag: V = OCV − I × R. Semakin besar arus, semakin besar penurunannya.'],
+['Dibanding NMC, LFP umumnya...',['Lebih padat energi tetapi umur lebih pendek','Lebih tahan panas dan siklusnya lebih panjang, tetapi lebih berat untuk energi sama','Tidak bisa dipakai di motor'],1,'LFP unggul pada keselamatan dan umur siklus, NMC unggul pada energi per berat.'],
+['Baterai terasa panas, berbau, dan menggembung. Yang benar adalah...',['Tetap dipakai sampai habis','Hentikan, jauhkan, jangan dipegang sendirian, hubungi bantuan','Diisi lebih lama'],1,'Itu tanda bahaya thermal runaway. Jauhi dan minta bantuan.'],
+['Seri dan paralel pada pack berfungsi untuk...',['Seri menambah tegangan, paralel menambah kapasitas','Seri menambah kapasitas, paralel menambah tegangan','Keduanya menambah tegangan'],0,'Seri menjumlahkan tegangan, paralel menjumlahkan kapasitas (Ah).']
+];
+let sc=0,ans=0;
+$('quiz').innerHTML=Q.map((q,i)=>`<div class="q" data-i="${i}"><h4>${i+1}. ${q[0]}</h4>${q[1].map((o,j)=>`<button class="opt" data-j="${j}">${o}</button>`).join('')}<p class="why" hidden></p></div>`).join('');
+$('quiz').onclick=e=>{
+  const b=e.target.closest('button');if(!b||b.disabled)return;
+  const box=b.closest('.q'),q=Q[+box.dataset.i],ok=+b.dataset.j===q[2];
+  box.querySelectorAll('button').forEach((x,j)=>{x.disabled=true;if(j===q[2])x.classList.add('right')});
+  if(!ok)b.classList.add('wrong');else sc++;
+  const w=box.querySelector('.why');w.hidden=false;w.textContent=(ok?'Benar. ':'Belum tepat. ')+q[3];
+  if(++ans===Q.length){const s=$('score');s.hidden=false;s.className='verdict '+(sc>=7?'ok':sc>=5?'warn':'bad');s.textContent=`Skor Anda ${sc} dari ${Q.length}. `+(sc>=7?'Siap lanjut ke modul berikutnya.':'Ulangi simulasi pack, lalu coba kuis lagi.')}
+};
+sizeAll();
+</script>
+</body>
+</html>

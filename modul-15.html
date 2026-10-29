@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>15 BMS | Training EV</title>
+<script src="assets/tema.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#060A12;--panel:#0C1220;--line:#1B2740;--text:#E6ECF5;--dim:#8593AA;--u:#FFC857;--v:#3DDC97;--w:#4DA3FF;--alert:#FF6B8B;--disp:'Chakra Petch',system-ui,sans-serif;--body:'Sora',system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font:400 16px/1.7 var(--body)}
+main{max-width:920px;margin:0 auto;padding:40px clamp(16px,4vw,32px) 0}
+h1{font:700 clamp(28px,4vw,44px)/1.1 var(--disp);margin:0 0 8px}
+h2{font:700 24px var(--disp);margin:52px 0 6px}
+a{color:var(--w)}
+.lead{color:var(--dim);margin:0 0 18px}
+.no{font:700 15px var(--disp);color:var(--v)}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;margin:12px 0}
+.goal{margin:0 0 8px;padding:14px 18px 14px 36px;border:1px solid var(--line);border-left:3px solid var(--v);border-radius:6px;background:var(--panel)}
+.ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 22px;margin:8px 0}
+.ctl label{display:block;font-size:13px;color:var(--dim)}
+.ctl b{color:var(--text);font-family:var(--disp)}
+.ctl input[type=range]{width:100%;accent-color:var(--v)}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0}
+.out div{padding:10px 12px;border:1px solid var(--line);border-radius:6px}
+.out span{display:block;font-size:12px;color:var(--dim)}
+.out strong{font:700 20px var(--disp)}
+main canvas{width:100%;height:200px;display:block;background:var(--ink);border:1px solid var(--line);border-radius:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--dim);font:500 13px var(--body);cursor:pointer}
+.chip[aria-pressed=true]{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 16px;background:var(--ink);border:1px solid var(--line);border-radius:6px;color:var(--text);font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--v)}
+.opt.right{border-color:var(--v);background:color-mix(in srgb,var(--v) 14%,transparent)}
+.opt.wrong{border-color:var(--alert);background:color-mix(in srgb,var(--alert) 12%,transparent)}
+.why{font-size:14px;color:var(--dim);margin:8px 0 0}
+.verdict{padding:10px 14px;border-radius:6px;border:1px solid var(--line);margin-top:12px;font-size:14px}
+.ok{border-color:var(--v);color:var(--v)}.warn{border-color:var(--u);color:var(--u)}.bad{border-color:var(--alert);color:var(--alert)}
+.story{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.story figure{margin:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.story img{width:100%;height:230px;object-fit:contain;background:#fff;border-radius:6px;display:block}
+.story figcaption{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5}
+.story h3{margin:10px 0 4px;font:600 17px var(--disp)}
+.story p{margin:4px 0;font-size:14px}
+table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+.cmp th,.cmp td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.cmp th{color:var(--dim);font-weight:500}
+.vl{display:grid;grid-template-columns:210px 1fr;gap:6px 16px;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.vl a.th{position:relative;display:block;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--ink)}
+.vl img{width:100%;height:100%;object-fit:cover;display:block}
+.vl .pl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);color:#fff;font:700 15px var(--disp)}
+.vl h4{margin:0 0 4px;font:600 16px var(--disp)}
+.vl p{margin:4px 0;font-size:14px}
+.vl .bd{display:inline-block;padding:1px 8px;border:1px solid var(--v);border-radius:999px;color:var(--v);font-size:11px;margin-right:6px}
+@media(max-width:560px){.vl{grid-template-columns:1fr}}
+details.dl{margin-top:20px;border:1px solid var(--line);border-radius:8px;padding:4px 16px}
+details.dl summary{cursor:pointer;padding:12px 0;color:var(--w);font-weight:500}
+.exp li{margin:6px 0}
+.q{margin:18px 0}.q h4{margin:0 0 8px;font:600 16px var(--body)}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:44px;padding-top:20px;border-top:1px solid var(--line)}
+.nav a,.nav button{padding:10px 18px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);font:600 14px var(--disp);text-decoration:none;cursor:pointer}
+.nav button{background:var(--v);border-color:var(--v);color:var(--ink)}
+.nav button[disabled]{background:var(--panel);color:var(--v)}
+
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:12px 0}
+.tools figure{margin:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.tools img{width:100%;height:200px;object-fit:contain;background:#fff;border-radius:6px;display:block}
+.tools figcaption{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.5}
+.fm{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:12px 0}
+.fm div{padding:12px;border:1px solid var(--line);border-left:3px solid var(--v);border-radius:6px;background:var(--panel)}
+.fm b{display:block;font:700 18px var(--disp);color:var(--u)}
+.fm span{font-size:13px;color:var(--dim)}
+.stack{display:flex;height:30px;border-radius:6px;overflow:hidden;border:1px solid var(--line);margin:10px 0}
+.stack i{display:flex;align-items:center;justify-content:center;font:600 12px var(--disp);color:var(--ink);min-width:0;white-space:nowrap;transition:width .2s}
+.lg{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--dim)}
+.lg b{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}
+.vl{display:grid;grid-template-columns:210px 1fr;gap:6px 16px;margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.vl a.th{position:relative;display:block;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--ink)}
+.vl img{width:100%;height:100%;object-fit:cover;display:block}
+.vl .pl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);color:#fff;font:700 15px var(--disp)}
+.vl h4{margin:0 0 4px;font:600 16px var(--disp)}
+.vl p{margin:4px 0;font-size:14px}
+.vl .bd{display:inline-block;padding:1px 8px;border:1px solid var(--v);border-radius:999px;color:var(--v);font-size:11px;margin-right:6px}
+@media(max-width:560px){.vl{grid-template-columns:1fr}}
+.cp rect,.cp circle{fill:var(--panel);stroke:var(--dim);stroke-width:1.6;transition:fill .15s,stroke .15s}
+.cp:hover rect,.cp:hover circle,.cp:focus rect,.cp:focus circle{stroke:var(--v)}
+.cp.sel rect,.cp.sel circle{fill:color-mix(in srgb,var(--v) 22%,var(--panel));stroke:var(--v);stroke-width:2.4}
+.cp text{fill:var(--text);font:600 10px var(--body);pointer-events:none}
+.cp{cursor:pointer;outline:none}
+.anat{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;align-items:start}
+@media(max-width:760px){.anat{grid-template-columns:1fr}}
+.info h3{font:700 20px var(--disp);margin:0 0 6px;color:var(--v)}
+.info p{margin:6px 0;font-size:15px}
+.info .k{color:var(--u);font:600 12px var(--disp)}
+.mx{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:12px 0}
+.mx div{padding:8px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;color:var(--dim);transition:all .2s}
+.mx div.on{border-color:var(--v);color:var(--text);background:color-mix(in srgb,var(--v) 12%,transparent)}
+.mx div b{display:block;font:600 11px var(--disp);color:var(--dim)}
+.mx div.on b{color:var(--v)}
+.flow line,.flow path{stroke:var(--line);stroke-width:3;fill:none}
+.flow .on{stroke:var(--u);stroke-width:4;stroke-dasharray:8 7;animation:fl 0.9s linear infinite}
+.flow .on.rev{animation-direction:reverse;stroke:var(--v)}
+.flow .on.thin{stroke-width:2.6}
+@keyframes fl{to{stroke-dashoffset:-30}}
+.flow .nd rect{fill:var(--panel);stroke:var(--dim);stroke-width:1.6}
+.flow .nd text{fill:var(--text);font:600 11px var(--body);text-anchor:middle}
+@media(prefers-reduced-motion:reduce){.flow .on{animation:none}}
+
+.stp{counter-reset:s;list-style:none;margin:10px 0;padding:0}
+.stp li{position:relative;margin:6px 0;padding:10px 12px 10px 48px;background:var(--ink);border:1px solid var(--line);border-radius:6px;font-size:14px}
+.stp li::before{counter-increment:s;content:counter(s);position:absolute;left:12px;top:8px;width:26px;height:26px;border-radius:50%;background:var(--v);color:var(--ink);font:700 14px/26px var(--disp);text-align:center}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font:600 12px var(--disp);margin-right:6px}
+
+abbr.tt{text-decoration:underline dotted var(--v);text-underline-offset:3px;cursor:help;position:relative}
+abbr.tt::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 6px);width:max-content;max-width:260px;padding:8px 10px;background:var(--panel);color:var(--text);border:1px solid var(--v);border-radius:6px;font:400 12px/1.5 var(--body);opacity:0;pointer-events:none;transform:translateY(4px);transition:opacity .15s,transform .15s;z-index:30;white-space:normal}
+abbr.tt:hover::after,abbr.tt:focus::after{opacity:1;transform:none}
+
+.cells{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin:12px 0}
+.cell{display:flex;flex-direction:column;align-items:center;font-size:12px;color:var(--dim)}
+.cell .bar{position:relative;width:100%;height:150px;border:1px solid var(--line);border-radius:6px;background:var(--ink);overflow:hidden}
+.cell .bar i{position:absolute;left:0;right:0;bottom:0;background:var(--v);transition:height .4s}
+.cell.lim .bar{border-color:var(--alert)}
+.cell.lim .bar i{background:var(--alert)}
+.cell b{display:block;margin-top:4px;font:600 12px var(--disp);color:var(--text)}
+.cell span{white-space:nowrap}
+.sw{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.stepb{padding:9px 16px;border:1px solid var(--v);border-radius:6px;background:var(--panel);color:var(--text);font:600 14px var(--disp);cursor:pointer}
+.stepb.pri{background:var(--v);color:var(--ink)}
+</style>
+</head>
+<body data-kode="15">
+<div id="site-header"></div>
+<main>
+  <div class="no">Modul 15 &nbsp;|&nbsp; R2 mendalam</div>
+  <h1>BMS: Otak dan Pelindung Baterai</h1>
+  <p class="lead">Baterai lithium yang tidak dijaga mudah rusak atau berbahaya. <abbr class="tt" tabindex="0" data-tip="Battery Management System: rangkaian elektronik yang memantau, melindungi, dan menyeimbangkan sel baterai.">BMS</abbr> adalah penjaganya. Modul ini membahas apa saja yang dikerjakan BMS, mengapa sel tidak seimbang menurunkan kapasitas, dan cara membaca gejala BMS di bengkel. Arahkan kursor atau ketuk istilah bergaris titik untuk melihat artinya.</p>
+  <ul class="goal">
+    <li>Menyebut empat tugas BMS: memantau, melindungi, menyeimbangkan, dan memperkirakan kondisi baterai.</li>
+    <li>Menjelaskan mengapa sel terlemah menentukan kapasitas pack, dan apa yang bisa dan tidak bisa diperbaiki balancing.</li>
+    <li>Menghubungkan gejala (motor mati mendadak, tidak mau mengisi) dengan penyebab dan pemeriksaan awal.</li>
+  </ul>
+
+  <div class="box" id="hook">
+    <b>Tebak dulu.</b> Sebuah pack 20 sel seri berisi satu sel lemah. Saat dipakai, apa yang menentukan kapan BMS memutus aliran?
+    <div id="hopt"></div><p class="why" id="hans" hidden></p>
+  </div>
+
+  <h2>1. Empat tugas BMS</h2>
+  <ul class="rec">
+    <li><b>Memantau:</b> tegangan tiap sel (atau kelompok sel), arus (lewat <abbr class="tt" tabindex="0" data-tip="Resistor sangat kecil untuk mengukur arus lewat tegangan jatuhnya (modul 06).">shunt</abbr>), dan suhu (sensor NTC).</li>
+    <li><b>Melindungi:</b> memutus bila tegangan terlalu tinggi atau rendah, arus berlebih, hubung singkat, atau suhu di luar batas.</li>
+    <li><b>Menyeimbangkan:</b> menyamakan tingkat isi tiap sel supaya tidak ada yang tertinggal.</li>
+    <li><b>Memperkirakan dan berkomunikasi:</b> menghitung <abbr class="tt" tabindex="0" data-tip="State of Charge: sisa isi baterai dalam persen.">SOC</abbr> dan <abbr class="tt" tabindex="0" data-tip="State of Health: kesehatan baterai, biasanya kapasitas sekarang dibanding kapasitas awal.">SOH</abbr>, lalu melaporkannya ke controller atau display lewat UART, CAN, atau Bluetooth (modul 19). Pada kendaraan tegangan tinggi, BMS juga memantau kebocoran ke bodi (ground fault).</li>
+  </ul>
+  <div class="tools" id="fig1"></div>
+
+  <h2>2. Proteksi dan skenarionya</h2>
+  <table class="cmp">
+    <tr><th>Proteksi</th><th>Memicu bila</th><th>Contoh ambang (per sel NMC, hanya contoh)</th></tr>
+    <tr><td><b>Tegangan lebih (OVP)</b></td><td>satu sel melewati batas atas saat isi</td><td>sekitar 4,25 V</td></tr>
+    <tr><td><b>Tegangan rendah (UVP)</b></td><td>satu sel turun di bawah batas bawah saat dipakai</td><td>sekitar 2,8 sampai 3,0 V</td></tr>
+    <tr><td><b>Arus lebih (OCP)</b></td><td>arus melebihi batas kontinu atau puncak</td><td>sesuai rating BMS dan sel</td></tr>
+    <tr><td><b>Hubung singkat</b></td><td>lonjakan arus sangat cepat</td><td>memutus dalam hitungan mikrodetik sampai milidetik</td></tr>
+    <tr><td><b>Suhu (OTP dan UTP)</b></td><td>terlalu panas atau terlalu dingin untuk diisi</td><td>sesuai lembar data sel</td></tr>
+  </table>
+  <p class="why">Ambang berbeda per sel dan per produsen BMS. Pada LFP batasnya berbeda (penuh sekitar 3,65 V). Sebagian besar BMS R2 memutus lewat MOSFET atau kontaktor. Pada kendaraan tegangan tinggi, kontaktor ada di dalam atau dekat pack (modul 06).</p>
+  <div class="box">
+    <b>Mengapa motor tiba-tiba mati atau lemah?</b> Pilih kejadian:
+    <div class="ctl"><label>Kejadian<select id="ev" style="width:100%;padding:6px;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:6px"><option value="a">Motor mati mendadak saat tanjakan</option><option value="b">Baterai tidak mau terisi penuh</option><option value="c">Tegangan pack normal, tetapi motor tidak hidup</option><option value="d">Baterai cepat habis</option><option value="e">Motor "ngempos" saat baterai menipis</option></select></label></div>
+    <div class="info" id="evi"></div>
+  </div>
+
+  <h2>3. Simulasi: sel tidak seimbang</h2>
+  <p class="lead">Pilih keadaan pack, nyalakan atau matikan <abbr class="tt" tabindex="0" data-tip="Penyeimbangan sel. Pada balancing pasif, sel yang lebih penuh dibuang sedikit energinya lewat resistor sebagai panas supaya sel lain menyusul.">balancing</abbr>, lalu isi dan kosongkan. Sel merah adalah sel pembatas.</p>
+  <div class="box">
+    <div class="ctl">
+      <label>Keadaan pack<select id="sc" style="width:100%;padding:6px;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:6px"><option value="a">A. Satu sel isinya lebih rendah (kapasitas sama)</option><option value="b">B. Satu sel menua (kapasitas lebih kecil)</option><option value="c">C. Pack seimbang</option></select></label>
+      <label>Arus balancing: <b id="ibT"></b><input type="range" id="ib" min="50" max="1000" step="50" value="100"></label>
+    </div>
+    <div class="sw"><button class="chip" id="bal" aria-pressed="false">Balancing: mati</button><button class="stepb pri" id="ch">1. Isi sampai BMS memotong</button><button class="stepb" id="ds">2. Kosongkan sampai BMS memotong</button><button class="stepb" id="rs">Ulang</button></div>
+    <div class="cells" id="cells"></div>
+    <div class="out"><div><span>Tahap</span><strong id="st" style="font-size:15px"></strong></div><div><span>Muatan yang bisa dipakai</span><strong id="us"></strong></div><div><span>Waktu balancing yang diperlukan</span><strong id="bt"></strong></div></div>
+    <div class="verdict" id="sv"></div>
+    <p class="why">Pack 8 sel seri, 20 Ah nominal. Model sederhana: arus seri mengalir sama ke semua sel. Isi berhenti saat sel pertama penuh, kosong berhenti saat sel pertama habis. Balancing hanya menyamakan <b>isi</b>, bukan menambah <b>kapasitas</b>. Sel yang menua tidak bisa dipulihkan oleh BMS.</p>
+  </div>
+
+  <h2>4. SOC, SOH, dan ukur kesehatan</h2>
+  <ul class="rec">
+    <li><b>Coulomb counting:</b> BMS menjumlahkan muatan yang masuk dan keluar (arus × waktu). Cepat dan halus, tetapi bergeser sedikit demi sedikit (drift), sehingga perlu dikalibrasi, misalnya saat penuh atau kosong.</li>
+    <li><b>Dari tegangan:</b> tegangan tanpa beban menunjukkan sisa isi, tetapi pada LFP kurvanya datar dan pada beban tegangan turun (modul 14), sehingga kurang akurat.</li>
+    <li><b>SOH:</b> kapasitas sekarang dibanding kapasitas awal, ditambah hambatan dalam yang naik. Banyak baterai dianggap menua jauh bila kapasitasnya tinggal sekitar 70 sampai 80% dari awal (angka umum, ikuti pabrikan).</li>
+  </ul>
+  <div class="box">
+    <div class="ctl">
+      <label>Kapasitas awal: <b id="k0T"></b><input type="range" id="k0" min="5" max="60" step=".5" value="20"></label>
+      <label>Kapasitas terukur saat ini: <b id="k1T"></b><input type="range" id="k1" min="2" max="60" step=".5" value="16"></label>
+    </div>
+    <div class="out"><div><span>SOH perkiraan</span><strong id="sh"></strong></div><div><span>Jarak tempuh yang tersisa dari semula</span><strong id="sj"></strong></div></div>
+    <div class="verdict" id="shv"></div>
+    <p class="why">Kapasitas terukur diperoleh dari mengosongkan baterai penuh pada arus tertentu sambil mencatat Ah, atau dari data BMS. Hasil bergantung suhu dan arus uji.</p>
+  </div>
+
+  <h2>5. BMS pada R2 dan cara memeriksanya</h2>
+  <ul class="rec">
+    <li><b>Port tunggal atau terpisah:</b> pada sebagian pack, arus isi dan arus pakai lewat jalur yang sama (common port). Pada yang lain, jalur isi dan pakai terpisah. Kabel dan sakelar berbeda, jadi periksa dokumen pack.</li>
+    <li><b>Konektor balance:</b> kabel tipis di samping pack membawa tegangan tiap kelompok sel. Dengan multimeter (modul 05) dan APD (modul 04), ukur tegangan tiap kelompok dan bandingkan. Selisih kecil (puluhan milivolt) wajar, sedangkan selisih lebih dari sekitar 0,1 V pada pack yang terisi layak diperhatikan (angka kasar).</li>
+    <li><b>Jangan memintas BMS</b> untuk "memaksa" baterai hidup. BMS yang memutus biasanya menandakan masalah nyata.</li>
+    <li><b>BMS tidak memperbaiki sel yang rusak.</b> Ia hanya melindungi dan menyeimbangkan. Sel yang menua atau rusak perlu diganti sesuai prosedur.</li>
+  </ul>
+  <div class="verdict warn">Jangan membuka pack atau menyolder pada sel tanpa pelatihan. Ikuti urutan putus, kunci, tunggu, ukur, baru kerja (<a href="modul-04.html">modul 04</a>).</div>
+
+  <h2>6. Video pendukung</h2>
+  <h3 style="font:600 18px var(--disp);margin:14px 0 6px">Bahasa Indonesia</h3>
+  <div id="vlistid"></div>
+  <p class="why" style="margin-top:14px"><b>Cari video lain.</b> Tautan berikut membuka hasil pencarian YouTube, bukan video tertentu.</p>
+  <ul class="rec" id="vlinks"></ul>
+  <p class="why"><b>Bacaan bahasa Indonesia:</b> <a href="https://www.idntimes.com/automotive/motorbike/mengenal-bms-motor-listrik-kenapa-fungsinya-sangat-krusial-c1c2-01-spf5w-ml44hf" target="_blank" rel="noopener">IDN Times: BMS motor listrik</a>, <a href="https://auto2000.co.id/berita-dan-tips/bms" target="_blank" rel="noopener">Auto2000: fungsi dan manfaat BMS</a>, <a href="https://www.builder.id/bms-baterai/" target="_blank" rel="noopener">Builder.id: fungsi dan cara kerja BMS</a>, dan <a href="https://www.jellykom.com/2022/01/fungsi-penting-bms-baterai-management.html" target="_blank" rel="noopener">Jellykom: fungsi BMS pada baterai LiFePO4</a>.</p>
+  <h3 style="font:600 18px var(--disp);margin:22px 0 6px">Bahasa Inggris</h3>
+  <p class="why">Tips subtitle: aktifkan CC, buka Setelan, Subtitel/CC, lalu Terjemahkan otomatis ke Indonesia, bila pemilik video mengaktifkan subtitel.</p>
+  <div id="vlist"></div>
+
+  <details class="dl"><summary>Catatan untuk pengajar</summary>
+    <p><b>Alur sekitar 75 menit:</b> tebakan (5), empat tugas (10), proteksi dan skenario (10), simulasi balancing (20), SOC dan SOH (10), BMS di R2 dan pemeriksaan (10), kuis (10).</p>
+    <p><b>Pertanyaan pemicu:</b> Pack baru tetapi jaraknya cuma setengah. Apa yang Anda periksa? (Tegangan tiap kelompok sel, sel lemah, SOH.) Mengapa balancing tidak menyelamatkan pack yang satu selnya menua?</p>
+    <p><b>Pesan utama:</b> pack kuat sama dengan sel terlemahnya. BMS menjaga dan menyamakan isi, tetapi tidak bisa menambah kapasitas.</p>
+  </details>
+
+  <h2>7. Kuis</h2>
+  <div id="quiz"></div><div class="verdict" id="score" hidden></div>
+
+  <p class="why" style="margin-top:30px">Sumber foto, Wikimedia Commons: <a href="https://commons.wikimedia.org/wiki/File:3s_20a_BMS_circuit_for_18650.jpg" target="_blank" rel="noopener">3s 20a BMS circuit for 18650</a> dan <a href="https://commons.wikimedia.org/wiki/File:3s_40a_BMS_circuit_for_18650.jpg" target="_blank" rel="noopener">3s 40a BMS circuit for 18650</a> (Mamun2a, CC BY-SA 4.0), <a href="https://commons.wikimedia.org/wiki/File:Lithium-Ion_Battery_for_BMW_i3_-_Battery_Pack.JPG" target="_blank" rel="noopener">paket baterai BMW i3</a> (RudolfSimon, CC BY-SA 3.0), dan <a href="https://commons.wikimedia.org/wiki/File:Electric_Bicycle.jpg" target="_blank" rel="noopener">Electric Bicycle</a> (Mikefairbanks, CC BY-SA 3.0). Isi dari MathWorks, Synopsys, Wikipedia (Battery management system), SunLith Energy, dan DIY Smart Lab. Ambang proteksi dan angka SOH bersifat contoh umum. Cek ulang sebelum dipakai sebagai rujukan resmi.</p>
+
+  <div class="nav">
+    <a href="modul-14.html">Sebelumnya: 14</a><a href="index.html#modul">Daftar modul</a>
+    <button id="doneBtn">Tandai selesai</button><a href="modul-16.html">Berikutnya: 16</a>
+  </div>
+</main>
+<div id="site-footer"></div>
+<script>
+const $=id=>document.getElementById(id);
+fetch('assets/layout.html').then(r=>{if(!r.ok)throw 0;return r.text()}).then(h=>{
+  const d=new DOMParser().parseFromString(h,'text/html');
+  document.head.append(...d.querySelectorAll('style'));
+  $('site-header').replaceWith(d.querySelector('header'));$('site-footer').replaceWith(d.querySelector('footer'));
+}).catch(()=>{$('site-header').textContent='Training EV'});
+const kode=document.body.dataset.kode, btn=$('doneBtn');
+let done=[]; try{done=JSON.parse(localStorage.getItem('evDone')||'[]')}catch(e){}
+const mark=()=>{btn.textContent='Selesai ✓';btn.disabled=true};
+if(done.includes(kode))mark();
+btn.onclick=()=>{if(!done.includes(kode))done.push(kode);try{localStorage.setItem('evDone',JSON.stringify(done))}catch(e){}mark()};
+const fx=(n,d=1)=>(+n).toLocaleString('id-ID',{maximumFractionDigits:d});
+function hook(id,aid,opts,ok,html){$(id).innerHTML=opts.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('');$(id).onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;[...$(id).children].forEach((x,i)=>{x.disabled=true;if(i===ok)x.classList.add('right')});if(+b.dataset.i!==ok)b.classList.add('wrong');const a=$(aid);a.hidden=false;a.innerHTML=html}}
+hook('hopt','hans',['Rata-rata semua sel','Sel yang paling lemah (paling dulu mencapai batas bawah)','Sel yang paling kuat','Charger'],1,'Jawabannya <b>sel yang paling lemah</b>. Sel-sel seri dialiri arus yang sama, jadi sel dengan sisa isi paling sedikit mencapai batas bawah lebih dulu, dan BMS memutus seluruh pack saat itu juga walau sel lain masih terisi.');
+
+// ----- foto -----
+const CM='https://commons.wikimedia.org/wiki/',fp=f=>CM+'Special:FilePath/'+encodeURIComponent(f)+'?width=520';
+const fg=(f,alt,cap,by)=>`<figure><img src="${fp(f)}" alt="${alt}" loading="lazy" onerror="this.closest('figure').style.display='none'"><figcaption>${cap}. Sumber: <a href="${CM}File:${encodeURIComponent(f)}" target="_blank" rel="noopener">${f.replace(/_/g,' ')}</a>, ${by}, Wikimedia Commons</figcaption></figure>`;
+$('fig1').innerHTML=
+ fg('3s_20a_BMS_circuit_for_18650.jpg','Papan BMS 3S 20 A','Papan BMS 3S 20 A untuk sel 18650: MOSFET dan rangkaian pemantau sel','Mamun2a, CC BY-SA 4.0')+
+ fg('3s_40a_BMS_circuit_for_18650.jpg','Papan BMS 3S 40 A','Papan BMS 3S 40 A: lebih banyak MOSFET untuk arus yang lebih besar','Mamun2a, CC BY-SA 4.0')+
+ fg('Lithium-Ion_Battery_for_BMW_i3_-_Battery_Pack.JPG','Paket baterai BMW i3','Paket baterai mobil listrik BMW i3, tempat BMS dan kontaktor berada','RudolfSimon, CC BY-SA 3.0')+
+ fg('Electric_Bicycle.jpg','Baterai sepeda listrik','Paket baterai sepeda listrik 960 Wh dengan BMS di dalamnya','Mikefairbanks, CC BY-SA 3.0');
+
+// ----- skenario -----
+const EV={
+ a:['Motor mati mendadak saat tanjakan','Arus tinggi menurunkan tegangan sel (voltage sag). Satu sel lemah turun di bawah batas bawah (UVP) atau arus melewati batas OCP, sehingga BMS memutus.','Ukur tegangan tiap kelompok sel saat beban, periksa sel lemah dan SOH, dan periksa sambungan yang panas (modul 05).'],
+ b:['Baterai tidak mau terisi penuh','Satu sel mencapai batas atas (OVP) lebih dulu, sehingga BMS menghentikan isi sebelum sel lain penuh. Penyebab: sel tidak seimbang atau balancing tidak berjalan.','Ukur tegangan tiap kelompok saat hampir penuh. Bila selisihnya besar, balancing sangat lama atau sel menua.'],
+ c:['Tegangan pack normal, tetapi motor tidak hidup','BMS sendiri mati, MOSFET keluaran terbuka, atau sakelar atau sensor di jalur BMS memutus. Tegangan sel bisa normal walau keluaran pack nol.','Bandingkan tegangan di terminal sel dengan tegangan di keluaran pack (modul 05). Bila beda, masalah ada di BMS atau jalur keluarannya.'],
+ d:['Baterai cepat habis','Kapasitas sudah turun (SOH rendah), sel menua, atau SOC yang ditampilkan salah karena kalibrasi bergeser.','Ukur kapasitas nyata dengan pengosongan terkontrol, bandingkan dengan awal, dan periksa selisih antar kelompok sel.'],
+ e:['Motor "ngempos" saat baterai menipis','Tegangan pack saat beban turun ke batas rendah controller (LVC) atau BMS mulai membatasi arus (modul 14 dan 21).','Ukur tegangan saat beban, periksa sag, dan bandingkan dengan batas controller.']
+};
+function ev(){const x=EV[$('ev').value];$('evi').innerHTML=`<h3 style="font:700 18px var(--disp);color:var(--v);margin:8px 0 4px">${x[0]}</h3><p>${x[1]}</p><p><b>Periksa:</b> ${x[2]}</p>`}
+$('ev').addEventListener('change',ev);ev();
+
+// ----- simulasi balancing -----
+const N=8,CAPN=20;
+const SC={a:{caps:Array(N).fill(CAPN),soc:[.92,.92,.92,.92,.92,.92,.92,.55]},b:{caps:[20,20,20,20,20,20,20,12],soc:[.9,.9,.9,.9,.9,.9,.9,.9]},c:{caps:Array(N).fill(CAPN),soc:Array(N).fill(.9)}};
+let S,stage,used=null,btime=null,balOn=false;
+function reset(){const s=SC[$('sc').value];S=s.caps.map((c,i)=>({cap:c,soc:s.soc[i]}));stage='awal';used=null;btime=null;draw()}
+function lim(){let m=0,v=1e9;S.forEach((c,i)=>{const x=stage==='penuh'?c.soc*c.cap:(1-c.soc)*c.cap;if(x<v){v=x;m=i}});return m}
+function draw(){
+  const l=stage==='awal'||stage==='kosong'?S.reduce((a,c,i)=>(1-c.soc)*c.cap<(1-S[a].soc)*S[a].cap?i:a,0):lim();
+  $('cells').innerHTML=S.map((c,i)=>`<div class="cell${i===(stage==='penuh'?S.reduce((a,x,j)=>x.soc*x.cap<S[a].soc*S[a].cap?j:a,0):l)?' lim':''}"><div class="bar"><i style="height:${Math.round(c.soc*100)}%"></i></div><b>${Math.round(c.soc*100)}%</b><span>${fx(c.cap,0)} Ah</span></div>`).join('');
+  $('st').textContent={awal:'Keadaan awal',penuh:'Setelah isi (BMS memotong)',kosong:'Setelah dikosongkan'}[stage];
+  $('us').textContent=used===null?'-':fx(used,1)+' Ah ('+fx(used/CAPN*100,0)+'% dari 20 Ah)';
+  $('bt').textContent=btime===null?'-':(btime<1?fx(btime*60,0)+' menit':btime<48?fx(btime,1)+' jam':fx(btime/24,1)+' hari');
+}
+$('bal').onclick=()=>{balOn=!balOn;$('bal').setAttribute('aria-pressed',balOn);$('bal').textContent='Balancing: '+(balOn?'nyala':'mati');$('ch').title=''};
+$('ib').addEventListener('input',()=>{$('ibT').textContent=$('ib').value+' mA'});$('ibT').textContent=$('ib').value+' mA';
+$('sc').addEventListener('change',reset);$('rs').onclick=reset;
+$('ch').onclick=()=>{
+  const x=Math.min(...S.map(c=>(1-c.soc)*c.cap));
+  S.forEach(c=>c.soc=Math.min(1,c.soc+x/c.cap));
+  const def=Math.max(...S.map(c=>(1-c.soc)*c.cap));
+  stage='penuh';used=null;
+  const v=$('sv');
+  if(balOn){const t=def/($('ib').value/1000);btime=t;S.forEach(c=>c.soc=1);
+    v.className='verdict '+(t>48?'warn':'ok');v.textContent=`Balancing menyamakan semua sel hingga penuh, tetapi memerlukan sekitar ${t<1?fx(t*60,0)+' menit':t<48?fx(t,1)+' jam':fx(t/24,1)+' hari'} pada arus ${$('ib').value} mA.`+(t>48?' Terlalu lama untuk sekali isi: pack akan terus tidak seimbang selama berminggu-minggu.':'')}
+  else{btime=null;v.className='verdict warn';v.textContent=def>0.05?'Isi berhenti saat sel pertama penuh. Sel lain belum penuh, sehingga isi pack lebih kecil dari seharusnya.':'Semua sel sudah hampir penuh bersamaan.'}
+  draw();
+};
+$('ds').onclick=()=>{
+  if(stage==='awal'){const v=$('sv');v.className='verdict warn';v.textContent='Isi dulu sampai BMS memotong, baru kosongkan, supaya perbandingannya jelas.';return}
+  const x=Math.min(...S.map(c=>c.soc*c.cap));used=x;
+  S.forEach(c=>c.soc=Math.max(0,c.soc-x/c.cap));stage='kosong';
+  const v=$('sv'),pct=x/CAPN*100;
+  v.className='verdict '+(pct>=90?'ok':pct>=70?'warn':'bad');
+  v.textContent=`Pengosongan berhenti saat sel terlemah habis: hanya ${fx(x,1)} Ah (${fx(pct,0)}%) dari 20 Ah yang bisa dipakai.`+($('sc').value==='b'?' Sel yang menua membatasi pack. Balancing tidak menolong kapasitas yang sudah hilang: sel itu perlu diganti.':$('sc').value==='a'?(balOn?' Setelah balancing, kapasitas pulih karena semua sel penuh bersamaan.':' Coba nyalakan balancing dan ulangi untuk melihat bedanya.'):' Pack seimbang memberi kapasitas penuh.');
+  draw();
+};
+reset();
+
+// ----- SOH -----
+function soh(){const a=+$('k0').value,b=+$('k1').value,s=b/a*100;$('k0T').textContent=fx(a,1)+' Ah';$('k1T').textContent=fx(b,1)+' Ah';
+  $('sh').textContent=fx(s,0)+'%';$('sj').textContent=fx(s,0)+'% dari jarak semula';
+  const v=$('shv');if(s>=90){v.className='verdict ok';v.textContent='Baterai masih sangat sehat.'}else if(s>=80){v.className='verdict ok';v.textContent='Baterai sehat dengan penurunan wajar.'}else if(s>=70){v.className='verdict warn';v.textContent='Penurunan sudah terasa. Pantau dan bandingkan sel-selnya.'}else{v.className='verdict bad';v.textContent='Baterai sudah banyak menurun. Pertimbangkan penggantian sesuai anjuran pabrikan.'}}
+['k0','k1'].forEach(i=>$(i).addEventListener('input',soh));soh();
+
+// ----- video -----
+const CARD=v=>`<div class="vl"><a class="th" href="${v.link}" target="_blank" rel="noopener" aria-label="Tonton: ${v.judul}"><img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="Pratinjau ${v.judul}" loading="lazy"><span class="pl">▶ Tonton di YouTube</span></a><div><h4><a href="${v.link}" target="_blank" rel="noopener">${v.judul}</a></h4><p><span class="bd">${v.bahasa}</span><span style="color:var(--dim);font-size:12px">${v.kanal||''}</span></p><p>${v.desk}</p></div></div>`;
+const VIDEOS_ID=[
+ { id:'DUnR4eFie-Y', judul:'apa itu bms ? || cara kerja BMS || BMS 1S 1A 3A 9A lithium 18650', bahasa:'Indonesia', kanal:'', link:'https://www.youtube.com/watch?v=DUnR4eFie-Y', desk:'Penjelasan apa itu BMS dan cara kerjanya, dengan contoh papan BMS untuk sel lithium 18650.' }
+];
+const VIDEOS=[
+ { id:'t0YY8t6DKL8', judul:'How BMS work', bahasa:'Inggris', kanal:'', link:'https://www.youtube.com/watch?v=t0YY8t6DKL8', desk:'Penjelasan kerja dan fungsi BMS pada pack lithium-ion dan perannya melindungi sel pada kendaraan listrik.' },
+ { id:'9GXj-CGc_MU', judul:'Battery management system (BMS)', bahasa:'Inggris', kanal:'', link:'https://www.youtube.com/watch?v=9GXj-CGc_MU', desk:'Pengantar BMS: menjaga operasi baterai tetap aman dan efisien.' }
+];
+$('vlistid').innerHTML=VIDEOS_ID.map(CARD).join('');
+$('vlist').innerHTML=VIDEOS.map(CARD).join('');
+const YT='https://www.youtube.com/results?search_query=';
+$('vlinks').innerHTML=[['fungsi dan cara kerja BMS baterai lithium motor listrik'],['balancing baterai lithium passive active BMS'],['cara mengukur tegangan sel pack baterai multimeter']].map(x=>`<li><a href="${YT+encodeURIComponent(x[0])}" target="_blank" rel="noopener">${x[0]}</a> (Bahasa Indonesia)</li>`).join('');
+
+// ----- kuis -----
+const Q=[
+['Dalam pack seri, yang menentukan kapan BMS memutus saat pemakaian adalah...',['Rata-rata semua sel','Sel dengan sisa isi paling sedikit','Sel paling penuh'],1,'Arus seri sama untuk semua sel, jadi sel yang paling dulu habis menentukan.'],
+['Tugas BMS yang BUKAN dikerjakan adalah...',['Memutus saat sel overvoltage','Menyeimbangkan isi sel','Memperbaiki sel yang rusak'],2,'BMS melindungi dan menyeimbangkan, tetapi tidak dapat memperbaiki sel yang sudah rusak.'],
+['Balancing pasif menyamakan sel dengan cara...',['Memindahkan energi lewat induktor','Membuang kelebihan energi sel tinggi sebagai panas lewat resistor','Menambah kapasitas sel kecil'],1,'Pada balancing pasif, sel yang lebih penuh dibuang sebagian energinya sebagai panas.'],
+['Pack seimbang, tetapi satu sel kapasitasnya tinggal 12 Ah dari 20 Ah. Balancing...',['Memulihkan kapasitas sel itu','Tidak memulihkan kapasitas, sel itu tetap membatasi pack','Membuat pack 32 Ah'],1,'Balancing menyamakan isi, bukan kapasitas. Sel yang menua perlu diganti.'],
+['Motor mati mendadak di tanjakan, dan setelah beberapa menit hidup lagi. Penyebab paling mungkin...',['Gas rusak total','Voltage sag atau sel lemah memicu UVP atau OCP BMS','Ban kempis'],1,'Beban tinggi menurunkan tegangan sel lemah, BMS memutus, lalu pulih saat beban hilang.'],
+['Cara memeriksa keseimbangan pack dengan multimeter adalah...',['Mengukur hambatan pack','Mengukur tegangan tiap kelompok sel pada konektor balance dan membandingkannya','Menempelkan probe ke casing'],1,'Selisih tegangan antar kelompok sel menunjukkan ketidakseimbangan.'],
+['SOH 75% pada baterai 20 Ah awal berarti kapasitas sekarang sekitar...',['15 Ah','10 Ah','25 Ah'],0,'20 × 0,75 = 15 Ah.']
+];
+let sc=0,ans=0;
+$('quiz').innerHTML=Q.map((q,i)=>`<div class="q" data-i="${i}"><h4>${i+1}. ${q[0]}</h4>${q[1].map((o,j)=>`<button class="opt" data-j="${j}">${o}</button>`).join('')}<p class="why" hidden></p></div>`).join('');
+$('quiz').onclick=e=>{
+  const b=e.target.closest('button');if(!b||b.disabled)return;
+  const box=b.closest('.q'),q=Q[+box.dataset.i],ok=+b.dataset.j===q[2];
+  box.querySelectorAll('button').forEach((x,j)=>{x.disabled=true;if(j===q[2])x.classList.add('right')});
+  if(!ok)b.classList.add('wrong');else sc++;
+  const w=box.querySelector('.why');w.hidden=false;w.textContent=(ok?'Benar. ':'Belum tepat. ')+q[3];
+  if(++ans===Q.length){const s=$('score');s.hidden=false;s.className='verdict '+(sc>=6?'ok':sc>=5?'warn':'bad');s.textContent=`Skor Anda ${sc} dari ${Q.length}. `+(sc>=6?'Siap lanjut ke modul berikutnya.':'Ulangi simulasi balancing, lalu coba kuis lagi.')}
+};
+</script>
+</body>
+</html>

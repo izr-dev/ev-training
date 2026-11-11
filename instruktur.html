@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Instruktur - EV Trainer Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0F1316;--panel:#171D22;--panel-2:#1C232A;--border:#2A323A;--text:#E9EDF1;--text-dim:#8B96A1;
+        --live:#43D9A3;--warn:#F2A93B;--alert:#FF5C5C;--data:#4FA3E3;--radius:10px;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:radial-gradient(circle at 18% -10%,rgba(79,163,227,.10),transparent 55%),
+       radial-gradient(circle at 85% 0%,rgba(67,217,163,.08),transparent 50%),var(--bg);
+       color:var(--text);font-family:'Space Grotesk',sans-serif;min-height:100vh;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  header{padding:20px 26px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,#12171B,#0F1316);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
+  header h1{margin:0;font-size:19px;font-weight:600;}
+  header p{margin:2px 0 0;font-size:12px;color:var(--text-dim);}
+  header a{color:var(--data);font-size:13px;text-decoration:none;border:1px solid var(--border);padding:8px 14px;border-radius:8px;}
+  main{max-width:1180px;margin:0 auto;padding:22px 26px 90px;display:grid;gap:20px;}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;}
+  .panel h2{margin:0 0 14px;font-size:15px;font-weight:600;}
+  .panel h3{margin:18px 0 8px;font-size:13px;color:var(--text-dim);font-weight:600;}
+  .note{font-size:12.5px;line-height:1.6;color:var(--warn);background:rgba(242,169,59,.07);border:1px solid rgba(242,169,59,.3);padding:10px 14px;border-radius:8px;}
+  ol.guide{margin:0;padding-left:20px;display:grid;gap:9px;font-size:13.5px;line-height:1.6;color:var(--text-dim);}
+  ol.guide b{color:var(--text);font-weight:600;}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+  @media(max-width:900px){.two{grid-template-columns:1fr;}}
+  .btn{padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--panel-2);color:var(--text);font-family:inherit;font-size:12.5px;cursor:pointer;transition:all .15s;}
+  .btn:hover:not(:disabled){border-color:var(--data);color:var(--data);}
+  .btn:disabled{opacity:.35;cursor:not-allowed;}
+  .btn.pri{border-color:var(--live);color:var(--live);background:rgba(67,217,163,.08);}
+  .btn.sm{padding:4px 9px;font-size:11.5px;}
+  input,select{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:9px 11px;font-family:'IBM Plex Mono',monospace;font-size:13px;}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .fam{border:1px solid var(--border);border-radius:10px;background:var(--panel-2);margin-bottom:10px;overflow:hidden;}
+  .fam-h{padding:10px 14px;font-size:13px;display:flex;justify-content:space-between;gap:10px;align-items:center;}
+  .fam-h b{font-family:'IBM Plex Mono',monospace;color:var(--data);margin-right:8px;}
+  .tag{font-size:10.5px;padding:2px 8px;border-radius:999px;border:1px solid var(--border);color:var(--text-dim);}
+  .tag.mil{color:var(--warn);border-color:rgba(242,169,59,.5);}
+  .root{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 14px;border-top:1px solid var(--border);font-size:12.5px;}
+  .root span.t{flex:1;}
+  .root small{display:block;color:var(--text-dim);font-size:11px;margin-top:2px;}
+  .sel{display:grid;gap:8px;margin-bottom:12px;}
+  .sel-item{display:grid;grid-template-columns:26px 1fr auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--panel-2);font-size:13px;}
+  .sel-item .n{width:24px;height:24px;border-radius:50%;background:var(--data);color:#08141C;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;}
+  .sel-item small{display:block;color:var(--text-dim);font-size:11.5px;margin-top:2px;line-height:1.5;}
+  .empty{color:var(--text-dim);font-size:13px;padding:14px;border:1px dashed var(--border);border-radius:10px;text-align:center;}
+  .code{font-family:'IBM Plex Mono',monospace;font-size:22px;letter-spacing:1px;color:var(--live);padding:14px 16px;border-radius:10px;border:1px solid rgba(67,217,163,.4);background:rgba(67,217,163,.06);word-break:break-all;}
+  .sum{display:grid;gap:10px;margin-top:6px;}
+  .sum-item{padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--panel-2);font-size:12.5px;line-height:1.6;color:var(--text-dim);}
+  .sum-item b{color:var(--text);}
+  .key{margin-top:12px;display:grid;gap:12px;}
+  .key-item{padding:14px;border:1px solid rgba(79,163,227,.4);border-radius:10px;background:rgba(79,163,227,.05);font-size:12.5px;line-height:1.6;}
+  .key-item h4{margin:0 0 6px;font-size:13.5px;}
+  .key-item ol{margin:8px 0 0;padding-left:20px;display:grid;gap:6px;}
+  .key-item ol em{display:block;font-style:normal;color:var(--text-dim);}
+  .kv{display:grid;grid-template-columns:130px 1fr;gap:4px 10px;margin:6px 0;}
+  .kv span{color:var(--text-dim);}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  th{text-align:left;color:var(--text-dim);font-weight:600;font-size:11px;padding:7px 8px;border-bottom:1px solid var(--border);}
+  td{padding:8px;border-bottom:1px solid var(--border);vertical-align:top;}
+  details{border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:var(--panel-2);}
+  summary{cursor:pointer;padding:10px 14px;font-size:13px;}
+  details .inner{padding:4px 14px 14px;}
+  .res{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px;}
+  @media(max-width:700px){.res{grid-template-columns:repeat(2,1fr);}}
+  .res div{padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--panel-2);font-size:11.5px;color:var(--text-dim);}
+  .res b{display:block;font-family:'IBM Plex Mono',monospace;font-size:20px;color:var(--text);margin-top:4px;}
+  .err{color:var(--alert);font-size:12.5px;margin-top:8px;}
+  #nocat{display:none;}
+</style>
+</head>
+<body>
+<script src="dtc-katalog.js"></script>
+
+<header>
+  <div>
+    <h1>Panel Instruktur</h1>
+    <p>EV Trainer Kit &middot; pembuat skenario diagnosis, kunci jawaban, dan pembaca hasil</p>
+  </div>
+  <a href="dashboard.html" id="backLink">Ke dashboard peserta</a>
+</header>
+
+<main>
+  <div class="panel" id="nocat">
+    <div class="err"><b>dtc-katalog.js</b> tidak ditemukan. Letakkan file itu di folder yang sama dengan halaman ini.</div>
+  </div>
+
+  <!-- PANDUAN -->
+  <section class="panel">
+    <h2>Panduan penggunaan</h2>
+    <div class="two">
+      <div>
+        <h3 style="margin-top:0;">Untuk instruktur</h3>
+        <ol class="guide">
+          <li><b>Susun skenario</b> di bagian &ldquo;Pembuat skenario&rdquo;: pilih 1 sampai 3 akar masalah dari katalog (berlapis: error berikutnya muncul setelah yang pertama selesai), atau tekan &ldquo;Isi acak&rdquo;.</li>
+          <li><b>Atur batas waktu</b> (opsional), lalu salin <b>kode skenario</b> atau <b>tautan peserta</b>.</li>
+          <li><b>Bagikan kode</b> ke peserta lewat chat atau papan tulis. Peserta tidak melihat penyebabnya.</li>
+          <li>Setelah selesai, peserta menyerahkan <b>kode hasil</b>. Tempel di &ldquo;Baca kode&rdquo; untuk melihat skor, waktu, dan jumlah langkah salah.</li>
+          <li><b>Kunci jawaban</b> ada di panel ini. Jangan tampilkan di layar yang bisa dilihat peserta.</li>
+        </ol>
+      </div>
+      <div>
+        <h3 style="margin-top:0;">Yang dialami peserta</h3>
+        <ol class="guide">
+          <li>Membuka tab <b>Diagnostik</b> di dashboard, menghubungkan BLE, dan memasukkan kode skenario.</li>
+          <li>Membaca gejala, <b>menyalakan ignition</b>, dan menunggu lampu MIL serta DTC muncul.</li>
+          <li>Menjawab <b>quiz berlapis</b>: tiap langkah memilih pemeriksaan yang tepat. Langkah benar menampilkan hasil ukur, langkah salah membuat <b>buntu</b>: skor berkurang 10 dan peserta kembali ke langkah sebelumnya.</li>
+          <li>Menetapkan akar masalah dan tindakan perbaikan, lalu <b>menghapus DTC</b> dan memverifikasi kode tidak muncul lagi.</li>
+        </ol>
+      </div>
+    </div>
+    <h3>Error fisik</h3>
+    <ol class="guide">
+      <li>Di tab Diagnostik, centang <b>Deteksi error fisik</b>. Kondisi normal direkam otomatis (HALL, CAN HU, CAN BMS, +5V). Pastikan kit terpasang normal saat merekam.</li>
+      <li>Cabut konektor HALL atau kabel CAN, atau lepas kabel +5V: DTC muncul sendiri sekitar 2 detik kemudian. Peserta lalu mencari sumbernya.</li>
+      <li>Belum terbaca sensor: kabel SIG throttle putus (throttle 0% = 0 V). Skenario throttle hanya tersedia sebagai error virtual.</li>
+    </ol>
+    <h3>Penilaian</h3>
+    <ol class="guide">
+      <li>Skor awal 100, berkurang 10 setiap langkah salah (minimum 0). Waktu tercatat. Status: Selesai, Waktu habis, atau Dihentikan (menyerah).</li>
+    </ol>
+    <div class="note" style="margin-top:14px;">Halaman ini statis (hosting GitHub): tidak ada login dan tidak ada server. Kode skenario hanya <b>disamarkan ringan</b>, dan semua isi file bisa dibaca peserta yang membongkar halaman. Cukup untuk latihan. Untuk ujian yang tidak boleh diintip dibutuhkan server.</div>
+  </section>
+
+  <!-- PEMBUAT SKENARIO -->
+  <section class="panel">
+    <h2>Pembuat skenario</h2>
+    <div class="two">
+      <div>
+        <h3 style="margin-top:0;">1. Pilih akar masalah (maksimal 3)</h3>
+        <div id="catalog"></div>
+      </div>
+      <div>
+        <h3 style="margin-top:0;">2. Skenario Anda</h3>
+        <div id="selected" class="sel"></div>
+        <div class="row" style="margin-bottom:10px;">
+          <label for="timeSel" style="font-size:12.5px;color:var(--text-dim);">Batas waktu</label>
+          <select id="timeSel">
+            <option value="0">Tanpa batas</option><option value="5">5 menit</option><option value="10">10 menit</option>
+            <option value="15">15 menit</option><option value="20">20 menit</option><option value="30">30 menit</option>
+          </select>
+          <button class="btn" id="randSeed">Acak urutan opsi quiz</button>
+        </div>
+        <div class="row" style="margin-bottom:6px;">
+          <label for="randN" style="font-size:12.5px;color:var(--text-dim);">Skenario acak</label>
+          <select id="randN"><option value="1">1 error</option><option value="2">2 error berlapis</option><option value="3">3 error berlapis</option></select>
+          <button class="btn" id="randFill">Isi acak</button>
+          <button class="btn" id="clearSel">Kosongkan</button>
+        </div>
+
+        <h3>3. Kode untuk peserta</h3>
+        <div class="code" id="codeBox">-</div>
+        <div class="row" style="margin-top:10px;">
+          <button class="btn pri" id="copyCode" disabled>Salin kode</button>
+          <input id="baseUrl" value="dashboard.html" size="22" title="Alamat halaman dashboard peserta" aria-label="Alamat dashboard">
+          <button class="btn" id="copyLink" disabled>Salin tautan peserta</button>
+        </div>
+        <div class="sum" id="summary"></div>
+        <div class="row" style="margin-top:14px;"><button class="btn" id="showKey" disabled>Tampilkan kunci jawaban</button></div>
+        <div id="keyBox" class="key"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PEMBACA KODE -->
+  <section class="panel">
+    <h2>Baca kode</h2>
+    <div class="two">
+      <div>
+        <h3 style="margin-top:0;">Kode skenario (lihat isi dan kunci)</h3>
+        <div class="row"><input id="decScen" size="30" placeholder="EV1-XXXXX-XXXXX-XXX" spellcheck="false"><button class="btn" id="decScenBtn">Baca</button></div>
+        <div id="decScenOut"></div>
+      </div>
+      <div>
+        <h3 style="margin-top:0;">Kode hasil peserta</h3>
+        <div class="row"><input id="decRes" size="30" placeholder="RS1-XXXXX-XXXXX-..." spellcheck="false"><button class="btn" id="decResBtn">Baca</button></div>
+        <div id="decResOut"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REFERENSI -->
+  <section class="panel">
+    <h2>Katalog DTC dan kunci jawaban lengkap</h2>
+    <table>
+      <thead><tr><th>Kode</th><th>Nama</th><th>MIL</th><th>Dampak</th><th>Aturan deteksi</th><th>Fisik</th></tr></thead>
+      <tbody id="famRows"></tbody>
+    </table>
+    <h3>Kunci jawaban per akar masalah</h3>
+    <div id="allKeys"></div>
+  </section>
+</main>
+
+<script>
+(function () {
+  const K = window.DTC_KATALOG;
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  if (!K) { $('nocat').style.display = 'block'; return; }
+
+  const IMPACT = { motor_off: 'Motor dinonaktifkan', limp: 'Mode limp (kecepatan dibatasi 30%)', nocomm: 'Head unit mati (NO COMM)', none: 'Tidak membatasi kendaraan' };
+  const INJ = {
+    th: { open: 'Kanal TH terbaca 0 (sinyal throttle terbuka)', high: 'Kanal TH terbaca 1023 (GND throttle lepas)' },
+    v5: { low: 'Rel +5V turun ke sekitar 40% normal' },
+    hall: { lost: 'Sinyal HALL dibuat hilang' }, canHu: { lost: 'Sinyal CAN head unit dibuat hilang' }, canBms: { lost: 'Sinyal CAN BMS dibuat hilang' },
+    uvw: { mismatch: 'U/V/W terbaca 100/500/800 (kelas berbeda)', phase_open: 'U/V/W terbaca 800/0/800 (fasa V lepas)' },
+    battNeg: { open: 'BATT- terbaca 520' }, brk: { stuck: 'Sinyal BRK dibuat selalu aktif' }, std: { stuck: 'Sinyal STND dibuat selalu aktif' },
+    charger: { mismatch: 'ADC charger terbaca 1800 (rentang error)' }, pack: { mismatch: 'Paket terbaca 96V dan BLDC terbaca 400W' },
+  };
+  const injText = (inj) => Object.keys(inj).map((k) => INJ[k][inj[k]]).join('; ');
+  const STUDENT = {
+    P0571: 'Menyalakan ignition, lalu memutar throttle (di atas 20%) sambil tuas rem tidak ditekan.',
+    B1001: 'Menyalakan ignition, lalu memutar throttle (di atas 10%).',
+    B0500: 'Tidak perlu ignition: indikator error charger muncul sendiri.',
+    _: 'Menyalakan ignition dan menunggu sekitar 2 detik sampai MIL menyala.',
+  };
+
+  let selected = [], seed = Math.floor(Math.random() * 65536);
+
+  // ---- katalog pilihan ----
+  function renderCatalog() {
+    const fams = Object.keys(K.FAMILIES).filter((c) => K.ROOTS.some((r) => r.dtc === c));
+    $('catalog').innerHTML = fams.map((c) => {
+      const f = K.FAMILIES[c];
+      return '<div class="fam"><div class="fam-h"><span><b>' + c + '</b>' + esc(f.name) + '</span><span>' + (f.mil ? '<span class="tag mil">MIL</span> ' : '') +
+        '<span class="tag">' + (f.phys ? 'fisik + virtual' : 'virtual saja') + '</span></span></div>' +
+        K.ROOTS.filter((r) => r.dtc === c).map((r) => '<div class="root"><span class="t">' + esc(r.title) + '<small>' + esc(r.symptom) + '</small></span>' +
+          '<button class="btn sm" data-add="' + r.id + '">Tambah</button></div>').join('') + '</div>';
+    }).join('');
+  }
+  function renderSelected() {
+    const box = $('selected');
+    if (!selected.length) { box.innerHTML = '<div class="empty">Belum ada akar masalah dipilih. Pilih dari katalog atau tekan &ldquo;Isi acak&rdquo;.</div>'; }
+    else box.innerHTML = selected.map((id, i) => {
+      const r = K.ROOT_BY_ID[id];
+      return '<div class="sel-item"><span class="n">' + (i + 1) + '</span><div><b>' + r.dtc + '</b> &middot; ' + esc(r.title) +
+        '<small>Dampak: ' + esc(IMPACT[K.FAMILIES[r.dtc].impact]) + '</small></div><div class="row">' +
+        '<button class="btn sm" data-up="' + i + '"' + (i === 0 ? ' disabled' : '') + '>Naik</button>' +
+        '<button class="btn sm" data-down="' + i + '"' + (i === selected.length - 1 ? ' disabled' : '') + '>Turun</button>' +
+        '<button class="btn sm" data-del="' + i + '">Hapus</button></div></div>';
+    }).join('');
+    const has = selected.length > 0;
+    const cfg = { faults: selected, seed, time: Number($('timeSel').value) };
+    $('codeBox').textContent = has ? K.encodeScenario(cfg) : '-';
+    $('copyCode').disabled = !has; $('copyLink').disabled = !has; $('showKey').disabled = !has;
+    $('keyBox').innerHTML = '';
+    $('summary').innerHTML = selected.map((id, i) => {
+      const r = K.ROOT_BY_ID[id], f = K.FAMILIES[r.dtc];
+      return '<div class="sum-item"><b>Error ' + (i + 1) + ': ' + r.dtc + ' ' + esc(f.name) + '</b><div class="kv">' +
+        '<span>Gejala peserta</span><div>' + esc(r.symptom) + '</div>' +
+        '<span>Peserta perlu</span><div>' + esc(STUDENT[r.dtc] || STUDENT._) + '</div>' +
+        '<span>Cara suntik</span><div>' + esc(injText(r.inject)) + '</div></div></div>';
+    }).join('');
+  }
+  function keyHtml(id) {
+    const k = K.answerKey(id);
+    return '<div class="key-item"><h4>' + k.dtc + ' &middot; ' + esc(k.title) + '</h4><div class="kv">' +
+      '<span>DTC</span><div>' + k.dtc + ' ' + esc(k.dtcName) + (k.mil ? ' (MIL menyala)' : '') + '</div>' +
+      '<span>Gejala</span><div>' + esc(k.symptom) + '</div><span>Dampak</span><div>' + esc(IMPACT[k.impact]) + '</div>' +
+      '<span>Tindakan benar</span><div>' + esc(k.repair) + '</div><span>Penjelasan</span><div>' + esc(k.learn) + '</div></div>' +
+      '<b>Jalur pemeriksaan yang benar</b><ol>' + k.path.map((p) => '<li>' + esc(p.check) + '<em>Hasil: ' + esc(p.result) + '</em></li>').join('') + '</ol></div>';
+  }
+
+  $('catalog').addEventListener('click', (e) => {
+    const id = e.target.dataset && e.target.dataset.add; if (!id) return;
+    if (selected.length >= 3) { alert('Maksimal 3 error berlapis.'); return; }
+    if (selected.indexOf(Number(id)) >= 0) { alert('Akar masalah itu sudah dipilih.'); return; }
+    selected.push(Number(id)); renderSelected();
+  });
+  $('selected').addEventListener('click', (e) => {
+    const d = e.target.dataset; if (!d) return;
+    if (d.del !== undefined) selected.splice(Number(d.del), 1);
+    else if (d.up !== undefined) { const i = Number(d.up); [selected[i - 1], selected[i]] = [selected[i], selected[i - 1]]; }
+    else if (d.down !== undefined) { const i = Number(d.down); [selected[i + 1], selected[i]] = [selected[i], selected[i + 1]]; }
+    else return;
+    renderSelected();
+  });
+  $('timeSel').addEventListener('change', renderSelected);
+  $('randSeed').addEventListener('click', () => { seed = Math.floor(Math.random() * 65536); renderSelected(); });
+  $('clearSel').addEventListener('click', () => { selected = []; renderSelected(); });
+  $('randFill').addEventListener('click', () => { const c = K.randomScenario(Number($('randN').value)); selected = c.faults.slice(); seed = c.seed; renderSelected(); });
+  $('showKey').addEventListener('click', () => { $('keyBox').innerHTML = selected.map(keyHtml).join(''); });
+  const copy = (text, ok) => { if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => alert(ok), () => prompt('Salin manual:', text)); else prompt('Salin manual:', text); };
+  $('copyCode').addEventListener('click', () => copy($('codeBox').textContent, 'Kode disalin.'));
+  $('copyLink').addEventListener('click', () => {
+    const base = $('baseUrl').value.trim() || 'dashboard.html';
+    let url = base; try { url = new URL(base, location.href).href; } catch (e) {}
+    copy(url + (url.indexOf('?') >= 0 ? '&' : '?') + 'kode=' + encodeURIComponent($('codeBox').textContent), 'Tautan disalin.');
+  });
+
+  // ---- pembaca kode ----
+  $('decScenBtn').addEventListener('click', () => {
+    const c = K.decodeScenario($('decScen').value), out = $('decScenOut');
+    if (!c) { out.innerHTML = '<div class="err">Kode skenario tidak valid.</div>'; return; }
+    out.innerHTML = '<div class="sum"><div class="sum-item">Batas waktu: <b>' + (c.time ? c.time + ' menit' : 'tanpa batas') + '</b> &middot; ' + c.faults.length + ' error berlapis</div>' +
+      c.faults.map((id, i) => { const r = K.ROOT_BY_ID[id]; return '<div class="sum-item"><b>Error ' + (i + 1) + ': ' + r.dtc + ' ' + esc(r.title) + '</b></div>'; }).join('') + '</div>' +
+      '<div class="key">' + c.faults.map(keyHtml).join('') + '</div>';
+  });
+  $('decResBtn').addEventListener('click', () => {
+    const d = K.decodeResult($('decRes').value), out = $('decResOut');
+    if (!d) { out.innerHTML = '<div class="err">Kode hasil tidak valid.</div>'; return; }
+    const mm = Math.floor(d.time / 60), ss = d.time % 60;
+    out.innerHTML = '<div class="res"><div>Skor<b>' + d.score + '</b></div><div>Langkah salah<b>' + d.wrong + '</b></div><div>Waktu<b>' + String(mm).padStart(2, '0') + ':' + String(ss).padStart(2, '0') +
+      '</b></div><div>Status<b style="font-size:15px;">' + esc(K.STATUS_LABEL[d.status] || '-') + '</b></div></div>' +
+      '<div class="sum"><div class="sum-item"><b>Skenario:</b><br>' + d.faults.map((id) => K.ROOT_BY_ID[id].dtc + ' ' + esc(K.ROOT_BY_ID[id].title)).join('<br>') + '</div></div>';
+  });
+
+  // ---- referensi ----
+  $('famRows').innerHTML = Object.keys(K.FAMILIES).map((c) => {
+    const f = K.FAMILIES[c];
+    return '<tr><td class="mono">' + c + '</td><td>' + esc(f.name) + '</td><td>' + (f.mil ? 'Ya' : '-') + '</td><td>' + esc(IMPACT[f.impact]) + '</td><td>' + esc(f.rule) + '</td><td>' + (f.phys ? 'Ya' : 'Tidak') + '</td></tr>';
+  }).join('');
+  $('allKeys').innerHTML = K.ROOTS.map((r) => '<details><summary><b class="mono">' + r.dtc + '</b> &middot; ' + esc(r.title) + '</summary><div class="inner">' + keyHtml(r.id) + '</div></details>').join('');
+
+  renderCatalog(); renderSelected();
+})();
+</script>
+</body>
+</html>
